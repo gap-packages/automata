@@ -4,13 +4,13 @@
 #W                                    Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: init.g,v 1.01 $
+#H  @(#)$Id: init.g,v 1.02 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
 
 # announce the package version
-DeclareAutoPackage("automata", "1.01", ReturnTrue);
+DeclareAutoPackage("automata", "1.02", ReturnTrue);
 
 # install the documentation
 DeclarePackageAutoDocumentation( "automata", "doc" );

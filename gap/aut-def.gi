@@ -4,7 +4,7 @@
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: aut-def.gi,v 1.01 $
+#H  @(#)$Id: aut-def.gi,v 1.02 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
