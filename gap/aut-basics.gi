@@ -3,7 +3,7 @@
 #W  aut-basics.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-basics.gi,v 1.04 $
+#H  @(#)$Id: aut-basics.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -104,12 +104,15 @@ end);
 ##
 #F  NullCompletionAutomaton(aut)
 ##
-##  Given a incomplete deterministic automaton returns a deterministic 
+##  Given an incomplete deterministic automaton returns a deterministic 
 ##  automaton completed with a new null state. 
 ##
 InstallGlobalFunction(NullCompletionAutomaton, function(aut)
     local b, i, j, t, x, y;
     
+    if not IsAutomatonObj(aut) then
+        Error("The argument must be an automaton");
+    fi;
     if not aut!.type = "det" then
         Error("<aut> must be deterministic");
     fi;
@@ -337,7 +340,7 @@ InstallGlobalFunction(IsPermutationAutomaton,function(aut)
 end);
 
 #############################################################################
-#F  ListSinkStatesAut(<A>)
+#F  ListSinkStatesAut(A)
 ##
 ##  Returns the list of sink states of the automaton A.
 ##  q is said to be a sink state iff it is not initial nor accepting and
@@ -375,7 +378,7 @@ end);
 
 #############################################################################
 ##
-#F  RemoveSinkStates(<A>)
+#F  RemoveSinkStates(A)
 ##
 ##  Removes the sink states of the automaton A
 ##
@@ -479,7 +482,7 @@ end);
 ##
 #F  NormalizedAutomaton(A)
 ##
-##  Returns the equivalent automaton but the initial states is numbered 1
+##  Returns the equivalent automaton but the initial state is numbered 1
 ##  and the final states have the last numbers
 ##
 InstallGlobalFunction(NormalizedAutomaton, function(A)
@@ -576,7 +579,7 @@ end);
 ##
 #F  ReversedAutomaton(A)
 ##
-##  Returns the automaton obtained from A by reversing it's edges and
+##  Returns the automaton obtained from A by reversing its edges and
 ##  switching the accepting and initial states
 ##
 InstallGlobalFunction(ReversedAutomaton, function(A)

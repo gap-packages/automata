@@ -3,7 +3,7 @@
 #W  aut-basics.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                       Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-basics.gd,v 1.04 $
+#H  @(#)$Id: aut-basics.gd,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -124,7 +124,7 @@ DeclareGlobalFunction( "PermutedAutomaton" );
 
 #############################################################################
 ##
-#F  ListSinkStatesAut(<A>)
+#F  ListSinkStatesAut(A)
 ##
 ##  Returns the list of sink states of the automaton A.
 ##  q is said to be a sink state iff it is not initial nor accepting and
@@ -136,7 +136,7 @@ DeclareGlobalFunction( "ListSinkStatesAut" );
 
 #############################################################################
 ##
-#F  RemoveSinkStates(<A>)
+#F  RemoveSinkStates(A)
 ##
 ##  Removes the sink states of the automaton A
 ##
@@ -156,7 +156,7 @@ DeclareGlobalFunction( "IsRecognizedByAutomaton" );
 ##
 #F  NormalizedAutomaton(A)
 ##
-##  Returns the equivalent automaton but the initial states is numbered 1
+##  Returns the equivalent automaton but the initial state is numbered 1
 ##  and the final states have the last numbers
 ##
 DeclareGlobalFunction( "NormalizedAutomaton" );
@@ -174,7 +174,7 @@ DeclareGlobalFunction( "UnionAutomata" );
 ##
 #F  ReversedAutomaton(A)
 ##
-##  Returns the automaton obtained from A by reversing it's edges and
+##  Returns the automaton obtained from A by reversing its edges and
 ##  switching the accepting and initial states
 ##
 DeclareGlobalFunction( "ReversedAutomaton" );

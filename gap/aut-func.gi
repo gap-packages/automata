@@ -6,7 +6,7 @@
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: automataoperations.gi,v 1.04 $
+#H  @(#)$Id: automataoperations.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -22,7 +22,7 @@ SetInfoLevel(InfoAutomataSL,0);
 ##
 #F  EpsilonToNFA(A)
 ##
-##  <A> is an automaton with epsilon-transitions. Returns a NFA
+##  <A> is an automaton with epsilon-transitions. Returns an NFA
 ##  recognizing the same language.
 ##
 InstallGlobalFunction(EpsilonToNFA, function(A)
@@ -572,7 +572,7 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
     tm := List([1..m], a->
                List(partn, p->partmap[aut!.transitions[a][p[1]]]));
     
-    mma :=  Automaton("det", Length(partn), m, tm,
+    mma :=  Automaton("det", Length(partn), AlphabetOfAutomaton(aut), tm,
                    [partmap[aut!.initial[1]]],
                     Filtered([1..Length(partn)], i->partn[i][1] in aut!.accepting));
     Info(InfoAutomataSL,1,"Minimized ",aut!.states," to ",Length(partn));
@@ -593,11 +593,10 @@ InstallMethod(MinimalAutomaton,"for finite automata", true,
     return MinimalizedAut(A);
 end);
 #############################################################################
-#F  AreEquivAut(<A1>,<A2>)
+#F  AreEquivAut(A1,A2)
 ##
 ##  Tests if the automata <A1> and <A2> are equivalent. This means that the
 ##  corresponding minimal automata are isomorphic.
-##  Auxiliar function to AreEqualLang(<L1>,<L2>)
 ##
 InstallGlobalFunction(AreEquivAut, function(A1, A2)
     local bijection, dom, range, visited, i_dom, i_range,
@@ -679,7 +678,7 @@ end);
 ##
 ##  Computes the list of states of  the automaton aut 
 ##  which are accessible from state p. When p is not given, returns the 
-## states  which are accessible from any initial state.
+##  states  which are accessible from any initial state.
 ##
 InstallGlobalFunction(AccessibleStates, function(arg)
     local A, a, acc, aut, N, newacc, q;
@@ -726,7 +725,6 @@ end);
 ##
 ##  If "aut" is a deterministic automaton, not necessarily dense, an 
 ##  equivalent dense deterministic accessible automaton is returned. 
-##  (The function AccessibleDAutomaton is called.)
 ##
 ##  If "aut" is not deterministic with a single initial state, an equivalent 
 ##  accessible automaton is returned.
@@ -734,6 +732,10 @@ end);
 InstallGlobalFunction(AccessibleAutomaton, function(aut)
     local A, a, acc, f, i, init, n, n1, n2, newacc, newtable, newnewtable, 
           nt, p, q, r, s, qa, qqa, F1, L, N, TR;
+    
+    if not IsAutomatonObj(aut) then
+        Error("The argument must be an automaton");
+    fi;
     if aut!.type = "det" then 
         return UsefulAutomaton(aut);
     elif aut!.type = "nondet" then
@@ -891,7 +893,7 @@ end);
 ##
 #F  IntersectionLanguage(A1,A2)
 ##
-##  The same as IntersectionAutomaton, but accepts both automata or rational 
+##  The same as IntersectionAutomaton; accepts both automata or rational 
 ##  expressions as arguments
 ##
 InstallGlobalFunction(IntersectionLanguage, function(a1,a2)

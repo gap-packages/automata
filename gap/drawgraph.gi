@@ -3,7 +3,7 @@
 #W  drawgraph.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: drawgraph.gi,v 1.04 $
+#H  @(#)$Id: drawgraph.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -142,6 +142,9 @@ InstallGlobalFunction(DrawAutomaton, function(arg)
         if gv = fail then
             Error("Please install gv or ggv");
         fi;
+    fi;
+    if not IsAutomatonObj(arg[1]) then
+        Error("The first argument must be an automaton");
     fi;
     if IsBound(arg[2]) then
         dotAutomaton(arg[1], arg[2]);

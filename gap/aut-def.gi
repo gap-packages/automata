@@ -4,7 +4,7 @@
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: aut-def.gi,v 1.04 $
+#H  @(#)$Id: aut-def.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -16,15 +16,18 @@
 ##
 ##
 ## Example
-## gap> A:=Automaton("det",4,2,[[3,3,3,4],[3,4,3,4]],[1],[4]);   
-##       |  1  2  3  4 
-##    -  -  -  -  -  - 
-##    a  |  3  3  3  4 
-##    b  |  3  4  3  4 
-## Initial state: [ 1 ]
+## gap> A:=Automaton("det",4,2,[[3,3,3,4],[3,4,3,4]],[1],[4]);
+## < deterministic automaton on 2 letters with 4 states >
+## gap> Display(A);
+##    |  1  2  3  4
+## -----------------
+##  a |  3  3  3  4
+##  b |  3  4  3  4
+## Initial state:   [ 1 ]
 ## Accepting state: [ 4 ]
 ##
 ## The first component of a non deterministic automaton is <"nondet">
+## and that of an epsilon automaton is <"epsilon">.
 ##
 ## In the case of automata with e-transitions, the last line of the 
 ## transition table corresponds to the e-transitions (i.e., epsilon is 
@@ -104,7 +107,7 @@ InstallGlobalFunction( Automaton, function(Type, Size, SizeAlphabet,
     
     #The type of the automaton: deterministic or not must be given
     if Type <> "det" and Type <> "nondet" and Type <> "epsilon" then
-        Error( "Please specify the type of the automaton as 'det' or 'nondet' or 'epsilon'");
+        Error( "Please specify the type of the automaton as \"det\" or \"nondet\" or \"epsilon\"");
     fi;
     
     

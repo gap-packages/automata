@@ -3,7 +3,7 @@
 #W  aut-rat.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-rat.gd,v 1.04 $
+#H  @(#)$Id: aut-rat.gd,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -28,7 +28,8 @@ DeclareAttribute("MinimalKnownRatExp", IsAutomatonObj, "mutable");
 ##
 #F  RatExpToNDAut(R)
 ##
-##  Given a rational expression R, computes the equivalent NFA 
+##  Given a rational expression R, computes an equivalent NFA using
+##  the Glushkov algorithm.
 ##
 DeclareGlobalFunction( "RatExpToNDAut" );
 #############################################################################

@@ -4,7 +4,7 @@
 #W  miscelaneous.gd                       Manuel Delgado <mdelgado@fc.up.pt>
 #W                                        Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: miscelaneous.gd,v 1.04 $
+#H  @(#)$Id: miscelaneous.gd,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 #############################################################################
@@ -24,8 +24,8 @@ DeclareGlobalFunction( "PermutationsOfN" );
 ##
 #F  RandomizeRandomState()
 ##
-##  Put StateRandom in a state that depends on the time of the start
-##  of the GAP session, providing thus a more probably
+##  Put StateRandom in a state that depends on the time of the calling
+##  of the function, providing thus a more probably
 ##  different output for RandomAutomaton. In fact, the probability
 ##  of RandomAutomaton("det",3,2) output the same result between
 ##  two different GAP sessions is 1/factor. We defined factor = 521,

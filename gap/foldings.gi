@@ -3,7 +3,7 @@
 #W  foldings.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: foldings.gi,v 1.04 $
+#H  @(#)$Id: foldings.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -226,7 +226,7 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
     if not (A!.initial = [1] and A!.accepting = [1]) then
         Error(" 1 must be initial and accepting state");
     fi;
-    ug := UnderlyingGraphOfAutomaton(A);
+    ug := UnderlyingMultiGraphOfAutomaton(A);
     if not ForAll([2..A!.states], q -> AutoVertexDegree(ug,q)=2) then
         Error(" A must be a flower automaton");
     fi;
@@ -416,7 +416,8 @@ InstallGlobalFunction(AddInverseEdgesToInverseAutomaton,function(aut)
         Append(T,[ai]);
     od;
     for L in T do 
-        for i in [1..Length(L)] do
+#        for i in [1..Length(L)] do
+        for i in [1..2*aut!.alphabet] do
             if not IsBound(L[i]) then
                 L[i] := 0;
             fi;
@@ -450,7 +451,8 @@ InstallGlobalFunction(GeodesicTreeOfInverseAutomatonWithInformation, function(A)
        or Length(A!.initial) <> 1 then
         Error("<A> must be an inverse automaton");
     fi;
-    Ainv := AddInverseEdgesToInverseAutomaton(A);
+    Ainv := Automaton(A!.type,A!.states,A!.alphabet,StructuralCopy(A!.transitions),A!.initial,A!.accepting);
+    AddInverseEdgesToInverseAutomaton(Ainv);
     T := StructuralCopy(Ainv!.transitions);
     visited := [Ainv!.initial[1]];
     bool := true;
@@ -466,7 +468,7 @@ InstallGlobalFunction(GeodesicTreeOfInverseAutomatonWithInformation, function(A)
         bool := false;
         for u in new do 
             for a in [1..Ainv!.alphabet] do
-                if T[a][u] in visited or T[a][u] = 0 then
+                if not IsBound(T[a][u]) or T[a][u] in visited or T[a][u] = 0 then
                     T[a][u] := 0;
                 else
                     bool := true;

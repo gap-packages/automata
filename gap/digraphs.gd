@@ -3,7 +3,7 @@
 #W  digraphs.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.04 $
+#H  @(#)$Id: digraphs.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -81,7 +81,7 @@ DeclareGlobalFunction( "UnderlyingGraphOfAutomaton" );
 ##
 #F DiGraphToRelation(D)
 ##
-## returns the relation corresponding to the digraph???????????????
+## returns the relation corresponding to the digraph
 ##
 DeclareGlobalFunction( "DiGraphToRelation" );
 
@@ -92,7 +92,7 @@ DeclareGlobalFunction( "DiGraphToRelation" );
 ## Produces an automaton where, in each strongly connected component,
 ## edges labeled by inverses are added.
 ## 
-## This construction is usefull in Finite Semigroup Theory
+## This construction is useful in Finite Semigroup Theory
 ##
 DeclareGlobalFunction( "MSccAutomaton" );
 

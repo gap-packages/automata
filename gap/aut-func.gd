@@ -1,11 +1,11 @@
 #############################################################################
 ##
 #W  aut-func.gd                          Manuel Delgado <mdelgado@fc.up.pt>
-#W                                           Jose Morais <jjoao@netcabo.pt>
+#W                                       Jose Morais    <jjoao@netcabo.pt>
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: automataoperations.gi,v 1.04 $
+#H  @(#)$Id: automataoperations.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -14,7 +14,7 @@
 ##
 #F  EpsilonToNFA(A)
 ##
-##  <A> is an automaton with epsilon-transitions. Returns a NFA
+##  <A> is an automaton with epsilon-transitions. Returns an NFA
 ##  recognizing the same language.
 ##
 DeclareGlobalFunction( "EpsilonToNFA" );
@@ -89,11 +89,10 @@ DeclareSynonym("MinimalizeDDAutomaton", MinimalizedAut);
 DeclareAttribute("MinimalAutomaton", IsAutomatonObj);
 
 #############################################################################
-#F  AreEquivAut(<A1>,<A2>)
+#F  AreEquivAut(A1,A2)
 ##
 ##  Tests if the automata <A1> and <A2> are equivalent. This means that the
 ##  corresponding minimal automata are isomorphic.
-##  Auxiliar function to AreEqualLang(<L1>,<L2>)
 ##
 DeclareGlobalFunction( "AreEquivAut" );
 DeclareSynonym("AreEqualLang", AreEquivAut);
@@ -112,7 +111,6 @@ DeclareGlobalFunction( "AccessibleStates" );
 ##
 ##  If "aut" is a deterministic automaton, not necessarily dense, an 
 ##  equivalent dense deterministic accessible automaton is returned. 
-##  (The function AccessibleDAutomaton is called.)
 ##
 ##  If "aut" is not deterministic with a single initial state, an equivalent 
 ##  accessible automaton is returned.
@@ -132,7 +130,7 @@ DeclareGlobalFunction( "ProductAutomaton" );
 ##
 #F  IntersectionLanguage(A1,A2)
 ##
-##  The same as IntersectionAutomaton, but accepts both automata or rational 
+##  The same as IntersectionAutomaton; accepts both automata or rational 
 ##  expressions as arguments
 ##
 DeclareGlobalFunction( "IntersectionLanguage" );

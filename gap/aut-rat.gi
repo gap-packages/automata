@@ -3,7 +3,7 @@
 #W  aut-rat.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-rat.gi,v 1.04 $
+#H  @(#)$Id: aut-rat.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -520,7 +520,8 @@ end);
 ##
 #F  RatExpToNDAut(R)
 ##
-##  Given a rational expression R, computes the equivalent NFA
+##  Given a rational expression R, computes an equivalent NFA using
+##  the Glushkov algorithm.
 ##
 InstallGlobalFunction(RatExpToNDAut, function(R)
     local r, n, map, mark, markToRExp, alphabet, al2,
@@ -821,7 +822,7 @@ end);
 ##
 #F  RatExpToAut(R)
 ##
-##  Given a rational expression R, uses  RatExpToAut to compute the 
+##  Given a rational expression R, uses  RatExpToNDAut to compute the 
 ##  equivalent NFA and then returns the equivalent minimal DFA
 ##
 InstallGlobalFunction(RatExpToAut, function(r)

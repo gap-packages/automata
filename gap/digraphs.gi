@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.04 $
+#H  @(#)$Id: digraphs.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -57,18 +57,33 @@ end);
 
 #############################################################################
 ##
-#F AutoVertexDegree(DG,v)
+#F VertexInDegree(DG,v)
 ##
 ## Computes the in degree of a vertex of a directed graph
 ##
 ##
 InstallGlobalFunction(VertexInDegree, function(G,v)
-    local l, d;
+    local i, l, d, n;
     
+    if not IsList(G) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> IsList(el)) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> ForAll(el, x -> IsPosInt(x))) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
     d := 0;
     for l in G do
+        n := 0;
         if v in l then
-            d := d + 1;
+            for i in l do
+                if i = v then
+                    n:= n+1;
+                fi;
+            od;
+            d := d + n;
         fi;
     od;
     return(d);
@@ -76,12 +91,21 @@ end);
 
 #############################################################################
 ##
-#F AutoVertexDegree(DG,v)
+#F VertexOutDegree(DG,v)
 ##
 ## Computes the out degree of a vertex of a directed graph
 ##
 ##
 InstallGlobalFunction(VertexOutDegree, function(G,v)
+    if not IsList(G) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> IsList(el)) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> ForAll(el, x -> IsPosInt(x))) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
     return(Length(G[v]));
 end);
 
@@ -96,6 +120,17 @@ end);
 InstallGlobalFunction(ReversedGraph, function(G)
     local GR, p, V,
           leaving_v;  #local function (computes the list of vertices that
+    
+    if not IsList(G) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> IsList(el)) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> ForAll(el, x -> IsPosInt(x))) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    
     # can be reached from v by an edge in the reversed graph)
     V := Length(G);
     GR := [];
@@ -132,6 +167,16 @@ InstallGlobalFunction(AutoConnectedComponents, function(G)
               #                 seen as a pair of edges of the directed graph) 
           visit,
           dfs;
+    
+    if not IsList(G) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> IsList(el)) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(G, el -> ForAll(el, x -> IsPosInt(x))) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
     
     cC := [];
     fl := [];
@@ -180,6 +225,18 @@ end);
 ##
 InstallGlobalFunction(GraphStronglyConnectedComponents, function(dg)
     local now,val,stack,comps,i,visit,V;
+    
+    if not IsList(dg) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(dg, el -> IsList(el)) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(dg, el -> ForAll(el, x -> IsPosInt(x))) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+
+    
     SetRecursionTrapInterval(0);
     V := Length(dg);
     val := [];
@@ -237,7 +294,10 @@ end);
 ##
 InstallGlobalFunction(UnderlyingMultiGraphOfAutomaton, function(A)
     local i, n, T, Tr, G, x;
-
+    
+    if not IsAutomatonObj(A) then
+        Error("The argument must be an automaton");
+    fi;
     n := A!.states;
     T := A!.transitions;
     G := [];
@@ -258,6 +318,9 @@ end);
 InstallGlobalFunction(UnderlyingGraphOfAutomaton, function(A)
     local i, n, T, Tr, G, x;
 
+    if not IsAutomatonObj(A) then
+        Error("The argument must be an automaton");
+    fi;
     n := A!.states;
     T := A!.transitions;
     G := [];
@@ -277,6 +340,15 @@ end);
 ##
 InstallGlobalFunction(DiGraphToRelation, function(D)
     local d, i, j, R;
+    if not IsList(D) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(D, el -> IsList(el)) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
+    if not ForAll(D, el -> ForAll(el, x -> IsPosInt(x))) then
+        Error("The first argument must be a list of lists of positive integers");
+    fi;
     R := [];
     for i in [1..Length(D)] do
         for j in D[i] do
@@ -293,11 +365,14 @@ end);
 ## Produces an automaton where, in each strongly connected component,
 ## edges labeled by inverses are added.
 ## 
-## This construction is usefull in Finite Semigroup Theory
+## This construction is useful in Finite Semigroup Theory
 ##
 InstallGlobalFunction(MSccAutomaton, function(A)
     local alph, a, c, CC, CCs, e, n, na, ns, s, staut, T, TT, t, i;
     
+    if not IsAutomatonObj(A) then
+        Error("The argument must be an automaton");
+    fi;
     if not IsInt(FamilyObj(A)!.alphabet) then
         Error("The automaton must be defined over the alphabet abc...");
     fi;

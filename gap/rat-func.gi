@@ -5,7 +5,7 @@
 ##
 ##  This file contains functions that perform tests on automata
 ##
-#H  @(#)$Id: rat-func.gi,v 1.04 $
+#H  @(#)$Id: rat-func.gi,v 1.05 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
