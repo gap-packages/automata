@@ -3,7 +3,7 @@
 #W  aut-rat.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-rat.gi,v 1.02 $
+#H  @(#)$Id: aut-rat.gi,v 1.04 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -526,7 +526,7 @@ InstallGlobalFunction(RatExpToNDAut, function(R)
     local r, n, map, mark, markToRExp, alphabet, al2,
           F, delta, q, fol,
           i, j,
-          epsInLRatExp, compFirst, compLast, compFollow;
+          epsInLRatExp, compFirst, compLast, compFollow, isOnlyEpsilon, isOnlyEmptySet;
     
     if not IsRationalExpression(R) then
         Error("The argument to RatExpToAut must be a rational expression");
@@ -535,22 +535,55 @@ InstallGlobalFunction(RatExpToNDAut, function(R)
     n        := 1;
     alphabet := FamilyObj(R)!.alphabet;
     al2 := ShallowCopy(FamilyObj(R)!.alphabet2);
-        
-    # Empty word
-    if R!.op = [] then
-        if R!.list_exp = [] then
-            delta := [];
-            for i in [1 .. alphabet] do
-                delta[i] := [];
-            od;
-            return(Automaton("det", 1, al2, delta, [1], [1]));
-        elif R!.list_exp = "empty_set" then
-            delta := [];
-            for i in [1 .. alphabet] do
-                delta[i] := [];
-            od;
-            return(Automaton("det", 1, al2, delta, [1], []));
+    
+    
+    isOnlyEpsilon := function(R)
+        if R!.op = [] then
+            if R!.list_exp = [] then
+                return(true);
+            else
+                return(false);
+            fi;
+        elif R!.op = "star" then
+            return(isOnlyEpsilon(R!.list_exp));
+        else
+            return(ForAll(R!.list_exp, x -> isOnlyEpsilon(x)));
         fi;
+        
+    end;
+    
+    
+    isOnlyEmptySet := function(R)
+        if R!.op = [] then
+            if R!.list_exp = "empty_set" then
+                return(true);
+            else
+                return(false);
+            fi;
+        elif R!.op = "star" then
+            return(isOnlyEmptySet(R!.list_exp));
+        else
+            return(ForAll(R!.list_exp, x -> isOnlyEmptySet(x)));
+        fi;
+        
+    end;
+    
+    # Empty word
+    if isOnlyEpsilon(R) then
+        delta := [];
+        for i in [1 .. alphabet] do
+            delta[i] := [[]];
+        od;
+        return(Automaton("nondet", 1, al2, delta, [1], [1]));
+    fi;
+    
+    # Empty Set
+    if isOnlyEmptySet(R) then
+        delta := [];
+        for i in [1 .. alphabet] do
+            delta[i] := [[]];
+        od;
+        return(Automaton("nondet", 1, al2, delta, [1], []));
     fi;
         
     ##  Tests whether epsilon is in the language L(r)
@@ -731,6 +764,7 @@ InstallGlobalFunction(RatExpToNDAut, function(R)
     ##  of the previous function mark(rexp)
     markToRExp := function(L)
         local r, list;
+        
         
         if L = [] then
             return(RatExpOnnLetters(alphabet, [], []));

@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: read.g,v 1.02 $
+#H  @(#)$Id: read.g,v 1.04 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

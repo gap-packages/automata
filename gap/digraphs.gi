@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.02 $
+#H  @(#)$Id: digraphs.gi,v 1.04 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -178,66 +178,54 @@ end);
 ##
 ## Produces the strongly connected components of the digraph G 
 ##
-InstallGlobalFunction(GraphStronglyConnectedComponents, function(dig)
-    local   mergeComponents,  DFS,  n,  compmap,  components,  seen,  
-            onstack,  done,  i,  stack;
-    mergeComponents := function(a,b)
-        local   x;
-        a := compmap[a];
-        b := compmap[b];
-        if a = b then
-            return;
-        fi;
-        if Length(components[b]) < Length(components[a]) then
-            x := a;
-            a := b;
-            b := x;
-        fi;
-        for x in components[a] do
-            compmap[x] := b;
-        od;
-        Append(components[b], components[a]);
-        Unbind(components[a]);
-    end;
-    DFS := function()
-        local   start,  y,  j;
-        start := stack[Length(stack)];
-        for y in dig[start] do
-            if y <> start then
-                if not seen[y] then
-                    seen[y] := true;
-                    Add(stack,y);
-                    onstack[y] := true;
-                    DFS();
-                elif onstack[y] then
-                    j := Length(stack);
-                    repeat
-                        j := j-1;
-                        mergeComponents(start,stack[j]);
-                    until stack[j] = y;
+InstallGlobalFunction(GraphStronglyConnectedComponents, function(dg)
+    local now,val,stack,comps,i,visit,V;
+    SetRecursionTrapInterval(0);
+    V := Length(dg);
+    val := [];
+    stack := [];
+    now := 0;
+    comps := [];
+    visit := function(k)
+        local m,min,t,comp,l,x;
+        now := now+1;
+        val[k] := now;
+        min := now;
+        Add(stack,k);
+        for t in dg[k] do
+            if not IsBound(val[t]) then
+                m := visit(t);
+                if m < min then
+                    min := m;
+                fi;
+            else 
+                m := val[t];
+                if m < min then 
+                    min := m;
                 fi;
             fi;
         od;
-        Unbind(stack[Length(stack)]);
-        onstack[start] := false;
-        return;
+        if min = val[k] then
+            comp := [];
+            repeat
+                l := Length(stack);
+                x := stack[l];
+                val[x] := V+1;
+                Add(comp, x);
+                Unbind(stack[l]);
+            until x = k;
+            Add(comps, comp);
+        fi;
+
+        return min;
     end;
-                        
-    n := Length(dig);
-    compmap := [1..n];
-    components := List([1..n], i->[i]);
-    seen := BlistList([1..n],[]);
-    onstack := BlistList([1..n],[]);
-    done := BlistList([1..n],[]);
-    for i in [1..n] do
-        if not seen[i] then
-            stack := [i];
-            seen[i] := true;
-            onstack[i] := true;
-            DFS();
+    for i in [1..V] do
+        if not IsBound(val[i]) then
+            visit(i);
         fi;
     od;
-    return Compacted(components);
+    SetRecursionTrapInterval(5000);
+    return comps;
 end);
 
         

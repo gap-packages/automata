@@ -1,12 +1,12 @@
 #############################################################################
 ##
-#W  autfunc.gi                              Manuel Delgado <mdelgado@fc.up.pt>
+#W  aut-func.gi                             Manuel Delgado <mdelgado@fc.up.pt>
 #W                                          Steve Linton <sal@dcs.st-and.ac.uk>
 #W                                          Jose Morais <jjoao@netcabo.pt>
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: automataoperations.gi,v 1.02 $
+#H  @(#)$Id: automataoperations.gi,v 1.04 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -578,7 +578,7 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
     Info(InfoAutomataSL,1,"Minimized ",aut!.states," to ",Length(partn));
     Assert(2,AreEquivAut(aut, mma));
 #    Assert(2,mma!.states = MinimalAutomaton(aut)!.states);
-    return mma;
+    return NullCompletionAut(mma);
 end);
 
 ########################################################################
@@ -670,7 +670,7 @@ InstallGlobalFunction(AreEquivAut, function(A1, A2)
         od;
         visited[q] := true;
     od;
-    return(true);
+    return(Set(List(A1!.accepting, x -> bijection[x])) = Set(A2!.accepting));
 end);
     
 #############################################################################

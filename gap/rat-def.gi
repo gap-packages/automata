@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gi,v 1.02 $
+#H  @(#)$Id: rat-def.gi,v 1.04 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -550,17 +550,8 @@ InstallMethod(AlphabetRatExp,
         "Alphabet of RatExp",
         [IsRatExpOnnLettersObj],
         function( A )
-    local alph, i;
     
-    if IsString(FamilyObj(A)!.alphabet2) then
-        return(ShallowCopy(FamilyObj(A)!.alphabet2));
-    else
-        alph := [];
-        for i in [Ord('a') .. Ord('a')+FamilyObj(A)!.alphabet2-1] do
-            Add(alph, jascii[i]);
-        od;
-        return(alph);
-    fi;
+    return(ShallowCopy(FamilyObj(A)!.alphabet2));
 end);
 
 ############################################################################

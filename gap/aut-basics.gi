@@ -3,7 +3,7 @@
 #W  aut-basics.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-basics.gi,v 1.02 $
+#H  @(#)$Id: aut-basics.gi,v 1.04 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -49,20 +49,8 @@ InstallMethod(AlphabetOfAutomaton,
         "Returns the alphabet of the automaton",
         [IsAutomatonObj],
         function( A )
-    local alph, i;
     
-    if IsString(FamilyObj(A)!.alphabet) then
-         return(ShallowCopy(FamilyObj(A)!.alphabet));
-    else
-        alph := [];
-        for i in [Ord('a') .. Ord('a')+FamilyObj(A)!.alphabet-1] do
-            Add(alph, jascii[i]);
-        od;
-        if A!.type = "epsilon" then
-            alph[A!.alphabet] := '@';
-        fi;
-        return(alph);
-    fi;
+    return(FamilyObj(A)!.alphabet);
 end);
 #############################################################################
 ##

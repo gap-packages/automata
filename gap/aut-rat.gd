@@ -3,7 +3,7 @@
 #W  aut-rat.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-rat.gd,v 1.02 $
+#H  @(#)$Id: aut-rat.gd,v 1.04 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
