@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.0 $
+#H  @(#)$Id: digraphs.gi,v 1.01 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -46,18 +46,18 @@ end);
  
 #############################################################################
 ##
-#F VertexDegree(DG,v)
+#F AutoVertexDegree(DG,v)
 ##
 ## Computes the degree of a vertex of a directed graph
 ##
 ##
-InstallGlobalFunction(VertexDegree, function(DG,v)
+InstallGlobalFunction(AutoVertexDegree, function(DG,v)
     return(VertexInDegree(DG,v) + VertexOutDegree(DG,v));
 end);
 
 #############################################################################
 ##
-#F VertexDegree(DG,v)
+#F AutoVertexDegree(DG,v)
 ##
 ## Computes the in degree of a vertex of a directed graph
 ##
@@ -76,7 +76,7 @@ end);
 
 #############################################################################
 ##
-#F VertexDegree(DG,v)
+#F AutoVertexDegree(DG,v)
 ##
 ## Computes the out degree of a vertex of a directed graph
 ##
@@ -116,7 +116,7 @@ InstallGlobalFunction(ReversedGraph, function(G)
 end);
 ############################################################################
 ## 
-#F ConnectedComponents(G)
+#F AutoConnectedComponents(G)
 ##
 ## We say that a digraph is connected when for every pair of vertices there 
 ## is a path consisting of directed or reversed edges from one vertex to 
@@ -125,7 +125,7 @@ end);
 ## Computes a list of the connected components of the digraph
 ##
 ##
-InstallGlobalFunction(ConnectedComponents, function(G)
+InstallGlobalFunction(AutoConnectedComponents, function(G)
     local acc, cC, i, j, fl,
           n, # number of vertices
           uG, # undirected graph (an edge of the undirected graph may be 

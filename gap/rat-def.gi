@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gi,v 1.0 $
+#H  @(#)$Id: rat-def.gi,v 1.01 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

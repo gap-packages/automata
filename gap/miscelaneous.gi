@@ -4,7 +4,7 @@
 #W  miscelaneous.gi                       Manuel Delgado <mdelgado@fc.up.pt>
 #W                                        Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: miscelaneous.gi,v 1.0 $
+#H  @(#)$Id: miscelaneous.gi,v 1.01 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 #############################################################################

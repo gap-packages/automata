@@ -3,7 +3,7 @@
 #W  foldings.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: foldings.gi,v 1.0 $
+#H  @(#)$Id: foldings.gi,v 1.01 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -227,7 +227,7 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
         Error(" 1 must be initial and accepting state");
     fi;
     ug := UnderlyingGraphOfAutomaton(A);
-    if not ForAll([2..A!.states], q -> VertexDegree(ug,q)=2) then
+    if not ForAll([2..A!.states], q -> AutoVertexDegree(ug,q)=2) then
         Error(" A must be a flower automaton");
     fi;
         
@@ -353,7 +353,7 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
         T := aut!.transitions;
         s := []; #list of vertices of degree 1
         for r in [2..aut!.states] do
-            if VertexDegree(ug,r) = 1 then
+            if AutoVertexDegree(ug,r) = 1 then
                 Add(s,r);
             fi;
         od;

@@ -500,9 +500,11 @@ Given an automaton <A>aut</A>, returns a list of automata with permuted states
 <Example><![CDATA[
 gap> x:=Automaton("det",3,2,[ [ 0, 2, 3 ], [ 1, 2, 3 ] ],[ 1 ],[ 2, 3 ]);;
 gap> ListPermutedAutomata(x);
-[ < deterministic automaton on 2 letters with 3 states >, < deterministic automaton on 2 letters with
+[ < deterministic automaton on 2 letters with 3 states >, 
+< deterministic automaton on 2 letters with
     3 states >, < deterministic automaton on 2 letters with 3 states >,
-  < deterministic automaton on 2 letters with 3 states >, < deterministic automaton on 2 letters with
+  < deterministic automaton on 2 letters with 3 states >, 
+< deterministic automaton on 2 letters with
     3 states >, < deterministic automaton on 2 letters with 3 states > ]
 ]]></Example>
  </Description> </ManSection> 

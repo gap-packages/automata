@@ -3,7 +3,7 @@
 #W  digraphs.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.0 $
+#H  @(#)$Id: digraphs.gi,v 1.01 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -18,11 +18,11 @@
 DeclareGlobalFunction( "RandomDiGraph" );
 #############################################################################
 ##
-#F VertexDegree(DG,v)
+#F AutoVertexDegree(DG,v)
 ##
 ## Computes the degree of a vertex of a directed graph
 ##
-DeclareGlobalFunction( "VertexDegree" );
+DeclareGlobalFunction( "AutoVertexDegree" );
 #############################################################################
 ##
 #F VertexInDegree(DG,v)
@@ -47,7 +47,7 @@ DeclareGlobalFunction( "VertexOutDegree" );
 DeclareGlobalFunction( "ReversedGraph" );
 ############################################################################
 ## 
-#F ConnectedComponents(G)
+#F AutoConnectedComponents(G)
 ##
 ## We say that a digraph is connected when for every pair of vertices there 
 ## is a path consisting of directed or reversed edges from one vertex to 
@@ -55,7 +55,7 @@ DeclareGlobalFunction( "ReversedGraph" );
 ##
 ## Computes a list of the connected components of the digraph
 ##
-DeclareGlobalFunction( "ConnectedComponents" );
+DeclareGlobalFunction( "AutoConnectedComponents" );
 #############################################################################
 ##
 #F  GraphStronglyConnectedComponents(G)

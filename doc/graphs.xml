@@ -56,13 +56,13 @@ gap> VertexOutDegree(G,2);
 
 
 <ManSection> 
-<Func Name="VertexDegree" Arg="DG,v"/>
+<Func Name="AutoVertexDegree" Arg="DG,v"/>
 <Description>
 Computes the degree of the vertex <A>v</A> of the directed graph <A>DG</A>
 <Example><![CDATA[
 gap> G:=RandomDiGraph(4);
 [ [ 1 ], [ 1, 2, 4 ], [  ], [ 1, 2, 3 ] ]
-gap> VertexDegree(G,2);
+gap> AutoVertexDegree(G,2);
 5
 ]]></Example>
 </Description> 
@@ -92,14 +92,14 @@ is a path consisting of directed or reversed edges from one vertex to
 the other.
 
 <ManSection> 
-<Func Name="ConnectedComponents" Arg="G"/>
+<Func Name="AutoConnectedComponents" Arg="G"/>
 <Description>
 Computes a list of the connected components of the digraph
 
 <Example><![CDATA[
 gap> G:=RandomDiGraph(6);
 [ [  ], [ 1, 4, 5, 6 ], [  ], [ 1, 3, 5, 6 ], [ 2, 3 ], [ 2, 4, 6 ] ]
-gap> ConnectedComponents(G);
+gap> AutoConnectedComponents(G);
 [ [ 1, 2, 3, 4, 5, 6 ] ]
 ]]></Example>
 </Description> 
