@@ -1,0 +1,206 @@
+<!-- $Id: graphs.xml,v 0.2  Exp $ -->
+<Appendix><Heading>Directed graphs</Heading>
+Automata are frequently described through directed labeled graphs. This appendix on directed graphs (digraphs) is devoted to some functions designed with the purpose of being used as auxiliary functions to deal with automata, but may have independent interest.
+
+
+<Section><Heading>Directed graphs</Heading>
+A directed graph with <M>n</M> vertices is represented by an adjacency list.
+
+For example, the list <C>G = [[2,4],[3],[1,4],[]]</C> represents a directed graph with <C>4 (= Length(G))</C> vertices; the sublist in position <C>i</C> is the list of endpoints of the edges beginning in vertex <M>i</M>.
+    <Alt Only="LaTeX">
+      \begin{figure}[htbp] \begin{center} \leavevmode \epsfbox{graph.eps} \end{center} \label{fig:graph} \end{figure}
+    </Alt>
+    <Alt Only="HTML">
+      &#60;br&#62;&#60;center&#62;&#60;img src=&#34;graph.gif&#34;&#62;&#60;/center&#62;&#60;br&#62;
+    </Alt>
+    <P />
+
+<ManSection> 
+<Func Name="RandomDiGraph" Arg="n"/>
+<Description>
+Produces a pseudo random digraph with <M>n</M> vertices
+<Example><![CDATA[
+gap> RandomDiGraph(4);
+[ [  ], [ 1, 2, 4 ], [  ], [  ] ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+<ManSection> 
+<Func Name="VertexInDegree" Arg="DG,v"/>
+<Description>
+Computes the in degree of the vertex <A>v</A> of the directed graph <A>DG</A>
+<Example><![CDATA[
+gap> G:=RandomDiGraph(4);
+[ [ 1 ], [ 1, 2, 4 ], [  ], [ 1, 2, 3 ] ]
+gap> VertexInDegree(G,2);
+2
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+<ManSection> 
+<Func Name="VertexOutDegree" Arg="DG,v"/>
+<Description>
+Computes the out degree of the vertex <A>v</A> of the directed graph <A>DG</A>
+<Example><![CDATA[
+gap> G:=RandomDiGraph(4);
+[ [ 1 ], [ 1, 2, 4 ], [  ], [ 1, 2, 3 ] ]
+gap> VertexOutDegree(G,2);
+3
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+<ManSection> 
+<Func Name="VertexDegree" Arg="DG,v"/>
+<Description>
+Computes the degree of the vertex <A>v</A> of the directed graph <A>DG</A>
+<Example><![CDATA[
+gap> G:=RandomDiGraph(4);
+[ [ 1 ], [ 1, 2, 4 ], [  ], [ 1, 2, 3 ] ]
+gap> VertexDegree(G,2);
+5
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+
+
+<ManSection> 
+<Func Name="ReversedGraph" Arg="G"/>
+<Description>
+Computes the reversed graph of the directed graph G. It is the graph 
+obtained from G by reversing the edges.
+<Example><![CDATA[
+gap> G:=RandomDiGraph(4);
+[ [  ], [ 4 ], [ 2 ], [ 1, 4 ] ]
+gap> ReverseD
+    identifier has no completions
+gap> ReversedGraph(G);
+[ [ 4 ], [ 3 ], [  ], [ 2, 4 ] ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+We say that a digraph is connected when for every pair of vertices there 
+is a path consisting of directed or reversed edges from one vertex to 
+the other.
+
+<ManSection> 
+<Func Name="ConnectedComponents" Arg="G"/>
+<Description>
+Computes a list of the connected components of the digraph
+
+<Example><![CDATA[
+gap> G:=RandomDiGraph(6);
+[ [  ], [ 1, 4, 5, 6 ], [  ], [ 1, 3, 5, 6 ], [ 2, 3 ], [ 2, 4, 6 ] ]
+gap> ConnectedComponents(G);
+[ [ 1, 2, 3, 4, 5, 6 ] ]
+]]></Example>
+</Description> 
+
+</ManSection> 
+
+Two vertices of a digraph belong to a strongly connected component if there is a directed path from each one to the other.<P/>
+
+<ManSection> 
+<Func Name="GraphStronglyConnectedComponents" Arg="G"/>
+<Description>
+Produces the strongly connected components of the digraph <A>G</A>. 
+<Example><![CDATA[
+gap> G:=RandomDiGraph(6);
+[ [  ], [ 4 ], [  ], [ 4, 6 ], [  ], [ 1, 4, 5, 6 ] ]
+gap> GraphStronglyConnectedComponents(G);
+[ [ 1 ], [ 2 ], [ 3 ], [ 4, 6 ], [ 5 ] ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+<ManSection> 
+<Func Name="UnderlyingMultiGraphOfAutomaton" Arg="A "/>
+<Description>
+<A>A</A> is an automaton. The output is the underlying directed multi-graph.
+<Example><![CDATA[
+gap> a:=RandomAutomaton("det",3,2);;Display(a);
+   |  1  2  3
+--------------
+ a |  1  3
+ b |     2  3
+Initial state:    [ 1 ]
+Accepting states: [ 1, 2 ]
+gap> UnderlyingMultiGraphOfAutomaton(a);
+[ [ 1 ], [ 3, 2 ], [ 3 ] ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+<ManSection> 
+<Func Name="UnderlyingGraphOfAutomaton" Arg="A"/>
+<Description>
+<A>A</A> is an automaton. The output is the underlying directed graph.
+<Example><![CDATA[
+gap> a:=RandomAutomaton("det",3,2);;Display(a);
+   |  1  2  3
+--------------
+ a |     1  2
+ b |  1  2
+Initial state:   [ 2 ]
+Accepting state: [ 2 ]
+gap> UnderlyingGraphOfAutomaton(a);
+[ [ 1 ], [ 1, 2 ], [ 2 ] ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+<ManSection> 
+<Func Name="DiGraphToRelation" Arg="D"/>
+<Description>
+Returns the relation corresponding to the digraph. Note that a directed graph may be seen in a natural way as a binary relation on the set of vertices.
+<Example><![CDATA[
+gap> G:=RandomDiGraph(4);
+[ [  ], [  ], [ 4 ], [ 4 ] ]
+gap> DiGraphToRelation(G);
+[ [ 3, 4 ], [ 4, 4 ] ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+<ManSection> 
+<Func Name="MSccAutomaton" Arg="A"/>
+<Description>
+Produces an automaton where, in each strongly connected component,
+edges labeled by inverses are added. (M stands for modified.)
+<P/>
+This construction is useful in Finite Semigroup Theory.
+<Example><![CDATA[
+gap> a:=RandomAutomaton("det",3,2);;Display(a);
+   |  1  2  3
+--------------
+ a |  1  3
+ b |  2  3
+Initial state:    [ 1 ]
+Accepting states: [ 1, 2, 3 ]
+gap> MSccAutomaton(a);
+< deterministic automaton on 4 letters with 3 states >
+gap> Display(last);
+   |  1  2  3
+--------------
+ a |  1  3
+ b |  2  3
+ A |  1
+ B |
+Initial state:    [ 1 ]
+Accepting states: [ 1, 2, 3 ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+</Section>
+</Appendix>
+

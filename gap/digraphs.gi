@@ -1,0 +1,353 @@
+############################################################################
+##
+#W  digraphs.gi                        Manuel Delgado <mdelgado@fc.up.pt>
+#W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
+#W                                     Jose Morais    <jjoao@netcabo.pt>
+##
+#H  @(#)$Id: digraphs.gi,v 1.0 $
+##
+#Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
+##
+##
+##
+#############################################################################
+##
+##  This file contains some generic methods directed graphs.
+##
+##
+## A directed graph with n vertices is represented as a list of lists.
+##
+## Example: G := [[2,4],[3],[1,4],[]];
+##
+## Length(G) is the number of vertices of G. G[i] is the list of endpoints
+## of the edges begining in vertex i.
+##
+#############################################################################
+##
+#F RandomDiGraph(n)
+##
+## Produces a "random" digraph with n vertices
+##
+##
+InstallGlobalFunction(RandomDiGraph, function(n)
+    local G, i, k, r;
+    if not IsPosInt(n) then
+        Error("The number of vertices must be a positive integer");
+    fi;
+    G := [];
+    for i in [1 .. n] do
+        r := Random([1..n]);
+        
+        k := Random(Concatenation(NullMat(r,r)[1],[0..n]));
+        G[i] := SSortedList(List([1 .. k], i -> Random([1 .. n])));
+    od;
+    return G;
+end);
+ 
+#############################################################################
+##
+#F VertexDegree(DG,v)
+##
+## Computes the degree of a vertex of a directed graph
+##
+##
+InstallGlobalFunction(VertexDegree, function(DG,v)
+    return(VertexInDegree(DG,v) + VertexOutDegree(DG,v));
+end);
+
+#############################################################################
+##
+#F VertexDegree(DG,v)
+##
+## Computes the in degree of a vertex of a directed graph
+##
+##
+InstallGlobalFunction(VertexInDegree, function(G,v)
+    local l, d;
+    
+    d := 0;
+    for l in G do
+        if v in l then
+            d := d + 1;
+        fi;
+    od;
+    return(d);
+end);
+
+#############################################################################
+##
+#F VertexDegree(DG,v)
+##
+## Computes the out degree of a vertex of a directed graph
+##
+##
+InstallGlobalFunction(VertexOutDegree, function(G,v)
+    return(Length(G[v]));
+end);
+
+
+#############################################################################
+##
+#F  ReversedGraph(G)
+##
+## Computes the reversed graph of the directed graph G. It is the graph 
+## obtained from G by reversing the edges.
+##
+InstallGlobalFunction(ReversedGraph, function(G)
+    local GR, p, V,
+          leaving_v;  #local function (computes the list of vertices that
+    # can be reached from v by an edge in the reversed graph)
+    V := Length(G);
+    GR := [];
+    leaving_v := function(vert)
+        local Lv, v;
+        Lv := [];
+        for v in [1..V] do
+            if vert in G[v] then
+                Add (Lv, v);
+            fi;
+        od;
+        return Lv;
+    end;
+    for p in [1..V] do
+        Add(GR, leaving_v(p));
+    od;
+    return GR;
+end);
+############################################################################
+## 
+#F ConnectedComponents(G)
+##
+## We say that a digraph is connected when for every pair of vertices there 
+## is a path consisting of directed or reversed edges from one vertex to 
+## the other.
+##
+## Computes a list of the connected components of the digraph
+##
+##
+InstallGlobalFunction(ConnectedComponents, function(G)
+    local acc, cC, i, j, fl,
+          n, # number of vertices
+          uG, # undirected graph (an edge of the undirected graph may be 
+              #                 seen as a pair of edges of the directed graph) 
+          visit,
+          dfs;
+    
+    cC := [];
+    fl := [];
+    n := Length(G);
+    uG := StructuralCopy(G);
+    for i in [1..n] do
+        for j in G[i] do
+            UniteSet(uG[j],[i]);
+        od;
+    od;
+    
+    
+    visit := [];          # mark the vertices an unvisited
+    for i in [1..n] do
+        visit[i] := 0;
+    od;
+    
+    dfs := function(v) #recursive call to Depth First Search
+        local w;
+        visit[v] := 1;
+        for w in uG[v] do
+            if visit[w] = 0 then
+                dfs(w);
+            fi;
+        od;
+    end;
+    
+    for i in [1..n] do
+        if not i in fl then 
+            dfs(i);
+            # vertices which are accessible from i 
+            #(which is the connected component of i)
+            acc := Filtered([1..n], i -> visit[i] = 1 and not i in fl); 
+            Add(cC,acc);
+            UniteSet(fl, acc);
+        fi;
+    od;
+    return cC;
+end);
+
+#############################################################################
+##
+#F  GraphStronglyConnectedComponents(G)
+##
+## Produces the strongly connected components of the digraph G 
+##
+InstallGlobalFunction(GraphStronglyConnectedComponents, function(dig)
+    local   mergeComponents,  DFS,  n,  compmap,  components,  seen,  
+            onstack,  done,  i,  stack;
+    mergeComponents := function(a,b)
+        local   x;
+        a := compmap[a];
+        b := compmap[b];
+        if a = b then
+            return;
+        fi;
+        if Length(components[b]) < Length(components[a]) then
+            x := a;
+            a := b;
+            b := x;
+        fi;
+        for x in components[a] do
+            compmap[x] := b;
+        od;
+        Append(components[b], components[a]);
+        Unbind(components[a]);
+    end;
+    DFS := function()
+        local   start,  y,  j;
+        start := stack[Length(stack)];
+        for y in dig[start] do
+            if y <> start then
+                if not seen[y] then
+                    seen[y] := true;
+                    Add(stack,y);
+                    onstack[y] := true;
+                    DFS();
+                elif onstack[y] then
+                    j := Length(stack);
+                    repeat
+                        j := j-1;
+                        mergeComponents(start,stack[j]);
+                    until stack[j] = y;
+                fi;
+            fi;
+        od;
+        Unbind(stack[Length(stack)]);
+        onstack[start] := false;
+        return;
+    end;
+                        
+    n := Length(dig);
+    compmap := [1..n];
+    components := List([1..n], i->[i]);
+    seen := BlistList([1..n],[]);
+    onstack := BlistList([1..n],[]);
+    done := BlistList([1..n],[]);
+    for i in [1..n] do
+        if not seen[i] then
+            stack := [i];
+            seen[i] := true;
+            onstack[i] := true;
+            DFS();
+        fi;
+    od;
+    return Compacted(components);
+end);
+
+        
+#############################################################################
+##
+#F  UnderlyingMultiGraphOfAutomaton(A)
+##
+## "A" is an automaton. The output is the underlying directed multi-graph.
+##
+InstallGlobalFunction(UnderlyingMultiGraphOfAutomaton, function(A)
+    local i, n, T, Tr, G, x;
+
+    n := A!.states;
+    T := A!.transitions;
+    G := [];
+    Tr := TransposedMat(T);
+
+    for i in [1..n] do
+        G[i] := Flat(Filtered(Flat(Tr[i]), x-> x<>0));
+    od;
+    return G;
+end);
+         
+#############################################################################
+##
+#F  UnderlyingGraphOfAutomaton(A)
+##
+## "A" is an automaton. The output is the underlying directed graph.
+##
+InstallGlobalFunction(UnderlyingGraphOfAutomaton, function(A)
+    local i, n, T, Tr, G, x;
+
+    n := A!.states;
+    T := A!.transitions;
+    G := [];
+    Tr := TransposedMat(T);
+
+    for i in [1..n] do
+        G[i] := Set(Flat(Filtered(Flat(Tr[i]), x-> x<>0)));
+    od;
+    return G;
+end);
+       
+#############################################################################
+##
+#F DiGraphToRelation(D)
+##
+## returns the relation corresponding to the digraph
+##
+InstallGlobalFunction(DiGraphToRelation, function(D)
+    local d, i, j, R;
+    R := [];
+    for i in [1..Length(D)] do
+        for j in D[i] do
+            Append(R,[[i,j]]);
+        od;
+    od;
+    return R;
+end);
+ 
+#############################################################################
+##
+#F  MSccAutomaton(A)
+##
+## Produces an automaton where, in each strongly connected component,
+## edges labeled by inverses are added.
+## 
+## This construction is usefull in Finite Semigroup Theory
+##
+InstallGlobalFunction(MSccAutomaton, function(A)
+    local alph, a, c, CC, CCs, e, n, na, ns, s, staut, T, TT, t, i;
+    
+    if not IsInt(FamilyObj(A)!.alphabet) then
+        Error("The automaton must be defined over the alphabet abc...");
+    fi;
+    CC := GraphStronglyConnectedComponents(UnderlyingGraphOfAutomaton(A));
+    na := A!.alphabet;
+    ns := A!.states;
+    T := StructuralCopy(A!.transitions);
+    t := NullMat(na,ns);
+    for a in [1..na] do
+        for s in [1..ns] do
+            CCs := Filtered(CC, c -> s in c)[1];
+            for e in CCs do
+                if T[a][e] = s then
+                    if t[a][s] = 0 then
+                        t[a][s] := e;
+                    elif IsList(t[a][s]) then
+                        Add(t[a][s],e);
+                    else
+                        t[a][s] := [t[a][s],e];
+                    fi;
+                fi;
+            od;
+        od;
+    od;
+    TT := Concatenation(T,t);
+    #    Print(A);
+    alph := "";
+    for i in [1 .. A!.alphabet] do
+        alph := Concatenation(alph, [jascii[68+i]]);
+    od;
+    for i in [1 .. A!.alphabet] do
+        alph := Concatenation(alph, [jascii[68+i-32]]);
+    od;
+    if ForAll(t,n->ForAll(n,IsInt)) then
+        return Automaton("det",ns,alph,TT,A!.initial,A!.accepting);
+    else
+        return Automaton("nondet",ns,alph,TT,A!.initial,A!.accepting);
+    fi;
+end);
+
+#E

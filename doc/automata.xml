@@ -1,0 +1,635 @@
+<!-- $Id: automata.xml,v 0.2  Exp $ -->
+
+<Chapter><Heading>Finite Automata</Heading>
+
+This chapter describes the representations used in this package for
+finite automata and some functions to determine information about them.
+<P/>
+ We have to remark that the states of an automaton are always named
+<M>1,2,3,\ldots;</M> the alphabet may be given by the user. By default 
+it is <M>\{a,b,c,\ldots\}</M> (or <M>\{a_1,a_2,a_3,\ldots\}</M> in the 
+case of alphabets with more than <M>7</M> letters). 
+<P/>
+The transition function of an automaton with <M>q</M> states over an alphabet with  <M> n</M> 
+letters is represented by a (not necessarily dense) <M>n\times q</M> 
+ matrix. Each row of the matrix describes the action of the corresponding
+letter on the states.
+In the case of a <Emph>deterministic automaton</Emph> (DFA) the entries of the
+ matrix are non-negative integers. 
+When all entries of the transition table 
+are positive integers, the automaton is said to be 
+<Emph>dense</Emph> or <Emph>complete</Emph>.
+<!--<Index>automaton!complete</Index><Index>automaton!dense</Index>-->
+
+In the case of a <Emph>non deterministic automaton</Emph> (NFA) the entries of the
+ matrix may be lists of non-negative integers. 
+
+<Emph>Automata with <M>\epsilon</M>-transitions</Emph> are also allowed: the 
+last letter of the alphabet is assumed to be  <M>\epsilon</M> and is represented by @.
+
+<Section><Heading>Automata generation</Heading>  
+<!-- In the case of <Emph>non
+ deterministic automata</Emph> the entries of the matrix are lists of 
+non-negative integers. -->
+
+The way to create an automaton in &GAP; is the following 
+ <ManSection>
+<Func Name="Automaton" Arg="Type, Size, Alphabet,TransitionTable, 
+Initial, Accepting"/>
+<Description>
+<!-- The names chosen for the arguments describe their meaning.-->
+<C>Type</C> may be 
+<C>"det"</C>, <C>"nondet"</C> or <C>"epsilon"</C> according to whether 
+the automaton is deterministic, non deterministic or an automaton with 
+<M>\epsilon</M>-transitions. 
+<C>Size</C> is a positive integer representing the
+number of states of the automaton. <C>Alphabet</C> is the number of
+letters of the alphabet or a string with the letters of the ordered alphabet. 
+<C>TransitionTable</C> is the transition matrix. The
+entries are non-negative integers not greater than the size of the automaton.
+In the case of non deterministic automata, lists of non-negative integers not 
+greater than the size of the automaton are also allowed. <C>Initial</C>
+and <C>Accepting</C> are, respectively, the lists of initial and accepting
+states.  
+<Example>
+<![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,4]],[1],[4]);
+< deterministic automaton on 2 letters with 4 states >
+gap> Display(aut);
+   |  1  2  3  4
+-----------------
+ a |  3     3  4
+ b |  3  4     4
+Initial state:   [ 1 ]
+Accepting state: [ 4 ]
+]]>
+</Example>
+The alphabet of the automaton may be specified:
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,"01",[[3,,3,4],[3,4,0,4]],[1],[4]);
+< deterministic automaton on 2 letters with 4 states >
+gap> Display(aut);
+   |  1  2  3  4
+-----------------
+ 0 |  3     3  4
+ 1 |  3  4     4
+Initial state:   [ 1 ]
+Accepting state: [ 4 ]
+]]></Example>
+Instead of leaving a hole in the transition matrix, we may write a <C>0</C>
+ to mean that no transition is present. 
+Non deterministic automata may be given the same way.
+<Example><![CDATA[
+gap> ndaut:=Automaton("nondet",4,2,[[3,[1,2],3,0],[3,4,0,[2,3]]],[1],[4]);
+< non deterministic automaton on 2 letters with 4 states >
+gap> Display(ndaut);
+   |  1       2          3       4
+-----------------------------------------
+ a | [ 3 ]   [ 1, 2 ]   [ 3 ]
+ b | [ 3 ]   [ 4 ]              [ 2, 3 ]
+Initial state:   [ 1 ]
+Accepting state: [ 4 ]
+]]></Example>
+Also in the same way can be given <M>\epsilon</M>-automata. The letter <M>\epsilon</M> is written <C>@</C> instead.
+<Example><![CDATA[
+gap> x:=Automaton("epsilon",3,"01@",[[,[2],[3]],[[1,3],,[1]],[[1],[2],
+> [2]]],[2],[2,3]);
+< epsilon automaton on 3 letters with 3 states >
+gap> Display(x);
+   |  1          2       3
+------------------------------
+ 0 |            [ 2 ]   [ 3 ]
+ 1 | [ 1, 3 ]           [ 1 ]
+ @ | [ 1 ]      [ 2 ]   [ 2 ]
+Initial state:    [ 2 ]
+Accepting states: [ 2, 3 ]
+]]></Example>
+Bigger automata are displayed in another form:
+<Example><![CDATA[
+gap> aut:=Automaton("det",16,2,[[4,0,0,6,3,1,4,8,7,4,3,0,6,1,6,0],
+> [3,4,0,0,6,1,0,6,1,6,1,6,6,4,8,7,4,5]],[1],[4]);
+< deterministic automaton on 2 letters with 16 states >
+gap> Display(aut);
+1    a   4
+1    b   3
+2    b   4
+    ... some more lines
+15   a   6
+15   b   8
+16   b   7
+Initial state:   [ 1 ]
+Accepting state: [ 4 ]
+]]></Example>
+</Description> </ManSection>
+
+<ManSection>
+<Func Name="IsAutomaton" Arg="O"/>
+<Description>
+In the presence of an object <A>O</A>, one may want to test whether 
+<C>O</C> is an automaton. This may be done using the function <C>IsAutomaton</C>.
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+gap> IsAutomaton(x);
+true
+]]></Example>
+</Description> </ManSection>
+
+<ManSection>
+<Func Name="IsDeterministicAutomaton" Arg="aut"/>
+<Description>
+Returns <K>true</K> when <C>aut</C> is a deterministic automaton and <K>false</K> otherwise. 
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+gap> IsDeterministicAutomaton(x);
+true
+]]></Example>
+</Description> </ManSection>
+<!-- silentius -->
+<ManSection>
+<Func Name="IsNonDeterministicAutomaton" Arg="aut"/>
+<Description>
+Returns <K>true</K> when <C>aut</C> is a non deterministic automaton and <K>false</K> otherwise. 
+<Example><![CDATA[
+gap> y:=Automaton("nondet",3,2,[[,[1,3],],[,[2,3],[1,3]]],[1,2],[1,3]);;
+gap> IsNonDeterministicAutomaton(y);
+true
+]]></Example>
+</Description> </ManSection>
+
+<ManSection>
+<Func Name="IsEpsilonAutomaton" Arg="aut"/>
+<Description>
+Returns <K>true</K> when <C>aut</C> is an <M>\epsilon</M>-automaton and <K>false</K> otherwise. 
+<Example><![CDATA[
+gap> z:=Automaton("epsilon",2,2,[[[1,2],],[[2],[1]]],[1,2],[1,2]);;
+gap> IsEpsilonAutomaton(z);
+true
+]]></Example>
+</Description> </ManSection>
+<ManSection>
+<Func Name="String" Arg="aut"/>
+<Description>
+
+The way  &GAP; displays an automaton is quite natural, but when one wants to 
+do small changes, for example using <E>copy/paste</E>, the use of the function 
+<C>String</C> (possibly followed by <C>Print</C>) may be usefull.
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+gap> String(x);
+"Automaton(\"det\",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;"
+gap> Print(String(x));
+Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+]]></Example>
+<Example><![CDATA[
+gap> z:=Automaton("epsilon",2,2,[[[1,2],],[[2],[1]]],[1,2],[1,2]);;
+gap> Print(String(z));
+Automaton("epsilon",2,2,[[[1,2],],[[2],[1]]],[1,2],[1,2]);;
+]]></Example>
+</Description> </ManSection>
+
+<ManSection>
+<Func Name="RandomAutomaton" Arg="Type, Size, Alphabet"/>
+<Description>
+Given the <A>Type</A>, the <A>Size</A> (i.e. the number of states) and the <A>Alphabet</A> (usually 
+just the number of symbols), returns a pseudo random automaton with 
+these parameters.
+<Example><![CDATA[
+gap> RandomAutomaton("det",5,"ac");
+< deterministic automaton on 2 letters with 5 states >
+gap> Display(last);
+   |  1  2  3  4  5
+--------------------
+ a |     2  3
+ c |  2  3
+Initial state:    [ 4 ]
+Accepting states: [ 3, 4 ]
+]]></Example>
+</Description> </ManSection>
+
+</Section>
+
+
+<Section><Heading>Automata internals</Heading>
+In this section we describe the functions used to access the internals of an automaton.
+
+<ManSection> 
+<Func Name="AlphabetOfAutomaton" Arg="aut"/>
+<Description>
+
+Returns the alphabet of automaton <C>aut</C>.
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
+gap> AlphabetOfAutomaton(aut);
+"ab"
+]]></Example>
+</Description> </ManSection>
+
+
+<ManSection> 
+<Func Name="TransitionMatrixOfAutomaton" Arg="aut"/>
+<Description>
+
+Returns the transition matrix of automaton <C>aut</C>.
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
+gap> TransitionMatrixOfAutomaton(aut);
+[ [ 3, 0, 3, 4 ], [ 3, 4, 0, 0 ] ]
+]]></Example>
+</Description> </ManSection>
+
+
+<ManSection> 
+<Func Name="InitialStatesOfAutomaton" Arg="aut"/>
+<Description>
+
+Returns the initial states of automaton <C>aut</C>.
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
+gap> InitialStatesOfAutomaton(aut);
+[ 1 ]
+]]></Example>
+</Description> </ManSection>
+
+
+<ManSection> 
+<Func Name="FinalStatesOfAutomaton" Arg="aut"/>
+<Description>
+
+Returns the final states of automaton <C>aut</C>.
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
+gap> FinalStatesOfAutomaton(aut);
+[ 4 ]
+]]></Example>
+</Description> </ManSection>
+
+
+<ManSection> 
+<Func Name="NumberStatesOfAutomaton" Arg="aut"/>
+<Description>
+
+Returns the number of states of automaton <C>aut</C>.
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
+gap> NumberStatesOfAutomaton(aut);
+4
+]]></Example>
+</Description> </ManSection>
+
+</Section>
+
+
+
+<Section><Heading>Comparison of automata</Heading>
+Although there is no standard way to compare automata it is usefull to be able to do some kind of comparison. Doing so, one can consider sets of automata.
+ We just compare the strings of the automata.
+<Log>
+gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+gap> y:=Automaton("det",3,2,[ [ 2, 0, 0 ], [ 1, 3, 0 ] ],[ 3 ],[ 2, 3 ]);;
+gap> x=y;
+false
+gap> Size(Set([y,x,x]));
+2
+</Log>
+</Section>
+<Section><Heading>Tests involving automata</Heading>
+
+This section describes some useful tests involving automata.
+
+<ManSection> 
+<Func Name="IsDenseAutomaton" Arg="aut"/>
+<Description>
+
+Tests whether a deterministic automaton <C>aut</C> is complete. 
+(See also <Ref Func="NullCompletionAutomaton"/>.)  
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
+gap> IsDenseAutomaton(aut);                                 
+false
+]]></Example>
+</Description> </ManSection>
+
+<ManSection> 
+<Func Name="IsRecognizedByAutomaton" Arg="A,w"/>
+<Description>
+The argments are: an automaton <A>A</A> and a string (i.e. a word) <A>w</A> in the alphabet of the automaton. 
+Returns <C>true</C> if the word is recognized by the automaton 
+ and <C>false</C> otherwise. 
+
+<Example><![CDATA[
+gap> aut:=Automaton("det",3,2,[[1,2,1],[2,1,3]],[1],[2]);;
+gap> IsRecognizedByAutomaton(aut,"bbb");
+true
+
+gap> aut:=Automaton("det",3,"01",[[1,2,1],[2,1,3]],[1],[2]);;
+gap> IsRecognizedByAutomaton(aut,"111");
+true
+]]></Example>
+</Description> </ManSection>
+
+
+<ManSection>
+<Func Name="IsPermutationAutomaton" Arg="aut"/>
+<Description>
+The argument is a deterministic automaton. Returns <K>true</K> when each letter of the alphabet induces a permutation on the vertices and <K>false</K> otherwise. <Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 1, 2, 3 ], [ 1, 2, 3 ] ],[ 1 ],[ 2, 3 ]);;
+gap> IsPermutationAutomaton(x);
+true
+]]></Example>
+</Description> </ManSection>
+
+<ManSection>
+<Func Name="IsInverseAutomaton" Arg="aut"/>
+<Description>
+The argument is a deterministic automaton. Returns <K>true</K> when each letter of the alphabet induces an injective partial function on the vertices and <K>false</K> otherwise. <Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 0, 1, 3 ], [ 0, 1, 2 ] ],[ 2 ],[ 1 ]);;
+gap> IsInverseAutomaton(x);
+true
+]]></Example>
+
+Frequently an inverse automaton is thought as if the inverse edges (labeled by formal inverses of the letters of the alphabet) were present, although they are usually not explicited. They can be made explicit using the function <C>AddInverseEdgesToInverseAutomaton</C>
+</Description> </ManSection>
+
+<ManSection>
+<Func Name="AddInverseEdgesToInverseAutomaton" Arg="aut"/>
+<Description>
+The argument is an inverse automaton over the alphabet <M>\{a,b,c,\ldots\}</M>. Returns an automaton with the inverse edges added. (The formal inverse of a letter is represented by the corresponding capital letter.)
+ <Example><![CDATA[
+gap> x:=Automaton("det",3,2,[[ 0, 1, 3 ],[ 0, 1, 2 ]],[ 2 ],[ 1 ]);;Display(x);
+   |  1  2  3
+--------------
+ a |     1  3
+ b |     1  2
+Initial state:   [ 2 ]
+Accepting state: [ 1 ]
+gap> AddInverseEdgesToInverseAutomaton(x);Display(x);
+   |  1  2  3
+--------------
+ a |     1  3
+ b |     1  2
+ A |  2     3
+ B |  2  3
+Initial state:   [ 2 ]
+Accepting state: [ 1 ]
+]]></Example>
+</Description> </ManSection>
+
+<ManSection>
+<Func Name="IsReversibleAutomaton" Arg="aut"/>
+<Description>
+The argument is a deterministic automaton. 
+Returns <K>true</K> when <A>aut</A> is a reversible automaton, i.e. the automaton obtained by reversing all edges and switching the initial and final states 
+(see also <Ref Func="ReversedAutomaton"/>) is deterministic. Returns <K>false</K> otherwise.
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 0, 1, 2 ], [ 0, 1, 3 ] ],[ 2 ],[ 2 ]);;
+gap> IsReversibleAutomaton(x);
+true
+]]></Example>
+</Description> </ManSection>
+
+</Section>
+
+<Section><Heading>Basic operations</Heading>
+
+
+ <ManSection> 
+<Func Name="NullCompletionAutomaton" Arg="aut"/>
+<Description>
+
+<C>aut</C> is a deterministic automaton. If it is complete returns <A>aut</A>,
+otherwise returns the completion (with a null state) of <A>aut</A>. Notice that the words recognized by  <A>aut</A> and its completion are the same.
+<Example><![CDATA[
+gap> aut:=Automaton("det",4,2,[[3,,3,4],[2,4,4,]],[1],[4]);;
+gap> IsDenseAutomaton(aut);
+false
+gap> y:=NullCompletionAutomaton(aut);;Display(y);
+   |  1  2  3  4  5
+--------------------
+ a |  3  5  3  4  5
+ b |  2  4  4  5  5
+Initial state:   [ 1 ]
+Accepting state: [ 4 ]
+]]></Example>
+
+The state added is a <Emph>sink state</Emph> i.e. it is a state <M>q</M> which is not initial nor accepting and for all letter <M>a</M> in the alphabet of the automaton, <M>q</M> is the result of the action of <M>a</M>  in <M>q</M>. (Notice that reading 
+a word, one does not go out of a sink state.) 
+ </Description> </ManSection>  
+
+<ManSection>
+<Func Name="ListSinkStatesAut" Arg="aut"/>
+<Description>
+Computes the list of all sink states of the automaton <A>aut</A>.
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 2, 3, 3 ], [ 1, 2, 3 ] ],[ 1 ],[ 2, 3 ]);;
+gap> ListSinkStatesAut(x);
+[  ]
+gap> y:=Automaton("det",3,2,[ [ 2, 3, 3 ], [ 1, 2, 3 ] ],[ 1 ],[ 2 ]);;
+gap> ListSinkStatesAut(y);
+[ 3 ]
+]]></Example>
+ </Description> </ManSection>  
+
+<ManSection>
+<Func Name="RemoveSinkStates" Arg="aut"/>
+<Description>
+Removes all sink states of the automaton <A>aut</A>, changing its argument and returning nothing.
+<Example><![CDATA[
+gap> y:=Automaton("det",3,2,[[ 2, 3, 3 ],[ 1, 2, 3 ]],[ 1 ],[ 2 ]);;Display(y);
+   |  1  2  3
+--------------
+ a |  2  3  3
+ b |  1  2  3
+Initial state:   [ 1 ]
+Accepting state: [ 2 ]
+gap> RemoveSinkStates(y);Display(y);
+   |  1  2
+-----------
+ a |  2
+ b |  1  2
+Initial state:   [ 1 ]
+Accepting state: [ 2 ]
+]]></Example>
+ </Description> </ManSection>  
+
+<ManSection>
+<Func Name="ReversedAutomaton" Arg="aut"/>
+<Description>
+Inverts the arrows of the automaton <A>aut</A>.
+<Example><![CDATA[
+gap> y:=Automaton("det",3,2,[ [ 2, 3, 3 ], [ 1, 2, 3 ] ],[ 1 ],[ 2 ]);;
+gap> z:=ReversedAutomaton(y);;Display(z);
+   |  1       2       3
+------------------------------
+ a |         [ 1 ]   [ 2, 3 ]
+ b | [ 1 ]   [ 2 ]   [ 3 ]
+Initial state:   [ 2 ]
+Accepting state: [ 1 ]
+]]></Example>
+ </Description> </ManSection>  
+
+
+<ManSection>
+<Func Name="PermutedAutomaton" Arg="aut, p"/>
+<Description>
+Given an automaton <A>aut</A> and a list <A>p</A> representing a permutation of the states,
+outputs the equivalent permuted automaton.
+<Example><![CDATA[
+gap> y:=Automaton("det",4,2,[[2,3,4,2],[0,0,0,1]],[1],[3]);;Display(y);
+   |  1  2  3  4
+-----------------
+ a |  2  3  4  2
+ b |           1
+Initial state:   [ 1 ]
+Accepting state: [ 3 ]
+gap> Display(PermutedAutomaton(y, [3,2,4,1]));
+   |  1  2  3  4
+-----------------
+ a |  2  4  2  1
+ b |  3
+Initial state:   [ 3 ]
+Accepting state: [ 4 ]
+]]></Example>
+ </Description> </ManSection>  
+
+
+
+<ManSection>
+<Func Name="ListPermutedAutomata" Arg="aut"/>
+<Description>
+Given an automaton <A>aut</A>, returns a list of automata with permuted states
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 0, 2, 3 ], [ 1, 2, 3 ] ],[ 1 ],[ 2, 3 ]);;
+gap> ListPermutedAutomata(x);
+[ < deterministic automaton on 2 letters with 3 states >, < deterministic automaton on 2 letters with
+    3 states >, < deterministic automaton on 2 letters with 3 states >,
+  < deterministic automaton on 2 letters with 3 states >, < deterministic automaton on 2 letters with
+    3 states >, < deterministic automaton on 2 letters with 3 states > ]
+]]></Example>
+ </Description> </ManSection> 
+ 
+
+<ManSection>
+<Func Name="NormalizedAutomaton" Arg="A"/>
+<Description>
+Produces an equivalent automaton but in which the initial state is numbered 1 and the accepting states have the greatest numbers.
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[[ 1, 2, 0 ],[ 0, 1, 2 ]],[2],[1, 2]);;Display(x);
+   |  1  2  3
+--------------
+ a |  1  2
+ b |     1  2
+Initial state:    [ 2 ]
+Accepting states: [ 1, 2 ]
+gap> Display(NormalizedAutomaton(x));
+   |  1  2  3
+--------------
+ a |  1     3
+ b |  3  1
+Initial state:    [ 1 ]
+Accepting states: [ 3, 1 ]
+]]></Example>
+ </Description> </ManSection>  
+
+<ManSection>
+<Func Name="UnionAutomata" Arg="A,B"/>
+<Description>
+Produces the disjoint union of the deterministic or non deterministic automata <C>A</C> and <C>B</C>. The output is a non-deterministic automaton.
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 1, 2, 0 ], [ 0, 1, 2 ] ],[ 2 ],[ 1, 2 ]);;
+gap> y:=Automaton("det",3,2,[ [ 0, 1, 3 ], [ 0, 0, 0 ] ],[ 1 ],[ 1, 2, 3 ]);;
+gap> UnionAutomata(x,y);
+< non deterministic automaton on 2 letters with 6 states >
+gap> Display(last);
+   |  1       2       3       4    5       6
+------------------------------------------------
+ a | [ 1 ]   [ 2 ]                [ 4 ]   [ 6 ]
+ b |         [ 1 ]   [ 2 ]
+Initial states:   [ 2, 4 ]
+Accepting states: [ 1, 2, 4, 5, 6 ]
+]]></Example>
+ </Description> </ManSection>  
+
+<ManSection> 
+<Func Name="ProductAutomaton" Arg="A1,A2"/>
+<Description>
+The arguments must be deterministic automata. Returns the product of <A>A1</A> and <A>A2</A>. 
+<P/>
+ Note: <M>(p,q)->(p-1)m+q</M> is a bijection from <M>\{1,\ldots, n\}\times \{1,\ldots, m\}</M> to <M>\{1,\ldots,mn\}</M>.
+<Example><![CDATA[
+gap> x:=RandomAutomaton("det",3,2);;Display(x);
+   |  1  2  3
+--------------
+ a |  2  3
+ b |     1
+Initial state:    [ 3 ]
+Accepting states: [ 1, 2, 3 ]
+gap> y:=RandomAutomaton("det",3,2);;Display(y);
+   |  1  2  3
+--------------
+ a |     1
+ b |  1  3
+Initial state:    [ 3 ]
+Accepting states: [ 1, 3 ]
+gap> z:=ProductAutomaton(x, y);;Display(z);
+   |  1  2  3  4  5  6  7  8  9
+--------------------------------
+ a |     4        7
+ b |           1  3
+Initial state:    [ 9 ]
+Accepting states: [ 1, 3, 4, 6, 7, 9 ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+</Section>
+<Section><Heading>Links with Semigroups</Heading>
+
+Each letter of the alphabet of an automaton induces a partial transformation in its set of 
+states. The semigroup generated by these transformations is
+called the <E>transition semigroup</E> of the automaton.
+
+<ManSection> 
+<Func Name="TransitionSemigroup" Arg="aut"/>
+<Description>
+
+Returns the transition semigroup of the deterministic automaton <A>aut</A>.
+<Example><![CDATA[
+gap> aut := Automaton("det",10,2,[[7,5,7,5,4,9,10,9,10,9],
+> [8,6,8,9,9,1,3,1,9,9]],[2],[6,7,8,9,10]);;
+gap> s := TransitionSemigroup(aut);;       
+gap> Size(s);                                                                  
+30
+]]></Example>
+
+The transition semigroup of the minimal automaton recognizing a language is
+the {\it syntactic semigroup} of that language.
+
+ </Description> </ManSection>  
+<ManSection> 
+<Func Name="SyntacticSemigroupAut" Arg="aut"/>
+<Description>
+
+Returns the syntactic semigroup of the  deterministic automaton <A>aut</A> (i.e. the transition semigroup of the equivalent minimal automaton)
+when it is non empty and returns <K>fail</K> otherwise. 
+<Example><![CDATA[
+gap> x:=Automaton("det",3,2,[ [ 1, 2, 0 ], [ 0, 1, 2 ] ],[ 2 ],[ 1, 2 ]);;
+gap> S:=SyntacticSemigroupAut(x);;
+gap> Size(S);
+3
+]]></Example>
+</Description> </ManSection> 
+<ManSection> 
+<Func Name="SyntacticSemigroupLang" Arg="rat"/>
+<Description>
+Returns the syntactic semigroup of the language given by the rational expression <A>rat</A>.
+<Example><![CDATA[
+gap> rat := RationalExpression("a*ba*ba*(@Ub)");;
+gap> S:=SyntacticSemigroupLang(rat);;
+gap> Size(S);
+7
+]]></Example>
+</Description> </ManSection> 
+</Section>
+  </Chapter>
+
+

@@ -1,0 +1,4 @@
+HelloWorld := function()
+	Print(String(RandomAutomaton("det",4,2)));
+	Print("\nThis is the way to create an automaton.\n");
+end;

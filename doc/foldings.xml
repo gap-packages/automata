@@ -1,0 +1,129 @@
+<!-- $Id: foldings.xml,v 0.2  Exp $ -->
+
+<Appendix><Heading>Inverse automata and subgroups of the free group</Heading>
+
+Inverse automata with a single initial/accepting state are in a one to one correspondence with finitely generated subgroups of the free group over the alphabet of the automaton. See  <Cite Key="MSW:2001"/>, <Cite Key="KM:2002" /> for details, as well as for concepts such as <E>flower automaton</E> and <E>Stallings foldings</E>.
+
+
+<Section><Heading>From subgroups to inverse automata</Heading>
+
+A finitely generated subgroup of a finitely generated free group is given
+through a list whose first element is the number of generators of the 
+free group and the remaining elements are the generators of the subgroup.
+The set of generators of the free group of rank <M>n</M> consists on the <M>n</M> first letters of the set <M>\{a,b,c,d,e,f,g\}</M>. In particular, free groups of rank greater than <M>8</M> must not be considered. A formal inverse of a generator is represented by the corresponding capital letter.
+<P/>
+A generator of the subgroup may be given through a string of letters or 
+through a list of positive integers as should be clear from the example that follows. 
+<P/>
+For example, <C>[2,"abA","bbabAB"]</C> stands for the subgroup of the free group of rank 2
+on the generators <M>aba^{-1}</M> and <M>bbaba^{-1}b^{-1}</M>.
+The same subgroup may be given as <C>[2,[1,2,3],[2,2,1,2,3,4]]</C>. The number <M> n+j</M> represents the formal inverse of the generator represented by <M>j</M>. One can go from one representation to another, using the following functions.
+
+<ManSection> 
+<Func Name="GeneratorsToListRepresentation" Arg="L"/>
+<Description> 
+<Example><![CDATA[
+gap> L:=[2,"abA","bbabAB"];;
+gap> GeneratorsToListRepresentation(L);
+[ 2, [ 1, 2, 3 ], [ 2, 2, 1, 2, 3, 4 ] ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+<ManSection> 
+<Func Name="ListToGeneratorsRepresentation" Arg="K"/>
+<Description>
+<Example><![CDATA[
+gap> K:=[2,[1,2,3],[2,2,1,2,3,4]];;
+gap> ListToGeneratorsRepresentation(K);
+[ 2, "abA", "bbabAB" ]
+]]></Example>
+</Description> </ManSection> 
+
+<ManSection> 
+<Func Name="FlowerAutomaton" Arg="L"/>
+<Description>
+The argument <C>L</C> is a subgroup of the free group given through any 
+of the representations described above. Returns the flower automaton.
+<Example><![CDATA[
+gap> W:=[2,"bbbAB","abAbA"];;
+gap> A:=FlowerAutomaton(W);
+   |  1          2       3       4    5       6       7    8       9
+---------------------------------------------------------------------
+ a | [ 6, 9 ]                        [ 4 ]                [ 7 ]
+ b | [ 2, 5 ]   [ 3 ]   [ 4 ]                [ 7 ]        [ 9 ]
+Initial state:   [ 1 ]
+Accepting state: [ 1 ]
+]]></Example>
+</Description> </ManSection> 
+
+<ManSection> 
+<Func Name="FoldFlowerAutomaton" Arg="A"/>
+<Description>
+ Makes identifications on the flower automaton <C>A</C>. In the literature, these identifications are called Stallings foldings.
+<P/>
+(This function may have <C>true</C> as a second argument. WARNING: the second argument should only be used when facilities to draw automata are available. In that case, one may visualize the identifications that are taking place.)
+<Example><![CDATA[
+gap> B := FoldFlowerAutomaton(A);
+   |  1  2  3  4  5  6  7
+--------------------------
+ a |  5  4              6
+ b |  2  3  4     6     5
+Initial state:   [ 1 ]
+Accepting state: [ 1 ]
+]]></Example>
+</Description> </ManSection>
+<ManSection>
+ <Func Name="SubgroupGenToInvAut" Arg="L"/>
+<Description>
+Returns the inverse automaton corresponding to the subgroup given by 
+<A>L</A>.
+<Example><![CDATA[
+gap> L:=[2,"bbbAB","AbAbA"];;
+gap> SubgroupGenToInvAut(L);
+   |  1  2  3  4  5  6  7  8
+-----------------------------
+ a |  8  4        1     6
+ b |  2  3  4     6     8
+Initial state:   [ 1 ]
+Accepting state: [ 1 ]
+
+]]></Example>
+</Description> </ManSection>
+</Section>
+<Section><Heading>From inverse automata to subgroups</Heading>
+Given an inverse automaton with a single initial/accepting state, one can find a set of generators for the subgroup represented by the automaton. Moreover, using a geodesic tree, one can find a Nielsen reduced set of generators <Cite Key="KM:2002" />.
+
+<ManSection> 
+<Func Name="GeodesicTreeOfInverseAutomaton" Arg="A"/>
+<Description>
+Returns a subautomaton of <A>A</A>whose underlying graph is a geodesic tree of the underlying graph of the inverse automaton <C>A</C>.  
+<Example><![CDATA[
+gap> A:=Automaton("det",4,2,[ [ 3, 4, 0, 0 ], [ 2, 3, 4, 0 ] ],[ 1 ],[ 1 ]);;
+gap> G := GeodesicTreeOfInverseAutomaton(A);
+   |  1  2  3  4
+-----------------
+ a |  3
+ b |  2     4
+Initial state:   [ 1 ]
+Accepting state: [ 1 ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+<ManSection> 
+<Func Name="InverseAutomatonToGenerators" Arg="A"/>
+<Description>
+Returns a set of generators (given trough the representation above) of the 
+subgroup of the free group corresponding to the automaton <C>A</C> given.
+<Example><![CDATA[
+gap> NW := InverseAutomatonToGenerators(A);
+[ 2, "baBA", "bbA" ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+</Section>
+</Appendix>
+

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+  <!-- $Id: introduction.xml,v 0.2  Exp $ -->
+  <Chapter>
+    <Heading>
+      Introduction
+    </Heading>
+    In many situations an automaton is conveniently described through a diagram like the following
+    <P />
+    <Alt Only="LaTeX">
+      \begin{figure}[htbp] \begin{center} \leavevmode \epsfbox{aut1.eps} \end{center} \label{fig:aut1} \end{figure}
+    </Alt>
+    <Alt Only="HTML">
+      &#60;br&#62;&#60;center&#62;&#60;img src=&#34;aut1.gif&#34;&#62;&#60;/center&#62;&#60;br&#62;
+    </Alt>
+    <P />
+    This diagram describes a (deterministic) automaton with
+    <M>
+      3
+    </M>
+    states (the elements of the set
+    <M>
+      \{1,2,3\}).
+    </M>
+    The arrow pointing to the state
+    <M>
+      1
+    </M>
+    indicates that
+    <M>
+      1
+    </M>
+    is the initial state and the two circles around state
+    <M>
+      3
+    </M>
+    indicate that
+    <M>
+      3
+    </M>
+    is a final or accepting state. The set
+    <M>
+      \{a,b\}
+    </M>
+    is the <E>alphabet</E> of the automaton; its elements are called <E>letters</E> and are the labels of the edges of the diagram. The words
+    <M>
+      a
+    </M>
+    ,
+    <M>
+      ab^2
+    </M>
+    ,
+    <M>
+      b^5a^3b
+    </M>
+    are examples of words recognized by the automaton since they are labels of paths from the initial to the final state.
+    <P />
+    The set of words recognized by an automaton is called the <E>language</E> of the automaton. It is a rational language and may be represented through a rational expression. For instance, <Log>(aUb)(a(aUb)Ub(aUb))*</Log> is a rational expression representing the language of the above automaton. 
+    <P />
+Kleene's Theorem states that a language is rational if and only if it is the language of a finite automaton.
+Both directions of Kleene's Theorem can be proved constructively, and these algorithms, to go from an automaton to a rational expression and <E>vice-versa</E>, are implemented in this package.
+    <P />
+Of course, one has to pay attention to the size of the output produced. When producing a deterministic automaton equivalent to a given rational expression one can obtain an optimal solution (the minimal automaton) using standard algorithms <Cite Key="AHU:74"/>.
+    <P />
+When producing a rational expression for the language of an automaton, and taking into account some reasonable measure for the size of a rational expression, to determine a minimal one is apparently computationally difficult. We use here some heuristic methods (to be published elsewhere) which in practice lead to very reasonable results.
+    <P />
+The development of this work has benefited from the existence of AMoRE <Cite Key="AMORE:95" />, a package written in <C>C</C> to handle Automata, Monoids and Regular Expressions. In fact, its manual has been very useful and some of the algorithms implemented here are those implemented in AMoRE. In this package, unlike what happened with AMoRE, we do not have to worry about the monoid part in order to make it useful to semigroup theorists, since monoids are already implemented in &GAP; and we may take advantage of this fact. We just need a function to compute the transition semigroup of an automaton.
+
+     <P />
+     <P />
+The parts of this package that have not so directly to do with automata or rational expressions are put into appendices in this manual. Some words about these appendices follow.
+     <P />
+Using the external program Graphviz <Cite Key="KoutsofiosNorth:2002" /> to graph visualization, one can visualize automata. This very convenient tool presently works easily under LINUX.
+     <P />
+Given a finitely generated subgroup of the free group it is possible to compute a flower automaton and perform Stallings foldings over it in order to obtain an inverse automaton corresponding to the given subgroup.
+     <P />
+  </Chapter>

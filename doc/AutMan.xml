@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE Book SYSTEM "gapdoc.dtd">
+
+<Book Name="Automata"> 
+
+<TitlePage>
+  <Title>Automata</Title>
+  <Version>( Version 
+<#Include SYSTEM "../version">
+ )
+  </Version>
+  <Author> Manuel Delgado 
+    <Email>mdelgado@fc.up.pt</Email>
+    <Homepage>http://www.fc.up.pt/cmup/mdelgado</Homepage>
+  </Author>
+    <Author> Steve Linton
+    <Email>sal@dcs.st-and.ac.uk</Email>
+    <Homepage>http://www.dcs.st-and.ac.uk/~sal/</Homepage>
+  </Author>
+  <Author> José João Morais 
+    <Email>jjoao@netcabo.pt</Email>
+  </Author>
+  <Copyright> &copyright; 2004 by Manuel Delgado, Steve Linton and José Morais <P/>
+              We adopt the copyright regulations of &GAP; as detailed in the 
+              copyright notice in the &GAP; manual. </Copyright>
+
+<Colophon>
+
+This work started in 1998, when the first author was in the
+LIAFA at the University of Paris 7, in a post-doc. 
+Encouraged by J. E. Pin, he began the implementation in &GAP;3 of
+an algorithm obtained some time before to answer a question from the realm 
+of Finite Semigroups proposed by J. Almeida. It is now part of a separate 
+package: <C>finsemi</C>. <P/>
+
+The first version of this package on automata was prepared by the first author 
+who gave it the form of a &GAP; share package.
+In a second version, prepared by the first and third authors, 
+many functions have been added and the performance of many of the existing 
+ones has been improved. Further important improvements, specially concerning performance,
+have been achieved when the second author joined the group.
+
+Bug reports, suggestions and comments are, of course, welcome. Please contact 
+any of the authors to this effect. Our e-mail addresses are     
+<Email>mdelgado@fc.up.pt</Email> or <Email>sal@dcs.st-and.ac.uk</Email> or <Email>jjoao@netcabo.pt</Email>.
+
+
+</Colophon>
+
+<Acknowledgements>
+
+The first author wishes to acknowledge Cyril Nicaud and Paulo Varandas for 
+their help in programming some functions of the very first version of this 
+package. He wishes also to acknowledge useful discussions and comments by 
+Cyril Nicaud, Vítor H. Fernandes, Jean-Eric Pin and Jorge Almeida.
+<P/>
+The first author also acknowledges support of FCT through CMUP 
+and the FCT and POCTI Project POCTI/32817/MAT/2000 which is funded in
+cooperation with the European Community Fund FEDER.
+<P/>
+The third author acknowledges financial support of FCT and the POCTI program 
+through a scholarship given by Centro de Matemática da Universidade do Porto.
+</Acknowledgements>
+
+</TitlePage>
+
+<TableOfContents/>
+
+<Body>
+
+<#Include SYSTEM "introduction.xml">
+<#Include SYSTEM "automata.xml">
+<#Include SYSTEM "rational.xml">
+<#Include SYSTEM "aut-vs-rat.xml">
+<#Include SYSTEM "aut-func.xml">
+
+</Body>
+
+<#Include SYSTEM "graphs.xml">
+<#Include SYSTEM "drawing.xml">
+<#Include SYSTEM "foldings.xml">
+
+
+
+<Bibliography Databases="AutMan" />
+
+<TheIndex/>
+
+</Book>
+
+<!-- ==================================================================== -->
