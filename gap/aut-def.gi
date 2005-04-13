@@ -4,7 +4,7 @@
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: aut-def.gi,v 1.05 $
+#H  @(#)$Id: aut-def.gi,v 1.06 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -931,9 +931,9 @@ function( A )
         s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",", String(A!.alphabet), ",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
     else
             if A!.type = "epsilon" then
-                s:=Concatenation("x:=Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", Concatenation(FamilyObj(A)!.alphabet, "@"), "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
+                s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", AlphabetOfAutomaton(A), "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
                            else
-        s:=Concatenation("x:=Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", FamilyObj(A)!.alphabet, "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
+        s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", FamilyObj(A)!.alphabet, "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
                    fi;
     fi;
     return(s);

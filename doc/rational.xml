@@ -1,4 +1,4 @@
-<!-- $Id: rational.xml,v 1.05  Exp $ -->
+<!-- $Id: rational.xml,v 1.06  Exp $ -->
 
 <Chapter><Heading>Rational languages</Heading>
 Rational languages are conveniently represented through rational expressions. These are finite expressions involving letters of the alphabet; <C>concatenation</C>, corresponding to the <E>product</E>; the symbol <C>U</C>, corresponding to the <E>union</E>; and  the symbol <C>*</C>, corresponding to the Kleene's star.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-15"?>
-  <!-- $Id: drawing.xml,v 1.05  Exp $ -->
+  <!-- $Id: drawing.xml,v 1.06  Exp $ -->
   <Appendix>
     <Heading>
       Drawing automata
@@ -18,20 +18,13 @@
       </Alt>
     </Alt>
     T Labs, that can be obtained at
-    <C>
-      http://www.research.att.com/sw/tools/graphviz/
-    </C>.
+    <C>http://www.graphviz.org/</C>.
     <Section>
       <Heading>
         Installing some external programs
       </Heading>
       If you work under
-      <C>LINUX</C>, you should install <C>graphviz</C> and create the directory
-      <C>
-        <Alt Only="LaTeX">{\textasciitilde}</Alt>
-        <Alt Not="LaTeX">~</Alt>/dot-tmp
-      </C>
-      .
+      <C>LINUX</C>, you should install <C>graphviz</C>.
     </Section>
     <Section>
       <Heading>
@@ -41,18 +34,11 @@
         <Func Arg="A [, file]" Name="DrawAutomaton" />
         <Description>
           This function draws automaton
-          <C>
-            A
-          </C>
-          writing the needed data in file
-          <Alt Only="LaTeX">
-            {\textasciitilde}
-          </Alt>
-          <Alt Not="LaTeX">
-            ~</Alt>/dot-tmp/file.
+          <C>A</C>.
 <Example><![CDATA[
 gap> x:=Automaton("det",3,2,[ [ 2, 3, 0 ], [ 0, 1, 2 ] ],[ 1 ],[ 1, 2, 3 ]);;
 gap> DrawAutomaton(x,"exx");
+Displaying file: /tmp/tmp.LKoc7O/exx.dot.ps
 ]]></Example>
 The output would be the following diagram displayed in a <E>ghostview</E> window.
 <P />
@@ -84,31 +70,14 @@ The output would be the following diagram displayed in a <E>ghostview</E> window
           <C>
             A
           </C>
-          by drawing them in a dotted style, while the others are drawn in a plain style and writes the needed data in file
-          <Alt Only="LaTeX">
-            {\textasciitilde}
-          </Alt>
-          <Alt Not="LaTeX">
-            ~
-          </Alt>
-          /dot-tmp/file.
+          by drawing them in a dotted style, while the others are drawn in a plain style.
         </Description>
       </ManSection>
       <ManSection>
         <Func Arg="G [, file]" Name="DrawGraph" />
         <Description>
           Draws a graph specified as an adjacency list
-          <C>
-            G
-          </C>
-          and writes the needed data in file
-          <Alt Only="LaTeX">
-            {\textasciitilde}
-          </Alt>
-          <Alt Not="LaTeX">
-            ~
-          </Alt>
-          /dot-tmp/file.
+          <C>G</C>.
         </Description>
       </ManSection>
       <ManSection>
@@ -118,14 +87,7 @@ The output would be the following diagram displayed in a <E>ghostview</E> window
           <C>
             A
           </C>
-          and highlights it&#39;s strongly connected components by drawing the other edges in a dotted style. Writes the needed data in file
-          <Alt Only="LaTeX">
-            {\textasciitilde}
-          </Alt>
-          <Alt Not="LaTeX">
-            ~
-          </Alt>
-          /dot-tmp/file.
+          and highlights it&#39;s strongly connected components by drawing the other edges in a dotted style.
         </Description>
       </ManSection>
     </Section>

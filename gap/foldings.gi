@@ -3,7 +3,7 @@
 #W  foldings.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: foldings.gi,v 1.05 $
+#H  @(#)$Id: foldings.gi,v 1.06 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -390,7 +390,7 @@ end);
 InstallGlobalFunction(AddInverseEdgesToInverseAutomaton,function(aut)
     local a, ai, alph, i, q, L, T;
     if not IsInverseAutomaton(aut) then
-        Error("The argument of IsInverseAutomaton must be a deterministic automaton");
+        Error("The argument must be an inverse automaton");
     fi;
     if not IsInt(FamilyObj(aut)!.alphabet) then
         Error("The automaton must be defined over the alphabet abc...");
@@ -416,8 +416,7 @@ InstallGlobalFunction(AddInverseEdgesToInverseAutomaton,function(aut)
         Append(T,[ai]);
     od;
     for L in T do 
-#        for i in [1..Length(L)] do
-        for i in [1..2*aut!.alphabet] do
+        for i in [1..q] do
             if not IsBound(L[i]) then
                 L[i] := 0;
             fi;

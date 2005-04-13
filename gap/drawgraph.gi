@@ -3,7 +3,7 @@
 #W  drawgraph.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: drawgraph.gi,v 1.05 $
+#H  @(#)$Id: drawgraph.gi,v 1.06 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -19,7 +19,7 @@ InstallGlobalFunction(dotAutomaton, function(A, fich)
     local au, aut, l1, l2,  arr, array, colors, i, j, k, letters, max, name,
           nome, R, l, s, t;
     
-    name := Concatenation("~/dot-tmp/", fich, ".dot");
+    name := Filename(DirectoryTemporary(), Concatenation(fich, ".dot"));
     aut := A;
 
     nome := "Automaton";
@@ -123,6 +123,7 @@ InstallGlobalFunction(dotAutomaton, function(A, fich)
         AppendTo(name, k, " [shape=circle];","\n");
     od;
     AppendTo(name,"}","\n");
+    return(name);
 end);
 #############################################################################
 ##
@@ -130,7 +131,7 @@ end);
 ##  automaton A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawAutomaton, function(arg)
-    local path, gv;
+    local path, gv, name;
     
     if Length(arg) = 0 then
         Error("Please give me an automaton to draw");
@@ -143,17 +144,21 @@ InstallGlobalFunction(DrawAutomaton, function(arg)
             Error("Please install gv or ggv");
         fi;
     fi;
+    gv := Concatenation(gv, " ");
+    
     if not IsAutomatonObj(arg[1]) then
         Error("The first argument must be an automaton");
     fi;
     if IsBound(arg[2]) then
-        dotAutomaton(arg[1], arg[2]);
-        Exec(Concatenation("dot -Tps ~/dot-tmp/", arg[2], ".dot -o ~/dot-tmp/", arg[2], ".ps"));
-        Exec(Concatenation(gv, " ~/dot-tmp/", arg[2], ".ps &"));
+        name := dotAutomaton(arg[1], arg[2]);
+        Exec(Concatenation("dot -Tps ", name, " -o ", name, ".ps"));
+        Print(Concatenation("Displaying file: ", name, ".ps\n"));
+        Exec(Concatenation(gv, name, ".ps &"));
     else
-        dotAutomaton(arg[1], "automaton");
-        Exec("dot -Tps ~/dot-tmp/automaton.dot -o ~/dot-tmp/automaton.ps");
-        Exec(Concatenation(gv, " ~/dot-tmp/automaton.ps &"));
+        name := dotAutomaton(arg[1], "automaton");
+        Exec(Concatenation("dot -Tps ", name, " -o ", name, ".ps"));
+        Print(Concatenation("Displaying file: ", name, ".ps\n"));
+        Exec(Concatenation(gv, name, ".ps &"));
     fi;
 
     
@@ -170,7 +175,7 @@ InstallGlobalFunction(dotGraph, function(G, fich)
     if not IsString(fich) then
         Error("The second argument must be a string");
     fi;
-    name := Concatenation("~/dot-tmp/", fich, ".dot");
+    name := Filename(DirectoryTemporary(), Concatenation(fich, ".dot"));
 
     nome := "grafo";
 
@@ -185,6 +190,7 @@ InstallGlobalFunction(dotGraph, function(G, fich)
         AppendTo(name, k, " [shape=circle];","\n");
     od;
     AppendTo(name,"}","\n");
+    return(name);
 end);
 
 #############################################################################
@@ -193,7 +199,7 @@ end);
 ## Graph A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawGraph, function(arg)
-    local path, gv;
+    local path, gv, name;
     
     if Length(arg) = 0 then
         Error("Please give me an automaton to draw");
@@ -206,14 +212,17 @@ InstallGlobalFunction(DrawGraph, function(arg)
             Error("Please install gv or ggv");
         fi;
     fi;
+    gv := Concatenation(gv, " ");
     if IsBound(arg[2]) then
-        dotGraph(arg[1], arg[2]);
-        Exec(Concatenation("dot -Tps ~/dot-tmp/", arg[2], ".dot -o ~/dot-tmp/", arg[2], ".ps"));
-        Exec(Concatenation(gv, " ~/dot-tmp/", arg[2], ".ps &"));
+        name := dotGraph(arg[1], arg[2]);
+        Exec(Concatenation("dot -Tps ", name, " -o ", name, ".ps"));
+        Print(Concatenation("Displaying file: ", name, ".ps\n"));
+        Exec(Concatenation(gv, name, ".ps &"));
     else
-        dotGraph(arg[1], "graph");
-        Exec("dot -Tps ~/dot-tmp/graph.dot -o ~/dot-tmp/graph.ps");
-        Exec(Concatenation(gv, " ~/dot-tmp/graph.ps &"));
+        name := dotGraph(arg[1], "graph");
+        Exec(Concatenation("dot -Tps ", name, " -o ", name, ".ps"));
+        Print(Concatenation("Displaying file: ", name, ".ps\n"));
+        Exec(Concatenation(gv, name, ".ps &"));
     fi;
 end);
 
@@ -232,13 +241,11 @@ InstallGlobalFunction(dotAutomata, function(A)
     fi;
 
     if Length(A) = 3 then
-        name := "~/dot-tmp/";
-        Append(name,String(A[3]));
-        Append(name,".dot");
+        name := Filename(DirectoryTemporary(), Concatenation(String(A[3]), ".dot"));
         aut1 := A[1];
         aut2 := A[2];
     elif Length(A) = 2 then
-        name := "~/dot-tmp/automato.dot";
+        name := Filename(DirectoryTemporary(), Concatenation("automato", ".dot"));
         aut1 := A[1];
         aut2 := A[2];
     fi;
@@ -355,6 +362,7 @@ InstallGlobalFunction(dotAutomata, function(A)
         AppendTo(name, k, " [shape=circle,color=gray];","\n");
     od;
     AppendTo(name,"}","\n");
+    return(name);
 end);
 
 #############################################################################
@@ -363,7 +371,7 @@ end);
 ## automaton A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawAutomata, function(arg)
-    local fich, A, B, q, a, k, path, gv;
+    local fich, A, B, q, a, k, path, gv, name;
     
     if not (IsBound(arg[1]) and IsBound(arg[2])) then
         Error("This function takes two automata as arguments");
@@ -399,6 +407,7 @@ InstallGlobalFunction(DrawAutomata, function(arg)
             Error("Please install gv or ggv");
         fi;
     fi;
+    gv := Concatenation(gv, " ");
     
     for a in [1 .. A!.alphabet] do
         for q in [1 .. A!.states] do
@@ -417,10 +426,11 @@ InstallGlobalFunction(DrawAutomata, function(arg)
         od;
     od;
     
-    dotAutomata([A,B, fich]);
+    name := dotAutomata([A,B, fich]);
 
-    Exec(Concatenation("dot -Tps ~/dot-tmp/", fich, ".dot -o ~/dot-tmp/", fich, ".ps"));
-    Exec(Concatenation(gv, " ~/dot-tmp/", fich, ".ps &"));
+    Exec(Concatenation("dot -Tps ", name, " -o ", name, ".ps"));
+    Print(Concatenation("Displaying file: ", name, ".ps\n"));
+    Exec(Concatenation(gv, name, ".ps &"));
 end);
 #############################################################################
 ##
@@ -453,6 +463,7 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
             Error("Please install gv or ggv");
         fi;
     fi;
+    gv := Concatenation(gv, " ");
 
     G := GraphStronglyConnectedComponents(UnderlyingGraphOfAutomaton(A));
     G2 := [];
@@ -462,7 +473,8 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
         od;
     od;
     
-    name := Concatenation("~/dot-tmp/", fich, ".dot");
+    
+    name := Filename(DirectoryTemporary(), Concatenation(fich, ".dot"));
     aut := A;
 
     nome := "Automaton";
@@ -578,8 +590,9 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
     od;
     AppendTo(name,"}","\n");
     
-    Exec(Concatenation("dot -Tps ~/dot-tmp/", fich, ".dot -o ~/dot-tmp/", fich, ".ps"));
-    Exec(Concatenation(gv, " ~/dot-tmp/", fich, ".ps &"));
+    Exec(Concatenation("dot -Tps ", name, " -o ", name, ".ps"));
+    Print(Concatenation("Displaying file: ", name, ".ps\n"));
+    Exec(Concatenation(gv, name, ".ps &"));
 end);
 
 ##
