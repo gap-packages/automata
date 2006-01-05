@@ -5,7 +5,7 @@ The GAP 4 package `automata'
 Introduction
 ------------
 
-This is release 1.06 of  the package `automata'.
+This is release 1.07 of  the package `automata'.
 
 The features of this package include
 
@@ -99,7 +99,8 @@ LoadPackage( "automata" );
 
 
 As a final step, GraphViz (http://www.graphviz.org/)
-should be installed.
+should be installed and also a Postscript viewer
+like Evince (http://www.gnome.org/projects/evince/).
 
 ----------
 In other systems, there are equivalent ways to do the same.

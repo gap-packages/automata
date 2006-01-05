@@ -6,13 +6,13 @@
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: automataoperations.gi,v 1.06 $
+#H  @(#)$Id: automataoperations.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
 
 
-BindGlobal("ComplementDA", da -> Automaton("det",da!.states, da!.alphabet, da!.transitions,
+BindGlobal("ComplementDA", da -> Automaton("det",da!.states, AlphabetOfAutomaton(da), da!.transitions,
         da!.initial, Difference([1..da!.states], da!.accepting)));
 
 InfoAutomataSL:=NewInfoClass("InfoAutomataSL");
@@ -135,7 +135,9 @@ end);
 ##
 InstallGlobalFunction(EpsilonToNFABlist, function(aut)
     
-    local   index,  eclos,  i,  comb,  n,  newet,  t;
+    local   index,  eclos,  i,  comb,  n,  newet,  t, al;
+    
+    
     index := [1..aut!.states];
     eclos := List(aut!.transitions[aut!.alphabet],x->BlistList(index,x));
     for i in [1..aut!.states] do
@@ -159,10 +161,20 @@ InstallGlobalFunction(EpsilonToNFABlist, function(aut)
     Info(InfoAutomataSL,2,"Finished Computing Closures, total size ",
          Sum(eclos, Length));
     t := List([1..aut!.alphabet-1], a -> List(aut!.transitions[a], x -> Union(eclos{x})));
-    return Automaton("nondet",aut!.states, aut!.alphabet-1, t,
-                   Union(eclos{aut!.initial}), 
-                   Filtered([1..aut!.states], i->
-                           ForAny(eclos[i],x->x in aut!.accepting)));
+    
+    if IsInt(AlphabetOfAutomaton(aut)) then
+        return Automaton("nondet",aut!.states, aut!.alphabet-1, t,
+                       Union(eclos{aut!.initial}), 
+                       Filtered([1..aut!.states], i->
+                               ForAny(eclos[i],x->x in aut!.accepting)));
+    else
+        al := AlphabetOfAutomaton(aut);
+        Unbind(al[Length(al)]);
+        return Automaton("nondet",aut!.states, al, t,
+                       Union(eclos{aut!.initial}), 
+                       Filtered([1..aut!.states], i->
+                               ForAny(eclos[i],x->x in aut!.accepting)));
+    fi;
 end);
 
 
@@ -371,7 +383,7 @@ InstallGlobalFunction(NFAtoDFA, function(A)
         i := i+1;
     od;
     Info(InfoAutomataSL,1,"Determinized ",A!.states," to ",Length(states));
-    return Automaton("det",Length(states),FamilyObj(A)!.alphabet,trans,
+    return Automaton("det",Length(states),AlphabetOfAutomaton(A),trans,
                    [1],accepting);
 end);
 
@@ -395,9 +407,9 @@ InstallGlobalFunction(UsefulAutomaton, function(A)
         A := NFAtoDFA(EpsilonToNFA(A));
     elif A!.type = "nondet" then
         A := NFAtoDFA(A);
-    else
-        A := NullCompletionAut(A);
     fi;
+    A := NullCompletionAut(A);
+
     if A!.initial = [] then
         Error("The automaton must have an initial state");
     fi;
@@ -436,7 +448,7 @@ InstallGlobalFunction(UsefulAutomaton, function(A)
          od;
          newacc := Filtered(A!.accepting, q->R[q]);
          return(Automaton("det", Length(fifo),
-ShallowCopy(FamilyObj(A)!.alphabet), T, [map[A!.initial[1]]], map{newacc}));  
+AlphabetOfAutomaton(A), T, [map[A!.initial[1]]], map{newacc}));  
 else        return(A);
     fi;
 end);
@@ -617,7 +629,7 @@ InstallGlobalFunction(AreEquivAut, function(A1, A2)
     else
         Error("The arguments must be rational expressions or automata");
     fi;
-    if not FamilyObj(A1)!.alphabet = FamilyObj(A2)!.alphabet then
+    if not AlphabetOfAutomaton(A1) = AlphabetOfAutomaton(A2) then
         return(false);
     fi;
     if A1!.states <> A2!.states then
@@ -626,6 +638,7 @@ InstallGlobalFunction(AreEquivAut, function(A1, A2)
     if not Length(A1!.accepting) = Length(A2!.accepting) then
         return(false);
     fi;
+    
     bijection := [];
     dom       := [];
     i_dom     := 1;
@@ -842,7 +855,7 @@ InstallGlobalFunction(ProductAutomaton, function(A1,A2)
         Error("The second argument must be a deterministic automaton");
     fi;
     a := A1!.alphabet;
-    if a <> A2!.alphabet then
+    if not AlphabetOfAutomaton(A1) = AlphabetOfAutomaton(A2) then
         Error("A1 and A2 must have the same alphabet");
     fi;
     n1 := A1!.states;
@@ -885,7 +898,7 @@ InstallGlobalFunction(ProductAutomaton, function(A1,A2)
         od;
     fi;
 
-    return Automaton("det",n,ShallowCopy(FamilyObj(A1)!.alphabet),T,init,fin);
+    return Automaton("det",n,AlphabetOfAutomaton(A1),T,init,fin);
 end);
 
 
@@ -912,6 +925,11 @@ InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
     else
         Error("The second argument must be an automaton or a rational expression");
     fi;
+    
+    if not AlphabetOfAutomaton(a1) = AlphabetOfAutomaton(a2) then
+        Error("A1 and A2 must have the same alphabet");
+    fi;
+    
     if a1!.type = "nondet" then
         a1 := NFAtoDFA(a1);
     fi;
@@ -962,7 +980,7 @@ InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
             fi;
         od;
     od;
-    return Automaton("det",Length(states),m,t,[1],finals);
+    return Automaton("det",Length(states),AlphabetOfAutomaton(a1),t,[1],finals);
 end);
 
 
@@ -1004,6 +1022,126 @@ InstallGlobalFunction(FuseSymbolsAut, function(aut, n1, n2)
     od;
     return Automaton("nondet",aut!.states, aut!.alphabet-1,ntm,
                    aut!.initial, aut!.accepting);
+end);
+
+
+#############################################################################
+##
+#F AutomatonAllPairsPaths(A)
+##
+## Given an automaton A, with n states, outputs a n x n matrix P,
+## such that P[i][j] is the list of simple paths from state i to
+## state j in A.
+InstallGlobalFunction(AutomatonAllPairsPaths, function(A)
+    local i, j, V, G, paths, visited,
+          BFS, pathClosure;
+    
+    
+    pathClosure := function(list)
+        local i, j, p, len, len2, lenx, list2, list3, listx, flag;
+        
+        list2 := [];
+        i := 1;
+        while IsBound(list[i]) do
+            if i = 1 then
+            else
+                Add(list2, list[i]);
+            fi;
+            i := i + 1;
+        od;
+        len := i-1;
+        len2 := i-2;
+        list3 := ShallowCopy(list2);
+        Unbind(list3[len2]);
+        AddSet(paths[list[1]][list[len]], list);
+        for i in [1..V] do
+            for p in paths[i][list[1]] do
+                if not p = [] then
+                    if p[1] in list3 then
+                        continue;
+                    fi;
+                    flag := true;
+                    j := 2;
+                    while IsBound(p[j]) do
+                        if p[j] in list2 then
+                            flag := false;
+                            break;
+                        fi;
+                        j := j+1;
+                    od;
+                    if flag and not p[1] = p[j-1] then
+                        listx := Concatenation(p, list2);
+                        if not listx in paths[listx[1]][listx[len2+j-1]] then
+                            pathClosure(listx);
+                        fi;
+
+                    fi;
+                fi;
+            od;
+        od;
+        list2 := Concatenation([list[1]], list3);
+        for i in [1..V] do
+            for p in paths[list[len]][i] do
+                if not p = [] then
+                    lenx := Length(p);
+                    flag := true;
+                    for j in [1..lenx-1] do
+                        if p[j] in list2 then
+                            flag := false;
+                            break;
+                        fi;
+                    od;
+                    if flag and not p[1] = p[lenx] then
+                        if p[lenx] in list3 then
+                            continue;
+                        fi;
+                        listx := Concatenation(list2, p);
+                        if not listx in paths[listx[1]][listx[len2+lenx]] then
+                            pathClosure(listx);
+                        fi;
+                    fi;
+                fi;
+            od;
+        od;
+    end;
+    ## End of pathClosure()  --
+    
+    
+    BFS := function(v)
+        local w, i, p;
+        
+        if not visited[v] then
+            visited[v] := true;
+            for w in G[v] do
+                pathClosure([v,w]);
+            od;
+            for w in G[v] do
+                BFS(w);
+            od;
+        fi;
+    end;
+    ##  End of BFS()  --
+    #==============================================
+    
+    
+    if not IsAutomaton(A) then
+        Error("The argument must be an automaton");
+    fi;
+    
+    G := UnderlyingGraphOfAutomaton(A);
+    V := Length(G);
+    paths := [];
+    visited := [];
+    for i in [1..V] do
+        paths[i] := [];
+        visited[i] := false;
+        for j in [1..V] do
+            paths[i][j] := [];
+        od;
+    od;
+    BFS(A!.initial[1]);
+    
+    return(paths);
 end);
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-15"?>
-  <!-- $Id: drawing.xml,v 1.06  Exp $ -->
+  <!-- $Id: drawing.xml,v 1.07  Exp $ -->
   <Appendix>
     <Heading>
       Drawing automata
@@ -43,7 +43,7 @@ Displaying file: /tmp/tmp.LKoc7O/exx.dot.ps
 The output would be the following diagram displayed in a <E>ghostview</E> window.
 <P />
     <Alt Only="LaTeX">
-      \begin{figure}[htbp] \begin{center} \leavevmode \epsfbox{aut2.eps} \end{center} \label{fig:aut2} \end{figure}
+      \begin{figure}[htbp] \begin{center} \leavevmode \includegraphics[bb=0 0 132 304]{aut2} \end{center} \label{fig:aut2} \end{figure}
     </Alt>
     <Alt Only="HTML">
       &#60;br&#62;&#60;center&#62;&#60;img src=&#34;aut2.gif&#34;&#62;&#60;/center&#62;&#60;br&#62;

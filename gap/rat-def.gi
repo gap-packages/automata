@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gi,v 1.06 $
+#H  @(#)$Id: rat-def.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -42,6 +42,7 @@
 DeclareRepresentation( "IsRationalExpressionRep", IsComponentObjectRep, 
         [ "op", "list_exp" ] );
 
+
 ############################################################################
 InstallGlobalFunction( RatExpOnnLettersObj, function( Fam, ratexpression )
     return Objectify( NewType( Fam, IsRatExpOnnLettersObj and 
@@ -63,8 +64,8 @@ InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
         Error("Wrong operation given in RatExpOnnLetters");
     fi;
     
-    if not (IsPosInt( n ) or IsString(n)) then
-      Error( "<n> must be a positive integer or a string" );
+    if not (IsPosInt( n ) or IsList(n)) then
+      Error( "<n> must be a positive integer or a list" );
     fi;
     
     if operation = "star" then
@@ -95,8 +96,13 @@ InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
     fi;
     
     # Construct the family of rational expressions on n letters.
-    F:= NewFamily( Concatenation( "RatExp", String( n ), "Letters" ),
-                   IsRatExpOnnLettersObj );
+    if IsInt(n) then    
+        F:= NewFamily( Concatenation( "RatExp", String(n), "Letters" ),
+                    IsRatExpOnnLettersObj );
+    else
+        F:= NewFamily( Concatenation( "RatExp", String(Length(n)), "Letters" ),
+                    IsRatExpOnnLettersObj );
+    fi;
 
     # Install the data.
     if IsPosInt(n) then
@@ -125,16 +131,28 @@ end );
 #F RatExpToString(r)
 ##
 InstallGlobalFunction( RatExpToString, function( r, count )
-    local str, e, A, flag, i, ret,
+    local str, e, A, flag, i, ret, xstr, xout,
           hasUnion;
     
-    if IsPosInt(FamilyObj(r)!.alphabet2) then
-        A := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"];
+    
+    
+    if IsPosInt(AlphabetOfRatExp(r)) then
+        if AlphabetOfRatExp(r) < 22 then
+            A := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"];
+        else
+            A := List([1..AlphabetOfRatExp(r)], k -> Concatenation("a", String(k)));
+        fi;
     else
         A := [];
-        for i in FamilyObj(r)!.alphabet2 do
-            Add(A, [i]);
-        od;
+        if IsChar(AlphabetOfRatExp(r)[1]) then
+            for i in AlphabetOfRatExp(r) do
+                Add(A, [i]);
+            od;
+        else
+            for i in AlphabetOfRatExp(r) do
+                Add(A, i);
+            od;
+        fi;
     fi;
     
     # Tests if a rational expression has a union rational subexpression
@@ -160,10 +178,14 @@ InstallGlobalFunction( RatExpToString, function( r, count )
         if r!.list_exp = [] then
             return(["@", count]);
         else
-            if r!.list_exp[1] < 22 then
-                return([ShallowCopy(A[r!.list_exp[1]]), count]);
+            if IsString(A[r!.list_exp[1]]) then
+                return([String(ShallowCopy(A[r!.list_exp[1]])), count]);
             else
-                return([Concatenation("a", String(r!.list_exp[1]), count)]);
+                xstr := "";
+                xout := OutputTextString( xstr, false );
+                PrintTo( xout, ShallowCopy(A[r!.list_exp[1]]));
+                CloseStream( xout );
+                return([xstr, count]);
             fi;
         fi;
     elif r!.op = "product" then
@@ -186,10 +208,8 @@ InstallGlobalFunction( RatExpToString, function( r, count )
             count := ret[2];
             if e!.op = "union" then
                 if str = "" then
-#                    str := Concatenation("(", ret[1], ")");
                     str := ret[1];    
                 else
-#                    str := Concatenation(str, "U", "(", ret[1], ")");
                     str := Concatenation(str, "U", ret[1]);
                 fi;
             else
@@ -491,7 +511,7 @@ InstallGlobalFunction(RandomRatExp, function(arg)
         Error("Please specify the number of letters of the alphabet of the rational expression or a string");
     fi;
     n := arg[1];
-    if not (IsPosInt( n ) or IsString(n)) then
+    if not (IsPosInt( n ) or IsList(n)) then
         Error( "The argument must be a positive integer or a string" );
     fi;
     if IsString(n) then
@@ -541,18 +561,42 @@ end);
 
 #########################################################################
 ##
-#M  AlphabetRatExp(r)
+#M  AlphabetOfRatExp(r)
 ##
 ##  Returns the alphabet of the rational expression r
 ##
 ##
-InstallMethod(AlphabetRatExp,
-        "Alphabet of RatExp",
-        [IsRatExpOnnLettersObj],
-        function( A )
-    
-    return(ShallowCopy(FamilyObj(A)!.alphabet2));
+InstallGlobalFunction(AlphabetOfRatExp, function( R )
+    return(ShallowCopy(FamilyObj(R)!.alphabet2));
 end);
+
+
+#############################################################################
+##
+#F  AlphabetOfRatExpAsList(R)
+##
+##  Returns the alphabet of the rational expression as a list.
+##  If the alphabet of the rational expression is an integer
+##  less than 27 it returns the list "abcd....",
+##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
+##
+InstallGlobalFunction(AlphabetOfRatExpAsList, function( R )
+    local a;
+    if not IsRatExpOnnLettersObj(R) then
+        Error("The argument must be a rational expression");
+    fi;
+    a := ShallowCopy(FamilyObj(R)!.alphabet2);
+    if IsInt(a) then
+        if a < 27 then
+            return(List([1..a], i -> jascii[68+i]));
+        else
+            return(List([1..a], i -> Concatenation("a", String(i))));
+        fi;
+    fi;
+    return(a);
+end
+        
+        );
 
 ############################################################################
 ##
@@ -574,7 +618,7 @@ InstallMethod( \=,
         function( L1, L2 ) 
     local i;
     
-    return( FamilyObj(L1)!.alphabet2 = FamilyObj(L2)!.alphabet2 and L1!.op = L2!.op and L1!.list_exp = L2!.list_exp );
+    return( AlphabetOfRatExp(L1) = AlphabetOfRatExp(L2) and L1!.op = L2!.op and L1!.list_exp = L2!.list_exp );
 end );
 
 InstallMethod( \<,

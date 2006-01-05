@@ -38,11 +38,11 @@ Subtitle := "A package on automata",
 ##  See '?Extending: Version Numbers' in GAP help for an explanation
 ##  of valid version numbers. For an automatic package distribution update
 ##  you must provide a new version number even after small changes.
-Version := "1.06",
+Version := "1.07",
 
 ##  Release date of the current version in dd/mm/yyyy format.
 # 
-Date := "13/04/2005",
+Date := "05/01/2006",
 
 ##  URL of the archive(s) of the current package release, but *without*
 ##  the format extension(s), like '.zoo', which are given next.
@@ -53,7 +53,7 @@ Date := "13/04/2005",
 ##  example/init.g, ...    or  example-1.3/init.g, ...  )
 # 
 ArchiveURL := 
-          "http://www.fc.up.pt/cmup/mdelgado/automata/automata-1.06",
+          "http://www.fc.up.pt/cmup/mdelgado/automata/automata-1.07",
 
 ##  All provided formats as list of file extensions, separated by white
 ##  space or commas.
@@ -299,7 +299,7 @@ Dependencies := rec(
   # (no automatic test will be done for this, do this in your 
   # 'AvailabilityTest' function below)
   # ExternalConditions := []
-  ExternalConditions := []
+  ExternalConditions := [["Graphviz","http://www.graphviz.org/"],["Evince","http://www.gnome.org/projects/evince/"]]
                       
 ),
 
@@ -339,11 +339,11 @@ AvailabilityTest := ReturnTrue,
 BannerString := Concatenation( 
   "----------------------------------------------------------------\n",
   "Loading  Automata ", ~.Version, "\n",
-  "by ", ~.Persons[1].FirstNames, " ", ~.Persons[1].LastName,
-        " (", ~.Persons[1].WWWHome, ")\n",
-  "   ", ~.Persons[2].FirstNames, " ", ~.Persons[2].LastName,
-        " (", ~.Persons[2].WWWHome, ")\n",
-  "   ", ~.Persons[3].FirstNames, " ", ~.Persons[3].LastName,"\n",
+#  "by ", ~.Persons[1].FirstNames, " ", ~.Persons[1].LastName,
+#        " (", ~.Persons[1].WWWHome, ")\n",
+#  "   ", ~.Persons[2].FirstNames, " ", ~.Persons[2].LastName,
+#        " (", ~.Persons[2].WWWHome, ")\n",
+#  "   ", ~.Persons[3].FirstNames, " ", ~.Persons[3].LastName,"\n",
 #        " (", ~.Persons[3].WWWHome, ")\n",                
   "For help, type: ?Automata: \n",
   "----------------------------------------------------------------\n" ),

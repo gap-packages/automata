@@ -1,0 +1,66 @@
+<!-- $Id: finitelang.xml,v 1.07  Exp $ -->
+
+<Chapter><Heading>Finite regular languages</Heading>
+This chapter describes some functions to deal with finite regular languages.
+
+<Section><Heading>Dealing with finite regular languages</Heading>
+
+<ManSection> 
+<Func Name="IsFiniteRegularLanguage" Arg="L"/>
+<Description>
+<A>L</A> is an automaton or a rational expression. This function tests
+whether its argument represents a finite language or not.
+<Example><![CDATA[
+gap> RandomRatExp(2);
+b*(aU@)
+gap> IsFiniteRegularLanguage(last);
+false
+gap> RandomRatExp(2);
+aUbU@
+gap> IsFiniteRegularLanguage(last);
+true
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+<ManSection> 
+<Func Name="FiniteRegularLanguageToListOfWords" Arg="L"/>
+<Description>
+<A>L</A> is an automaton or a rational expression. 
+This function outputs the recognized language as a list of words.
+<Example><![CDATA[
+gap> r:=RationalExpression("aaUb(aUb)");
+aaUb(aUb)
+gap> FiniteRegularLanguageToListOfWords(r);
+[ "aa", "ba", "bb" ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+<ManSection> 
+<Func Name="ListOfWordsToAutomaton" Arg="alph, L"/>
+<Description>
+Given an alphabet <A>alph</A> (a list) and a list of
+words <A>L</A> (a list of lists), outputs an automaton
+that recognizes the given list of words.
+<Example><![CDATA[
+gap> ListOfWordsToAutomaton("ab",["aaa","bba",""]);
+< deterministic automaton on 2 letters with 6 states >
+gap> FAtoRatExp(last);
+(bbUaa)aU@
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+
+
+
+    </Section>
+</Chapter>
+
+
+
+

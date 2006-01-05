@@ -3,7 +3,7 @@
 #W  aut-basics.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                       Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-basics.gd,v 1.06 $
+#H  @(#)$Id: aut-basics.gd,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -34,43 +34,76 @@ DeclareGlobalFunction( "IsNonDeterministicAutomaton" );
 DeclareGlobalFunction( "IsEpsilonAutomaton" );
 #############################################################################
 ##
-#A AlphabetOfAutomaton(A)
+#F AlphabetOfAutomaton(A)
 ##
 ## returns the alphabet of the automaton
 ##
-DeclareAttribute("AlphabetOfAutomaton", IsAutomatonObj);
+DeclareGlobalFunction("AlphabetOfAutomaton");
 #############################################################################
 ##
-#A TransitionMatrixOfAutomaton(A)
+#F  AlphabetOfAutomatonAsList(A)
+##
+##  Returns the alphabet of the automaton as a list.
+##  If the alphabet of the automaton is an integer
+##  less than 27 it returns the list "abcd....",
+##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
+##
+DeclareGlobalFunction("AlphabetOfAutomatonAsList");
+#############################################################################
+##
+#F TransitionMatrixOfAutomaton(A)
 ##
 ## returns the transition matrix of the automaton
 ##
-DeclareAttribute("TransitionMatrixOfAutomaton", IsAutomatonObj);
+DeclareGlobalFunction("TransitionMatrixOfAutomaton");
 #############################################################################
 #############################################################################
 ##
-#A InitialStatesOfAutomaton(A)
+#F InitialStatesOfAutomaton(A)
 ##
 ## returns the initial states of the automaton
 ##
-DeclareAttribute("InitialStatesOfAutomaton", IsAutomatonObj);
+DeclareGlobalFunction("InitialStatesOfAutomaton");
 #############################################################################
 #############################################################################
 ##
-#A FinalStatesOfAutomaton(A)
+#F SetInitialStatesOfAutomaton(A)
+##
+## Sets the initial states of the automaton
+##
+DeclareGlobalFunction("SetInitialStatesOfAutomaton");
+#############################################################################
+#############################################################################
+##
+#F FinalStatesOfAutomaton(A)
 ##
 ## returns the final states of the automaton
 ##
-DeclareAttribute("FinalStatesOfAutomaton", IsAutomatonObj);
+DeclareGlobalFunction("FinalStatesOfAutomaton");
 #############################################################################
 #############################################################################
 ##
-#A NumberStatesOfAutomaton(A)
+#F SetFinalStatesOfAutomaton(A)
+##
+## Sets the final states of the automaton
+##
+DeclareGlobalFunction("SetFinalStatesOfAutomaton");
+#############################################################################
+#############################################################################
+##
+#F NumberStatesOfAutomaton(A)
 ##
 ## returns the number of states of the automaton
 ##
-DeclareAttribute("NumberStatesOfAutomaton", IsAutomatonObj);
+DeclareGlobalFunction("NumberStatesOfAutomaton");
 #############################################################################
+#############################################################################
+##
+#F  CopyAutomaton(A)
+##
+##  Returns a copy of the automaton A.
+##
+DeclareGlobalFunction("CopyAutomaton");
 #############################################################################
 ##
 #F  NullCompletionAutomaton(aut)
@@ -140,7 +173,7 @@ DeclareGlobalFunction( "ListSinkStatesAut" );
 ##
 ##  Removes the sink states of the automaton A
 ##
-DeclareGlobalFunction( "RemoveSinkStates" );
+DeclareGlobalFunction( "RemovedSinkStates" );
 
 
 #############################################################################
@@ -188,3 +221,17 @@ DeclareGlobalFunction( "ReversedAutomaton" );
 ##  automaton
 ##
 DeclareGlobalFunction( "IsReversibleAutomaton" );
+
+
+#############################################################################
+##
+#F ProductOfLanguages(a1, a2)
+##
+## Given two regular languages (as automata or rational expressions),
+## returns an automaton that recognizes the concatenation of the given 
+## languages, that is, the set of words <M>uv</M> such that
+## <M>u</M> belongs to the first language and <M>v</M>
+## belongs to the second language.
+##
+DeclareGlobalFunction("ProductOfLanguages");
+        

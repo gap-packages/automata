@@ -61,6 +61,9 @@ cooperation with the European Community Fund FEDER.
 <P/>
 The third author acknowledges financial support of FCT and the POCTI program 
 through a scholarship given by Centro de Matemática da Universidade do Porto.
+<P/>
+
+The authors would like to thank Mark Kambites (http://www.theory.informatik.uni-kassel.de/~kambites/) for his contribution in finding bugs and making suggestions for the improvement of this package.
 </Acknowledgements>
 
 </TitlePage>
@@ -74,6 +77,7 @@ through a scholarship given by Centro de Matemática da Universidade do Porto.
 <#Include SYSTEM "rational.xml">
 <#Include SYSTEM "aut-vs-rat.xml">
 <#Include SYSTEM "aut-func.xml">
+<#Include SYSTEM "finitelang.xml">
 
 </Body>
 

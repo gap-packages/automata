@@ -4,13 +4,13 @@
 #W                                    Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: init.g,v 1.06 $
+#H  @(#)$Id: init.g,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
 
 # announce the package version
-DeclareAutoPackage("automata", "1.06", ReturnTrue);
+DeclareAutoPackage("automata", "1.07", ReturnTrue);
 
 # install the documentation
 DeclarePackageAutoDocumentation( "automata", "doc" );
@@ -36,5 +36,7 @@ ReadPackage( "automata", "gap/rat-func.gd" );
 
 #
 ReadPackage( "automata", "gap/sgpslinks.gd" );
+
+ReadPackage( "automata", "gap/finitelang.gd" );
 
 #E  init.g  . . . . . . . . . . . . . . . . . . . . . . . . . . .  ends here

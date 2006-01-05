@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: read.g,v 1.06 $
+#H  @(#)$Id: read.g,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -28,6 +28,6 @@ ReadPackage( "automata", "gap/rat-func.gi" );
 #
 ReadPackage( "automata", "gap/sgpslinks.gi" );
 
-#
-ReadPackage( "automata", "gap/xautomaton.gi" );
+ReadPackage( "automata", "gap/finitelang.gi" );
+
 #E  read.g  . . . . . . . . . . . . . . . . . . . . . . . . . . .  ends here

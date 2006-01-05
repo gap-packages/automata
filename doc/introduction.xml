@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-15"?>
-  <!-- $Id: introduction.xml,v 1.06  Exp $ -->
+  <!-- $Id: introduction.xml,v 1.07  Exp $ -->
   <Chapter>
     <Heading>
       Introduction
@@ -7,7 +7,7 @@
     In many situations an automaton is conveniently described through a diagram like the following
     <P />
     <Alt Only="LaTeX">
-      \begin{figure}[htbp] \begin{center} \leavevmode \epsfbox{aut1.eps} \end{center} \label{fig:aut1} \end{figure}
+      \begin{figure}[htbp] \begin{center} \leavevmode \includegraphics[bb=0 0 132 279]{aut1} \end{center} \label{fig:aut1} \end{figure}
     </Alt>
     <Alt Only="HTML">
       &#60;br&#62;&#60;center&#62;&#60;img src=&#34;aut1.gif&#34;&#62;&#60;/center&#62;&#60;br&#62;

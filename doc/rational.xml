@@ -1,4 +1,4 @@
-<!-- $Id: rational.xml,v 1.06  Exp $ -->
+<!-- $Id: rational.xml,v 1.07  Exp $ -->
 
 <Chapter><Heading>Rational languages</Heading>
 Rational languages are conveniently represented through rational expressions. These are finite expressions involving letters of the alphabet; <C>concatenation</C>, corresponding to the <E>product</E>; the symbol <C>U</C>, corresponding to the <E>union</E>; and  the symbol <C>*</C>, corresponding to the Kleene's star.
@@ -98,6 +98,68 @@ true
 </Description> 
 </ManSection> 
 
+<ManSection> 
+<Func Name="AlphabetOfRatExp" Arg="R"/>
+<Description>
+
+Returns the alphabet of the rational expression <C>R</C>.
+<Example><![CDATA[
+gap> r:=RandomRatExp(2);
+a*(ba*U@)
+gap> AlphabetOfRatExp(r);
+2
+gap> r:=RandomRatExp("01");
+1*(01*U@)
+gap> AlphabetOfRatExp(r);
+"01"
+gap> a:=RandomTransformation(3);;
+gap> b:=RandomTransformation(3);;
+gap> r:=RandomRatExp([a,b]);
+(Transformation( [ 1, 1, 3 ] )UTransformation( [ 1, 1, 2 ] ))*
+gap> AlphabetOfRatExp(r);
+[ Transformation( [ 1, 1, 3 ] ), Transformation( [ 1, 1, 2 ] ) ]
+]]></Example>
+</Description> </ManSection>
+
+
+<ManSection> 
+<Func Name="AlphabetOfRatExpAsList" Arg="R"/>
+<Description>
+
+Returns the alphabet of the rational expression <C>R</C> always
+as a list.
+If the alphabet of the rational expression is an integer
+less than 27 it returns the list <C>"abcd...."</C>,
+otherwise returns <C>[ "a1", "a2", "a3", "a4", ... ]</C>.
+<Example><![CDATA[
+gap> r:=RandomRatExp(2);
+(aUb)((aUb)(bU@)U@)U@
+gap> AlphabetOfRatExpAsList(r);
+"ab"
+gap> r:=RandomRatExp("01");
+1*(0U@)
+gap> AlphabetOfRatExpAsList(r);
+"01"
+gap> r:=RandomRatExp(30);;
+gap> AlphabetOfRatExpAsList(r);
+[ "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", 
+"a12", "a13", "a14", "a15", "a16", "a17", "a18", "a19", "a20", "a21", 
+"a22", "a23", "a24", "a25", "a26", "a27", "a28", "a29", "a30" ]
+]]></Example>
+</Description> </ManSection>
+
+
+<ManSection> 
+<Func Name="CopyRatExp" Arg="R"/>
+<Description>
+Returns a new rational expression, which is a copy of <C>R</C>.
+<Example><![CDATA[
+gap> r:=RandomRatExp(2);
+a*(bU@)
+gap> CopyRatExp(r);
+a*(bU@)
+]]></Example>
+</Description> </ManSection>
 
     </Section>
 

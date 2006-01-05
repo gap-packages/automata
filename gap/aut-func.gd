@@ -5,7 +5,7 @@
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: automataoperations.gi,v 1.06 $
+#H  @(#)$Id: automataoperations.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -146,5 +146,13 @@ DeclareSynonym("IntersectionAutomaton", IntersectionLanguage);
 DeclareGlobalFunction( "FuseSymbolsAut" );
 
 
+#############################################################################
+##
+#F AutomatonAllPairsPaths(A)
+##
+## Given an automaton A, with n states, outputs a n x n matrix P,
+## such that P[i][j] is the list of simple paths from state i to
+## state j in A.
+DeclareGlobalFunction("AutomatonAllPairsPaths");
 
 #E

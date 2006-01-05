@@ -4,7 +4,7 @@
 #W  miscelaneous.gi                       Manuel Delgado <mdelgado@fc.up.pt>
 #W                                        Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: miscelaneous.gi,v 1.06 $
+#H  @(#)$Id: miscelaneous.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 #############################################################################
@@ -109,7 +109,7 @@ end);
 InstallGlobalFunction(RandomizeRandomState, function()
     local factor, path, date, seed, i, a;
     
-    factor := 521;;
+    factor := 1024;;
     path   := DirectoriesSystemPrograms();;
     date   := Filename( path, "date" );;
     seed := "";; a := OutputTextString(seed,true);;
@@ -118,7 +118,7 @@ InstallGlobalFunction(RandomizeRandomState, function()
     Unbind(seed[Length(seed)]);;
     seed := Int(seed) mod factor;;
     for i in [1 .. seed] do
-        Random([1, 2]);;
+        Random([1..factor]);;
     od;
 end);
 

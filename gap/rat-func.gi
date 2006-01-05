@@ -5,10 +5,38 @@
 ##
 ##  This file contains functions that perform tests on automata
 ##
-#H  @(#)$Id: rat-func.gi,v 1.06 $
+#H  @(#)$Id: rat-func.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
+
+#############################################################################
+##
+#F  CopyRatExp(r)
+##
+##  Returns a new rational expression, which is a copy
+##  of the argument.
+##
+InstallGlobalFunction(CopyRatExp, function(r)
+    local r1, l, r2;
+    
+    if not IsRatExpOnnLettersObj(r) then
+        Error("The argument must be a rational expression");
+    fi;
+    l := [];
+    if r!.op = [] then
+        l := ShallowCopy(r!.list_exp);
+    elif not r!.op = "star" then
+        for r2 in r!.list_exp do
+            Add(l, CopyRatExp(r2));
+        od;
+    else
+        l := CopyRatExp(r!.list_exp);
+    fi;
+    r1 := RatExpOnnLetters(FamilyObj(r)!.alphabet2, ShallowCopy(r!.op), l);
+    return(r1);
+end);
+
 
 #############################################################################
 #F  IsEmptyLang(<L>)
@@ -67,12 +95,12 @@ InstallGlobalFunction(IsContainedLang, function(L1,L2)
     if IsAutomaton(L1) then
         alph1 := AlphabetOfAutomaton(L1);
     else
-        alph1 := AlphabetRatExp(L1);
+        alph1 := AlphabetOfRatExp(L1);
     fi;
     if IsAutomaton(L2) then
         alph2 := AlphabetOfAutomaton(L2);
     else
-        alph2 := AlphabetRatExp(L2);
+        alph2 := AlphabetOfRatExp(L2);
     fi;
     
     if alph1 <> alph2 then
@@ -129,12 +157,12 @@ InstallGlobalFunction(AreDisjointLang, function(L1,L2)
     if IsAutomaton(L1) then
         alph1 := AlphabetOfAutomaton(L1);
     else
-        alph1 := AlphabetRatExp(L1);
+        alph1 := AlphabetOfRatExp(L1);
     fi;
     if IsAutomaton(L2) then
         alph2 := AlphabetOfAutomaton(L2);
     else
-        alph2 := AlphabetRatExp(L2);
+        alph2 := AlphabetOfRatExp(L2);
     fi;
     
     if alph1 <> alph2 then
@@ -172,11 +200,11 @@ InstallGlobalFunction(ProductRatExp,  function(a, b)
     local empty;
     if not (IsRatExpOnnLettersObj(a) and IsRatExpOnnLettersObj(b)) then
         Error("<a> and <b> must be rational expressions");
-    elif not FamilyObj(a)!.alphabet2 = FamilyObj(b)!.alphabet2 then
+    elif not AlphabetOfRatExp(a) = AlphabetOfRatExp(b) then
         Error("<a> and <b> must be on the same alphabet");
     fi;
     
-    empty := RatExpOnnLetters(FamilyObj(a)!.alphabet2, [], "empty_set");
+    empty := RatExpOnnLetters(AlphabetOfRatExp(a), [], "empty_set");
     if a!.list_exp = "empty_set" or b!.list_exp = "empty_set" then
         return empty;
     fi;
@@ -189,16 +217,16 @@ InstallGlobalFunction(ProductRatExp,  function(a, b)
     fi;
      
     if a!.op = "product" and b!.op = "product" then
-        return RatExpOnnLetters(FamilyObj(a)!.alphabet2,"product", 
+        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", 
                        Concatenation(a!.list_exp, b!.list_exp )); 
     elif a!.op = "product" then   
-        return RatExpOnnLetters(FamilyObj(a)!.alphabet2,"product", 
+        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", 
                        Concatenation(a!.list_exp, [b] )); 
     elif b!.op = "product" then   
-        return RatExpOnnLetters(FamilyObj(a)!.alphabet2,"product", 
+        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", 
                        Concatenation( [a], b!.list_exp)); 
     else
-        return RatExpOnnLetters(FamilyObj(a)!.alphabet2,"product", [a, b]);
+        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", [a, b]);
     fi;        
 end);
 
@@ -212,7 +240,7 @@ InstallGlobalFunction(UnionRatExp, function(a, b)
     local alist, alistrat, blist, blistrat, c, list, n, ss;
     if not (IsRatExpOnnLettersObj(a) and IsRatExpOnnLettersObj(b)) then
         Error("<a> and <b> must be rational expressions");
-    elif not FamilyObj(a)!.alphabet2 = FamilyObj(b)!.alphabet2 then
+    elif not AlphabetOfRatExp(a) = AlphabetOfRatExp(b) then
         Error("<a> and <b> must be on the same alphabet");
     fi;
     if a!.list_exp = "empty_set" then
@@ -220,7 +248,7 @@ InstallGlobalFunction(UnionRatExp, function(a, b)
     elif b!.list_exp = "empty_set" then
         return(a);
     else
-        return(RatExpOnnLetters(FamilyObj(a)!.alphabet2,"union",[a,b]));
+        return(RatExpOnnLetters(AlphabetOfRatExp(a),"union",[a,b]));
     fi;
 end); 
 
@@ -238,7 +266,7 @@ InstallGlobalFunction(StarRatExp, function(a)
     if a!.op = "star" then
         return a;
         else
-        return RatExpOnnLetters(FamilyObj(a)!.alphabet2,"star", a);
+        return RatExpOnnLetters(AlphabetOfRatExp(a),"star", a);
     fi;
 end);
 

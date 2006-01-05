@@ -6,10 +6,20 @@
 ##  This file declares functions that perform tests on the languages
 ##  of automata.
 ##
-#H  @(#)$Id: rat-func.gd,v 1.06 $
+#H  @(#)$Id: rat-func.gd,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
+
+
+#############################################################################
+##
+#F  CopyRatExp(r)
+##
+##  Returns a new rational expression, which is a copy
+##  of the argument.
+##
+DeclareGlobalFunction( "CopyRatExp" );
 
 #############################################################################
 ##

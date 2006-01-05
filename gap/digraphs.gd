@@ -3,7 +3,7 @@
 #W  digraphs.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.06 $
+#H  @(#)$Id: digraphs.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -95,6 +95,16 @@ DeclareGlobalFunction( "DiGraphToRelation" );
 ## This construction is useful in Finite Semigroup Theory
 ##
 DeclareGlobalFunction( "MSccAutomaton" );
+
+#############################################################################
+##
+#F AutoIsAcyclicGraph(G)
+##
+## The argument is a graph's list of adjacencies
+## and this function returns true if the argument
+## is an acyclic graph and false otherwise.
+##
+DeclareGlobalFunction( "AutoIsAcyclicGraph" );
 
 
 #E

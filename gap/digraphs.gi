@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.06 $
+#H  @(#)$Id: digraphs.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -373,7 +373,7 @@ InstallGlobalFunction(MSccAutomaton, function(A)
     if not IsAutomatonObj(A) then
         Error("The argument must be an automaton");
     fi;
-    if not IsInt(FamilyObj(A)!.alphabet) then
+    if not IsInt(AlphabetOfAutomaton(A)) then
         Error("The automaton must be defined over the alphabet abc...");
     fi;
     CC := GraphStronglyConnectedComponents(UnderlyingGraphOfAutomaton(A));
@@ -412,5 +412,49 @@ InstallGlobalFunction(MSccAutomaton, function(A)
         return Automaton("nondet",ns,alph,TT,A!.initial,A!.accepting);
     fi;
 end);
+
+
+#############################################################################
+##
+#F AutoIsAcyclicGraph(G)
+##
+## The argument is a graph's list of adjacencies
+## and this function returns true if the argument
+## is an acyclic graph and false otherwise.
+##
+InstallGlobalFunction(AutoIsAcyclicGraph, function(G)
+    local v, n, DFS, visited, finished, dag;
+    
+    DFS := function(v)
+        local w;
+        
+        visited[v] := true;
+        for w in G[v] do
+            if not visited[w] then
+                DFS(w);
+            elif not finished[w] then
+                dag := false;
+            fi;
+        od;
+        finished[v] := true;
+    end;
+    # ================================
+    
+    dag := true;
+    n := Length(G);
+    visited := [];
+    finished := [];
+    for v in [1..n] do
+        visited[v] := false;
+        finished[v] := false;
+    od;
+    for v in [1..n] do
+        if not visited[v] then
+            DFS(v);
+        fi;  
+    od;
+    return(dag);
+end);
+
 
 #E

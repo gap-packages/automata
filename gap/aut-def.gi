@@ -4,7 +4,7 @@
 #W                                     Jose Morais    <jjoao@netcabo.pt>
 ##
 ##
-#H  @(#)$Id: aut-def.gi,v 1.06 $
+#H  @(#)$Id: aut-def.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -54,12 +54,12 @@ DeclareRepresentation( "IsAutomatonRep", IsComponentObjectRep,
 
 ######################################################################
 ##
-#F  Automaton(Type, Size, SizeAlphabet,TransitionTable, ListInitial, 
+#F  Automaton(Type, Size, Alphabet, TransitionTable, ListInitial, 
 ##  ListAccepting )
 ##
 ##  Produces an automaton
 ##
-InstallGlobalFunction( Automaton, function(Type, Size, SizeAlphabet, 
+InstallGlobalFunction( Automaton, function(Type, Size, Alphabet, 
         TransitionTable, ListInitial, ListAccepting )
         
         local A, aut, F, i, j, x, y, TT, l;
@@ -67,22 +67,22 @@ InstallGlobalFunction( Automaton, function(Type, Size, SizeAlphabet,
     #some tests...
     if not IsPosInt(Size) then
         Error("The size of the automaton must be a positive integer");
-    elif not (IsPosInt(SizeAlphabet) or IsString(SizeAlphabet)) then
-        Error("The size of the alphabet must be a positive integer or a string");
+    elif not (IsPosInt(Alphabet) or IsList(Alphabet)) then
+        Error("The size of the alphabet must be a positive integer or a list");
     fi;
     
     # Construct the family of all automata.
     F:= NewFamily( "Automata" ,
                 IsAutomatonObj );
-    if IsPosInt(SizeAlphabet) then
-        F!.alphabet := SizeAlphabet;
+    if IsPosInt(Alphabet) then
+        F!.alphabet := Alphabet;
     else
         if Type = "epsilon" then
-            if not SizeAlphabet[Length(SizeAlphabet)] = '@' then
+            if not Alphabet[Length(Alphabet)] = '@' then
                 Error("The last letter of the alphabet must be @");
             fi;
             j:=0;
-            for i in SizeAlphabet do
+            for i in Alphabet do
                 if i = '@' then
                     j := j + 1;
                 fi;
@@ -91,8 +91,8 @@ InstallGlobalFunction( Automaton, function(Type, Size, SizeAlphabet,
                 Error("The alphabet must contain only one @");
             fi;
         fi;
-        F!.alphabet := SizeAlphabet;
-        SizeAlphabet := Length(F!.alphabet);
+        F!.alphabet := Alphabet;
+        Alphabet := Length(F!.alphabet);
     fi;
     
     if not IsList(TransitionTable) then
@@ -101,7 +101,7 @@ InstallGlobalFunction( Automaton, function(Type, Size, SizeAlphabet,
         Error("The initial states must be provided as a list");
     elif not IsList(ListAccepting) then
         Error("The accepting states must be provided as a list");
-    elif (Length(TransitionTable) <> SizeAlphabet) then
+    elif (Length(TransitionTable) <> Alphabet) then
         Error("The number of rows of the transition table matrix must equal the size of the alphabet");
     fi;
     
@@ -114,8 +114,8 @@ InstallGlobalFunction( Automaton, function(Type, Size, SizeAlphabet,
     # Fill the holes in the transition table with <0> in the case of 
     # deterministic automata and with <[0]> in the case of non 
     # deterministic automata
-    TT := NullMat(SizeAlphabet,Size);
-    for i in [1 .. SizeAlphabet] do
+    TT := NullMat(Alphabet,Size);
+    for i in [1 .. Alphabet] do
         for j in[1 .. Size] do
             if Type = "det" then
                 if IsBound(TransitionTable[i][j]) then
@@ -172,7 +172,7 @@ InstallGlobalFunction( Automaton, function(Type, Size, SizeAlphabet,
     od;
     
     aut := rec(type := Type,
-               alphabet := SizeAlphabet,
+               alphabet := Alphabet,
                states := Size,
                initial := ListInitial,
                accepting := ListAccepting,
@@ -227,13 +227,13 @@ InstallMethod( Display,
     true,
     [IsAutomatonObj and IsAutomatonRep], 0,
 function( A )
-    local a, i, j, q, str, letters, sizea, sizeq, lsizeq, len;
+    local a, i, j, q, str, letters, sizea, sizeq, lsizeq, len, xout, xs;
     
-    if IsPosInt(FamilyObj(A)!.alphabet) then
+    if IsPosInt(AlphabetOfAutomaton(A)) then
         letters := ["a","b","c","d","e","f","g"];
     else
         letters := [];
-        for i in FamilyObj(A)!.alphabet do
+        for i in AlphabetOfAutomaton(A) do
             Add(letters, [i]);
         od;
     fi;
@@ -250,7 +250,11 @@ function( A )
                 od;
                 str := Concatenation(str, "\n");
                 for a in [1 .. A!.alphabet] do
-                    str := Concatenation(str, " ", letters[a], " |  ");
+                    xs := "";
+                    xout := OutputTextString(xs, false);
+                    PrintTo(xout, letters[a]);
+                    str := Concatenation(str, " ", xs, " |  ");
+                    CloseStream(xout);
                     for i in [1 .. A!.states] do
                         q := A!.transitions[a][i];
                         if q = 0 then
@@ -262,11 +266,27 @@ function( A )
                     str := Concatenation(str, "\n");
                 od;
                 if IsBound(A!.accepting[2]) then
-                    str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
+                    xs := "";
+                    xout := OutputTextString(xs, false);
+                    PrintTo(xout, A!.initial);
+                    str := Concatenation(str, "Initial state:    ", String(xs), "\n");
+                    CloseStream(xout);
+                    xs := "";
+                    xout := OutputTextString(xs, false);
+                    PrintTo(xout, A!.accepting);
+                    str := Concatenation(str, "Accepting states: ", xs, "\n");
+                    CloseStream(xout);
                 else
-                    str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
+                    xs := "";
+                    xout := OutputTextString(xs, false);
+                    PrintTo(xout, A!.initial);
+                    str := Concatenation(str, "Initial state:   ", xs, "\n");
+                    CloseStream(xout);
+                    xs := "";
+                    xout := OutputTextString(xs, false);
+                    PrintTo(xout, A!.accepting);
+                    str := Concatenation(str, "Accepting state: ", xs, "\n");
+                    CloseStream(xout);
                 fi;
             else
                 sizea := Length(String(A!.alphabet));
@@ -869,7 +889,10 @@ end);
 ##
 ##  Given the type T, number of states Q and number of the input alphabet
 ##  symbols A, this function returns a pseudo random automaton with those
-##  parameters.
+##  parameters. To obtain an epsilon automata with 3 non-@-letters plus @, use
+##  RandomAutomaton("epsilon",2,"abc");
+##  < epsilon automaton on 4 letters with 2 states >
+##
 ##
 InstallGlobalFunction(RandomAutomaton, function(T, Q, A)
     local i, transitions, a;
@@ -877,14 +900,14 @@ InstallGlobalFunction(RandomAutomaton, function(T, Q, A)
     if not IsPosInt(Q) then
         Error("The number of states must be a positive integer");
     fi;
-    if not (IsPosInt(A) or IsString(A)) then
+    if not (IsPosInt(A) or IsList(A)) then
         Error("The number of symbols of the input alphabet must be a positive integer or a string");
     fi;
     
     if IsPosInt(A) then
         a := A;
     else
-        a := SSortedList(A);
+        a := ShallowCopy(A);
         A := Length(a);
     fi;
         
@@ -908,10 +931,10 @@ InstallGlobalFunction(RandomAutomaton, function(T, Q, A)
         if IsInt(a) then
             return(Automaton(T, Q, a+1, transitions, SSortedList(List([1 .. Random([1 .. Q])], j -> Random([1 .. Q]))), SSortedList(List([1 .. Q], j -> Random([1 .. Q])))));
         else
-            if not jascii[Length(jascii)] in a then
-                return(Automaton(T, Q, Concatenation(a, [jascii[Length(jascii)]]), transitions, SSortedList(List([1 .. Random([1 .. Q])], j -> Random([1 .. Q]))), SSortedList(List([1 .. Q], j -> Random([1 .. Q])))));
+            if jascii[Position(jascii, '@')] in a then
+                Error("Please choose an alphabet, without the character '@'");
             fi;
-            Error("Please choose an alphabet, without the last character of the global variable 'jascii'");
+            return(Automaton(T, Q, Concatenation(a, [jascii[Position(jascii, '@')]]), transitions, SSortedList(List([1 .. Random([1 .. Q])], j -> Random([1 .. Q]))), SSortedList(List([1 .. Q], j -> Random([1 .. Q])))));
         fi;
     fi;
 end);
@@ -927,13 +950,13 @@ InstallMethod( String,
     [IsAutomatonObj and IsAutomatonRep], 0,
 function( A )
     local s;
-    if IsPosInt(FamilyObj(A)!.alphabet) then
+    if IsPosInt(AlphabetOfAutomaton(A)) then
         s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",", String(A!.alphabet), ",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
     else
             if A!.type = "epsilon" then
                 s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", AlphabetOfAutomaton(A), "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
                            else
-        s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", FamilyObj(A)!.alphabet, "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
+        s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", AlphabetOfAutomaton(A), "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
                    fi;
     fi;
     return(s);

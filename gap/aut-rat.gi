@@ -3,7 +3,7 @@
 #W  aut-rat.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-rat.gi,v 1.06 $
+#H  @(#)$Id: aut-rat.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -95,14 +95,14 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         T[p][q] := 0;  # 0 means the empty_set
                         WT[p][q] := -1;
                     elif IsBound(list[2]) then
-                        T[p][q] := RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), "union", List(list, a -> RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), [], [a])));
+                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), "union", List(list, a -> RatExpOnnLetters(AlphabetOfAutomaton(A), [], [a])));
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
                             Nin[q] := Nin[q] + 1;
                         fi;
                     else
-                        T[p][q] := RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), [], list);
+                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], list);
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
@@ -112,8 +112,8 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                 od;
             od;
         elif A!.type = "epsilon" then
-            if IsString(FamilyObj(A)!.alphabet) then
-                l := ShallowCopy(FamilyObj(A)!.alphabet);
+            if IsList(AlphabetOfAutomaton(A)) then
+                l := AlphabetOfAutomaton(A);
                 Unbind(l[Length(l)]);
             fi;
             for p in [1 .. A!.states] do
@@ -148,23 +148,23 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         list2 := [];
                         for x in list do
                             if x = 0 then
-                                if IsString(FamilyObj(A)!.alphabet) then
+                                if IsList(AlphabetOfAutomaton(A)) then
                                     Add(list2, RatExpOnnLetters(l, [], []));
                                 else
-                                    Add(list2, RatExpOnnLetters(FamilyObj(A)!.alphabet-1, [], []));
+                                    Add(list2, RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []));
                                 fi;
                             else
-                                if IsString(FamilyObj(A)!.alphabet) then
+                                if IsList(AlphabetOfAutomaton(A)) then
                                     Add(list2, RatExpOnnLetters(l, [], [x]));
                                 else
-                                    Add(list2, RatExpOnnLetters(FamilyObj(A)!.alphabet-1, [], [x]));
+                                    Add(list2, RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], [x]));
                                 fi;
                             fi;
                         od;
-                        if IsString(FamilyObj(A)!.alphabet) then
+                        if IsList(AlphabetOfAutomaton(A)) then
                             T[p][q] := RatExpOnnLetters(l, "union", list2);
                         else
-                            T[p][q] := RatExpOnnLetters(FamilyObj(A)!.alphabet-1, "union", list2);
+                            T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, "union", list2);
                         fi;
                         WT[p][q] := c;
                         if not p = q then
@@ -173,16 +173,16 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         fi;
                     else
                         if list = [0] then
-                            if IsString(FamilyObj(A)!.alphabet) then
+                            if IsList(AlphabetOfAutomaton(A)) then
                                 T[p][q] := RatExpOnnLetters(l, [], []);
                             else
-                                T[p][q] := RatExpOnnLetters(FamilyObj(A)!.alphabet-1, [], []);
+                                T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []);
                             fi;
                         else
-                            if IsString(FamilyObj(A)!.alphabet) then
+                            if IsList(AlphabetOfAutomaton(A)) then
                                 T[p][q] := RatExpOnnLetters(l, [], list);
                             else
-                                T[p][q] := RatExpOnnLetters(FamilyObj(A)!.alphabet-1, [], list);
+                                T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], list);
                             fi;
                         fi;
                         WT[p][q] := c;
@@ -215,14 +215,14 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         T[p][q] := 0;  # 0 means the empty_set
                         WT[p][q] := -1;
                     elif IsBound(list[2]) then
-                        T[p][q] := RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), "union", List(list, a -> RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), [], [a])));
+                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), "union", List(list, a -> RatExpOnnLetters(AlphabetOfAutomaton(A), [], [a])));
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
                             Nin[q] := Nin[q] + 1;
                         fi;
                     else
-                        T[p][q] := RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), [], list);
+                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], list);
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
@@ -239,13 +239,13 @@ InstallGlobalFunction(FAtoRatExp, function(A)
             WT[p][q0] := -1;
             if p in A!.accepting then
                 if A!.type = "epsilon" then
-                    if IsString(FamilyObj(A)!.alphabet) then
+                    if IsList(AlphabetOfAutomaton(A)) then
                         T[p][qf] := RatExpOnnLetters(l, [], []);
                     else
-                        T[p][qf] := RatExpOnnLetters(FamilyObj(A)!.alphabet-1, [], []);
+                        T[p][qf] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []);
                     fi;
                 else
-                    T[p][qf] := RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), [], []);
+                    T[p][qf] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], []);
                 fi;
                 WT[p][qf] := 0;
                 Nout[p] := Nout[p] + 1;
@@ -259,13 +259,13 @@ InstallGlobalFunction(FAtoRatExp, function(A)
         for q in [1 .. A!.states] do
             if q in A!.initial then
                 if A!.type = "epsilon" then
-                    if IsString(FamilyObj(A)!.alphabet) then
+                    if IsList(AlphabetOfAutomaton(A)) then
                         T[q0][q] := RatExpOnnLetters(l, [], []);
                     else
-                        T[q0][q] := RatExpOnnLetters(FamilyObj(A)!.alphabet-1, [], []);
+                        T[q0][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []);
                     fi;
                 else
-                    T[q0][q] := RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), [], []);
+                    T[q0][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], []);
                 fi;
                 WT[q0][q] := 0;
                 Nin[q] := Nin[q] + 1;
@@ -486,7 +486,7 @@ InstallGlobalFunction(FAtoRatExp, function(A)
         if A!.type = "epsilon" then
             r := RatExpOnnLetters(l, [], "empty_set");
         else
-            r := RatExpOnnLetters(ShallowCopy(FamilyObj(A)!.alphabet), [], "empty_set");
+            r := RatExpOnnLetters(AlphabetOfAutomaton(A), [], "empty_set");
         fi;
         Setter(SizeRatExp)(r,0);
         return(r);
@@ -530,12 +530,12 @@ InstallGlobalFunction(RatExpToNDAut, function(R)
           epsInLRatExp, compFirst, compLast, compFollow, isOnlyEpsilon, isOnlyEmptySet;
     
     if not IsRationalExpression(R) then
-        Error("The argument to RatExpToAut must be a rational expression");
+        Error("The argument to RatExpToNDAut must be a rational expression");
     fi;
     map      := [];
     n        := 1;
     alphabet := FamilyObj(R)!.alphabet;
-    al2 := ShallowCopy(FamilyObj(R)!.alphabet2);
+    al2 := AlphabetOfRatExp(R);
     
     
     isOnlyEpsilon := function(R)

@@ -1,4 +1,4 @@
-<!-- $Id: graphs.xml,v 1.06  Exp $ -->
+<!-- $Id: graphs.xml,v 1.07  Exp $ -->
 <Appendix><Heading>Directed graphs</Heading>
 Automata are frequently described through directed labeled graphs. This appendix on directed graphs (digraphs) is devoted to some functions designed with the purpose of being used as auxiliary functions to deal with automata, but may have independent interest.
 
@@ -8,7 +8,7 @@ A directed graph with <M>n</M> vertices is represented by an adjacency list.
 
 For example, the list <C>G = [[2,4],[3],[1,4],[]]</C> represents a directed graph with <C>4 (= Length(G))</C> vertices; the sublist in position <C>i</C> is the list of endpoints of the edges beginning in vertex <M>i</M>.
     <Alt Only="LaTeX">
-      \begin{figure}[htbp] \begin{center} \leavevmode \epsfbox{graph.eps} \end{center} \label{fig:graph} \end{figure}
+      \begin{figure}[htbp] \begin{center} \leavevmode \includegraphics[bb=0 0 132 299]{graph} \end{center} \label{fig:graph} \end{figure}
     </Alt>
     <Alt Only="HTML">
       &#60;br&#62;&#60;center&#62;&#60;img src=&#34;graph.gif&#34;&#62;&#60;/center&#62;&#60;br&#62;
@@ -196,6 +196,22 @@ gap> Display(last);
  B |
 Initial state:    [ 1 ]
 Accepting states: [ 1, 2, 3 ]
+]]></Example>
+</Description> 
+</ManSection> 
+
+
+<ManSection> 
+<Func Name="AutoIsAcyclicGraph" Arg="G"/>
+<Description>
+The argument is a graph's list of adjacencies
+and this function returns true if the argument
+is an acyclic graph and false otherwise.
+<Example><![CDATA[
+gap> RandomDiGraph(3);
+[ [  ], [ 3 ], [ 2 ] ]
+gap> AutoIsAcyclicGraph(last);
+false
 ]]></Example>
 </Description> 
 </ManSection> 

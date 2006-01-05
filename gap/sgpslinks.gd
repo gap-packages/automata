@@ -3,7 +3,7 @@
 #W  sgpslinks.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: sgpslinks.gi,v 1.06 $
+#H  @(#)$Id: sgpslinks.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

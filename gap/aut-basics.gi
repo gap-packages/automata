@@ -3,7 +3,7 @@
 #W  aut-basics.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <jjoao@netcabo.pt>
 ##
-#H  @(#)$Id: aut-basics.gi,v 1.06 $
+#H  @(#)$Id: aut-basics.gi,v 1.07 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -45,48 +45,122 @@ end);
 ##
 ##  Returns the alphabet of the automaton
 ##
-InstallMethod(AlphabetOfAutomaton,
-        "Returns the alphabet of the automaton",
-        [IsAutomatonObj],
+InstallGlobalFunction(AlphabetOfAutomaton,
         function( A )
-    
-    return(FamilyObj(A)!.alphabet);
+    if not IsAutomaton(A) then
+        Error("The argument must be an automaton");
+    fi;
+    return(ShallowCopy(FamilyObj(A)!.alphabet));
 end);
 #############################################################################
 ##
-#A TransitionMatrixOfAutomaton(A)
+#F  AlphabetOfAutomatonAsList(A)
+##
+##  Returns the alphabet of the automaton as a list.
+##  If the alphabet of the automaton is an integer
+##  less than 27 it returns the list "abcd....",
+##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
+##
+InstallGlobalFunction(AlphabetOfAutomatonAsList,
+        function( A )
+    local a;
+    if not IsAutomaton(A) then
+        Error("The argument must be an automaton");
+    fi;
+    a := ShallowCopy(FamilyObj(A)!.alphabet);
+    if IsInt(a) then
+        if a < 27 then
+            return(List([1..a], i -> jascii[68+i]));
+        else
+            return(List([1..a], i -> Concatenation("a", String(i))));
+        fi;
+    fi;
+    return(a);
+end);
+#############################################################################
+##
+#F TransitionMatrixOfAutomaton(A)
 ##
 ## returns the transition matrix of the automaton
 ##
-InstallMethod(TransitionMatrixOfAutomaton,
-        "Returns the transition matrix of the automaton",
-        [IsAutomatonObj],
+InstallGlobalFunction(TransitionMatrixOfAutomaton,
         function( A )
+    if not IsAutomaton(A) then
+        Error("The argument must be an automaton");
+    fi;
     return(A!.transitions);
 end);
 #############################################################################
 ##
-#A InitialStatesOfAutomaton(A)
+#F InitialStatesOfAutomaton(A)
 ##
 ## returns the initial states of the automaton
 ##
-InstallMethod(InitialStatesOfAutomaton,
-        "Returns the initial states of the automaton",
-        [IsAutomatonObj],
+InstallGlobalFunction(InitialStatesOfAutomaton,
         function( A )
-    return(A!.initial);
+    if not IsAutomaton(A) then
+        Error("The argument must be an automaton");
+    fi;
+    return(ShallowCopy(A!.initial));
 end);
 #############################################################################
 ##
-#A FinalStatesOfAutomaton(A)
+#F SetInitialStatesOfAutomaton(A)
+##
+## Sets the initial states of the automaton
+##
+InstallGlobalFunction(SetInitialStatesOfAutomaton,
+        function( A, I )
+    if not IsAutomaton(A) then
+        Error("The first argument must be an automaton");
+    fi;
+    if IsInt(I) then
+        if not (I > 0 and I <= A!.states) then
+            Error("The second argument must be a list of positive integers (or just a positive integer) <= ", A!.states);
+        fi;
+        A!.initial := [I];
+        return;
+    fi;
+    if not (IsList(I) and ForAll(I, i->IsPosInt(i)) and ForAll(I, i-> i <= A!.states)) then
+        Error("The second argument must be a list of positive integers (or just a positive integer) <= ", A!.states);
+    fi;
+    A!.initial := ShallowCopy(I);
+end);
+#############################################################################
+##
+#F FinalStatesOfAutomaton(A)
 ##
 ## returns the final states of the automaton
 ##
-InstallMethod(FinalStatesOfAutomaton,
-        "Returns the final states of the automaton",
-        [IsAutomatonObj],
+InstallGlobalFunction(FinalStatesOfAutomaton,
         function( A )
-    return(A!.accepting);
+    if not IsAutomaton(A) then
+        Error("The argument must be an automaton");
+    fi;
+    return(ShallowCopy(A!.accepting));
+end);
+#############################################################################
+##
+#F SetFinalStatesOfAutomaton(A, F)
+##
+## Sets the final states of the automaton
+##
+InstallGlobalFunction(SetFinalStatesOfAutomaton,
+        function( A, F )
+    if not IsAutomaton(A) then
+        Error("The first argument must be an automaton");
+    fi;
+    if IsInt(F) then
+        if not (F > 0 and F <= A!.states) then
+            Error("The second argument must be a list of positive integers (or just a positive integer) <= ", A!.states);
+        fi;
+        A!.accepting := [F];
+        return;
+    fi;
+    if not (IsList(F) and ForAll(F, i->IsPosInt(i)) and ForAll(F, i-> i <= A!.states)) then
+        Error("The second argument must be a list of positive integers <= ", A!.states);
+    fi;
+    A!.accepting := ShallowCopy(F);
 end);
 #############################################################################
 ##
@@ -94,12 +168,31 @@ end);
 ##
 ## returns the number of states of the automaton
 ##
-InstallMethod(NumberStatesOfAutomaton,
-        "Returns the final states of the automaton",
-        [IsAutomatonObj],
+InstallGlobalFunction(NumberStatesOfAutomaton,
         function( A )
+    if not IsAutomaton(A) then
+        Error("The argument must be an automaton");
+    fi;
     return(A!.states);
 end);
+
+
+#############################################################################
+##
+#F  CopyAutomaton(A)
+##
+##  Returns a copy of the automaton A.
+##
+InstallGlobalFunction(CopyAutomaton, function ( A )
+    if not IsAutomatonObj(A) then
+        Error("The argument must be an automaton");
+    fi;
+    return Automaton( ShallowCopy( A!.type ), A!.states,
+                   AlphabetOfAutomaton(A), StructuralCopy( A!.transitions ), 
+                   ShallowCopy( A!.initial ),
+                   ShallowCopy( A!.accepting ) );
+end);
+
 #############################################################################
 ##
 #F  NullCompletionAutomaton(aut)
@@ -130,7 +223,7 @@ InstallGlobalFunction(NullCompletionAutomaton, function(aut)
             fi;
         od;
     od;
-    return Automaton("det", b, ShallowCopy(FamilyObj(aut)!.alphabet), t, aut!.initial, aut!.accepting);
+    return Automaton("det", b, AlphabetOfAutomaton(aut), t, aut!.initial, aut!.accepting);
 end);
 
 
@@ -166,7 +259,7 @@ InstallGlobalFunction(ListPermutedAutomata, function(A)
                     fi;
                 od;
             od;
-            Add(list, Automaton("epsilon", A!.states, FamilyObj(A)!.alphabet, T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+            Add(list, Automaton("epsilon", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
         od;
     elif A!.type = "nondet" then
         list := [];                           # List of the permuted automata
@@ -183,7 +276,7 @@ InstallGlobalFunction(ListPermutedAutomata, function(A)
                     fi;
                 od;
             od;
-            Add(list, Automaton("nondet", A!.states, FamilyObj(A)!.alphabet, T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+            Add(list, Automaton("nondet", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
         od;
     else
         list := [];                           # List of the permuted automata
@@ -200,7 +293,7 @@ InstallGlobalFunction(ListPermutedAutomata, function(A)
                     fi;
                 od;
             od;
-            Add(list, Automaton("det", A!.states, FamilyObj(A)!.alphabet, T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
+            Add(list, Automaton("det", A!.states, AlphabetOfAutomaton(A), T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
         od;
     fi;
     return(list);
@@ -237,7 +330,7 @@ InstallGlobalFunction(PermutedAutomaton, function(A, perm)
                 fi;
             od;
         od;
-        return(Automaton("det", A!.states, FamilyObj(A)!.alphabet, T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
+        return(Automaton("det", A!.states, AlphabetOfAutomaton(A), T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
     elif A!.type = "nondet" then
         for a in [1 .. A!.alphabet] do
             T[a] := [];
@@ -249,7 +342,7 @@ InstallGlobalFunction(PermutedAutomaton, function(A, perm)
                 fi;
             od;
         od;
-        return(Automaton("nondet", A!.states, FamilyObj(A)!.alphabet, T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+        return(Automaton("nondet", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
     else
         for a in [1 .. A!.alphabet] do
             T[a] := [];
@@ -261,7 +354,7 @@ InstallGlobalFunction(PermutedAutomaton, function(A, perm)
                 fi;
             od;
         od;
-        return(Automaton("epsilon", A!.states, FamilyObj(A)!.alphabet, T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+        return(Automaton("epsilon", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
     fi;
     
 end);
@@ -279,12 +372,8 @@ InstallGlobalFunction(IsDenseAutomaton, function(A)
         Error("<A> must be a deterministic automaton");
     fi;
         
-    if ForAll(A!.transitions, n -> IsDenseList(n) and 
-              ForAll(n,IsPosInt)) then
-        return true;
-    else
-        return false;
-    fi;
+    return(ForAll(A!.transitions, n -> IsDenseList(n) and 
+              ForAll(n,IsPosInt)));
 end);
 #############################################################################
 ##
@@ -378,17 +467,18 @@ end);
 
 #############################################################################
 ##
-#F  RemoveSinkStates(A)
+#F  RemovedSinkStates(A)
 ##
 ##  Removes the sink states of the automaton A
 ##
-InstallGlobalFunction(RemoveSinkStates, function(A)
+InstallGlobalFunction(RemovedSinkStates, function(A)
     local s, I, F, q, a, i, T, t, Q, acc, len;
     
     if not IsDeterministicAutomaton(A) then
         Error("The argument must be a deterministic automaton");
     fi;
     
+    A := CopyAutomaton(A);
     s := ListSinkStatesAut(A);
     T := StructuralCopy(A!.transitions);
     acc := Difference([1 .. A!.states], s);
@@ -430,8 +520,7 @@ InstallGlobalFunction(RemoveSinkStates, function(A)
     A!.transitions := T;
     A!.initial := [I];
     A!.accepting := F;
-#    return(A);
-#    return(Automaton("det", Length(acc), AlphabetOfAutomaton(A), T, [I], F));
+    return(A);
 end);
 
 
@@ -451,17 +540,25 @@ InstallGlobalFunction(IsRecognizedByAutomaton, function(arg)
     if not IsAutomatonObj(arg[1]) then
         Error("The first argument must be an automaton");
     fi;
-    if not IsString(arg[2]) then
-        Error("The second argument must be a string");
+    if not IsList(arg[2]) then
+        Error("The second argument must be a list");
     fi;
     A := MinimalAutomaton(arg[1]);
     w := arg[2];
     alph := AlphabetOfAutomaton(A);
-    for a in w do
-        if not a in alph then
-            return(false);
+    if IsList(alph) then
+        for a in w do
+            if not a in alph then
+                return(false);
+            fi;
+        od;
+    else
+        if alph < 22 then
+            alph := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"];
+        else
+            alph := List([1..alph], k -> Concatenation("a", String(k)));
         fi;
-    od;
+    fi;
     
     s := A!.initial[1];
     for c in w do
@@ -648,6 +745,77 @@ InstallGlobalFunction(IsReversibleAutomaton, function(A)
         od;
     od;
     return(true);
+end);
+
+
+
+
+
+#############################################################################
+##
+#F ProductOfLanguages(a1, a2)
+##
+## Given two regular languages (as automata or rational expressions),
+## returns an automaton that recognizes the concatenation of the given 
+## languages, that is, the set of words <M>uv</M> such that
+## <M>u</M> belongs to the first language and <M>v</M>
+## belongs to the second language.
+##
+InstallGlobalFunction(ProductOfLanguages, function(a1, a2)
+    local a, q, s, T, A;
+    
+    if IsAutomaton(a1) then
+        a1 := MinimalAutomaton(a1);
+    elif IsRationalExpression(a1) then
+        a1 := RatExpToAut(a1);
+    else
+        Error("The first argument must be an automaton or a rational expression");
+    fi;
+    if IsAutomaton(a2) then
+        a2 := MinimalAutomaton(a2);
+    elif IsRationalExpression(a2) then
+        a2 := RatExpToAut(a2);
+    else
+        Error("The second argument must be an automaton or a rational expression");
+    fi;
+    
+    if not AlphabetOfAutomaton(a1) = AlphabetOfAutomaton(a2) then
+        Error("A1 and A2 must have the same alphabet");
+    fi;
+    
+    a1 := RemovedSinkStates(a1);
+    a2 := RemovedSinkStates(a2);
+    
+    T := List(a1!.transitions, l -> List(l, q -> [q]));
+    
+    for a in [1..a2!.alphabet] do
+        for q in [1..a2!.states] do
+            if a2!.transitions[a][q] = 0 then
+                Add(T[a], []);
+            else
+                Add(T[a], [a2!.transitions[a][q] + a1!.states]);
+            fi;
+        od;
+    od;
+    
+    Add(T, List([1..a1!.states+a2!.states], i -> []));
+    
+    for q in a1!.accepting do
+        for s in a2!.initial do
+            Add(T[a1!.alphabet + 1][q], a1!.states + s);
+        od;
+    od;
+    
+    A := Automaton("epsilon", a1!.states + a2!.states, 
+                 a1!.alphabet + 1,
+                 T,
+                 ShallowCopy(a1!.initial),
+                 List(a2!.accepting, q -> q + a1!.states));
+
+    A := MinimalAutomaton(A);
+    A := RemovedSinkStates(A);
+    FamilyObj(A)!.alphabet := AlphabetOfAutomaton(a1);
+    return(A);
 end);
 
 #E
