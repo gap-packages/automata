@@ -1,10 +1,10 @@
 #############################################################################
 ##
 #W  rat-def.gi                         Manuel Delgado <mdelgado@fc.up.pt>
-#W                                    Jose Morais    <jjoao@netcabo.pt>
+#W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gi,v 1.07 $
+#H  @(#)$Id: rat-def.gi,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -12,12 +12,12 @@
 ##          Rational Expressions
 ##
 ##  RatExpOnnLetters( n, operation, list )
-## 
+##
 ## Constructs a rational expression on n letters.
 ##
-## The name of the operation is "product", "union" or "star" 
-##  list is a list (with one element in the case of "star") of rational 
-## expressions or a list consisting of an integer when the rational 
+## The name of the operation is "product", "union" or "star"
+##  list is a list (with one element in the case of "star") of rational
+## expressions or a list consisting of an integer when the rational
 ## expression is a single letter.
 ##
 ##  Example
@@ -26,7 +26,7 @@
 ##                       RatExpOnnLetters(2,[],[2])]);
 ##  (Due to the function PrintObj that follows, GAP writes  aUb )
 ##
-## ProductRatExp(r,r); 
+## ProductRatExp(r,r);
 ##  GAP writes (aUb)(aUb)
 ##
 ## UnionRatExp(StarRatExp(r),ProductRatExp(r,StarRatExp(r)));
@@ -39,13 +39,13 @@
 ## The empty set is considered a rational expression:
 ## RatExpOnnLetters(n,[],"empty_set");
 ############################################################################
-DeclareRepresentation( "IsRationalExpressionRep", IsComponentObjectRep, 
+DeclareRepresentation( "IsRationalExpressionRep", IsComponentObjectRep,
         [ "op", "list_exp" ] );
 
 
 ############################################################################
 InstallGlobalFunction( RatExpOnnLettersObj, function( Fam, ratexpression )
-    return Objectify( NewType( Fam, IsRatExpOnnLettersObj and 
+    return Objectify( NewType( Fam, IsRatExpOnnLettersObj and
                    IsRationalExpressionRep and IsAttributeStoringRep),  ratexpression );
 end );
 
@@ -58,16 +58,16 @@ end );
 InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
 
     local exp, F, R, l, x, k;
-    
-    if not (operation = "product" or operation = "union" or 
+
+    if not (operation = "product" or operation = "union" or
             operation = "star" or operation = [ ]) then
         Error("Wrong operation given in RatExpOnnLetters");
     fi;
-    
+
     if not (IsPosInt( n ) or IsList(n)) then
       Error( "<n> must be a positive integer or a list" );
     fi;
-    
+
     if operation = "star" then
         if not IsRationalExpression(list) then
             Error("The star must be on a rational expression");
@@ -75,14 +75,14 @@ InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
     elif not IsList(list) then
         Error("list must be a list");
     elif operation = [] then
-        if not(list = [ ] or list = "empty_set" or (Length(list)=1 
+        if not(list = [ ] or list = "empty_set" or (Length(list)=1
                    and IsPosInt(list[1]))) then
             Error("list must be the empty list, a list of one positive integer or \"empty_set\"");
         fi;
     elif  not  ForAll(list, x -> IsPosInt(x) or IsRationalExpression(x)) then
         Error("list must be a list of positive integers/rational expressions");
     fi;
-    
+
     if operation <> []  and operation <> "star" then
         for k in [1..Length(list)] do
             if IsPosInt(list[k]) then
@@ -90,13 +90,13 @@ InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
             fi;
         od;
     fi;
-    
+
     if operation = [] and Length(list) > 1 and list <> "empty_set" then
         Error("When <operation> is [], the third argument must be the empty list, a list of length 1 or \"empty_list\"");
     fi;
-    
+
     # Construct the family of rational expressions on n letters.
-    if IsInt(n) then    
+    if IsInt(n) then
         F:= NewFamily( Concatenation( "RatExp", String(n), "Letters" ),
                     IsRatExpOnnLettersObj );
     else
@@ -121,7 +121,7 @@ InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
     exp := rec(op := operation,
                list_exp := list );
     R := RatExpOnnLettersObj( F, exp );
-    
+
     # Return the rational expression.
     return R;
 end );
@@ -133,9 +133,9 @@ end );
 InstallGlobalFunction( RatExpToString, function( r, count )
     local str, e, A, flag, i, ret, xstr, xout,
           hasUnion;
-    
-    
-    
+
+
+
     if IsPosInt(AlphabetOfRatExp(r)) then
         if AlphabetOfRatExp(r) < 22 then
             A := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"];
@@ -154,7 +154,7 @@ InstallGlobalFunction( RatExpToString, function( r, count )
             od;
         fi;
     fi;
-    
+
     # Tests if a rational expression has a union rational subexpression
     hasUnion := function(r)
         if r!.op = [] then
@@ -167,7 +167,7 @@ InstallGlobalFunction( RatExpToString, function( r, count )
             return(ForAny(r!.list_exp, e -> hasUnion(e)));
         fi;
     end;
-    
+
     if not IsRatExpOnnLettersObj(r) then
         Error("The argument to RatExpToString must be a rational expression");
     fi;
@@ -208,7 +208,7 @@ InstallGlobalFunction( RatExpToString, function( r, count )
             count := ret[2];
             if e!.op = "union" then
                 if str = "" then
-                    str := ret[1];    
+                    str := ret[1];
                 else
                     str := Concatenation(str, "U", ret[1]);
                 fi;
@@ -237,7 +237,7 @@ end);
 ##
 #M  PrintObj(R)
 ##
-## Is used to display a rational expression <R> in a form that is readable by 
+## Is used to display a rational expression <R> in a form that is readable by
 ## a human being
 ##
 InstallMethod( PrintObj,
@@ -246,7 +246,7 @@ true,
 [ IsRatExpOnnLettersObj and IsRationalExpressionRep ], 0,
 function(r)
     local ret, string;
-    
+
     ret := RatExpToString(r, 0);
     string := ret[1];
     Setter(SizeRatExp)(r,ret[2]);
@@ -261,14 +261,49 @@ end );
 ##  the rational expression represented by S
 ##
 InstallGlobalFunction(RationalExpression, function(arg)
-    local i, I0, S0, RationalExp;
+    local i, I0, S0, RationalExp, processPowers;
 
-    
+
+#	This function parses a string and replaces a^n by aaa.. (n times)
+	processPowers := function(S)
+		local S2, lc, i, j, k, num;
+
+		if S = [] then
+			return [];
+		fi;
+		lc := S[1];		# The last character read
+		S2 := [lc];		# The converted string
+		i := 2;
+		while IsBound(S[i]) do
+			if S[i] = '^' and IsBound(S[i+1]) and IsDigitChar(S[i+1]) then
+				j := i + 1;
+				num := [];
+#				Get the power
+				while IsBound(S[j]) and IsDigitChar(S[j]) do
+					Add(num, S[j]);
+					j := j + 1;
+				od;
+				num := Int(num);
+				for k in [2..num] do
+					Add(S2, lc);
+				od;
+				i := j - 1;
+			else
+				Add(S2, S[i]);
+			fi;
+			lc := S[i];
+			i := i + 1;
+		od;
+		return S2;
+	end;
+##	End of processPowers()  --
+
+
     if Length(arg) = 0 then
         Error("Please specify a rational expression as a string");
     elif IsBound(arg[2]) then
         I0 := arg[2];
-        S0 := arg[1];
+        S0 := processPowers(arg[1]);
         if not ((IsPosInt(I0) or IsString(I0)) and IsString(S0)) then
             Error("The arguments to RationalExpression must be a string [and a positive integer or a string]");
         fi;
@@ -284,7 +319,7 @@ InstallGlobalFunction(RationalExpression, function(arg)
         fi;
     else
         I0 := [];
-        S0 := arg[1];
+        S0 := processPowers(arg[1]);
         if S0 = "@" then
             Error("When defining @, please specify the alphabet");
         fi;
@@ -294,12 +329,13 @@ InstallGlobalFunction(RationalExpression, function(arg)
             fi;
         od;
     fi;
-    
+
+
     RationalExp := function(S, I)
         local i, op, ord, I0, S0,
               getTopOp, buildStar, buildProduct,
               sub_exps, union_inds, star_inds, union_sub_exps;
-        
+
         if S = "" or S = "@" then
             return(RatExpOnnLetters(I, [], []));
         elif S = "empty_set" then
@@ -319,21 +355,21 @@ InstallGlobalFunction(RationalExpression, function(arg)
         union_inds     := [];
         star_inds      := [];
         union_sub_exps := [];
-            
-        ##  This functions returns the "top" most operation of the given
-        ##  expression
-        ##  getTopOp("aaUab*") returns "union"
-        ##  getTopOp("(bUa)*") returns "star"
-        ##  getTopOp("(bUa)*b") returns "product"
-        ##
-        ##  it also fills the array sub_exps with the sub expressions,
-        ##  union_inds with the indexes in sub_exps of the positions of
-        ##  the U symbols
-        ##  and star_inds with the indexes in sub_exps of the positions
-        ##  of the * symbols
+
+##  This functions returns the "top" most operation of the given
+##  expression
+##  getTopOp("aaUab*") returns "union"
+##  getTopOp("(bUa)*") returns "star"
+##  getTopOp("(bUa)*b") returns "product"
+##
+##  it also fills the array sub_exps with the sub expressions,
+##  union_inds with the indexes in sub_exps of the positions of
+##  the U symbols
+##  and star_inds with the indexes in sub_exps of the positions
+##  of the * symbols
         getTopOp := function(e)
             local i, c, stack, istack, star, nonstar, union, len, sub;
-            
+
             if e = "" or Length(e) = 1 then
                 return([]);
             else
@@ -393,14 +429,14 @@ InstallGlobalFunction(RationalExpression, function(arg)
                 fi;
             fi;
         end;
-        ##  End of getTopOp()  --
-    
-        ##  This function scans the array sub_exps and replaces
-        ##  all the strings that are meant to be star expressions
-        ##  by the corresponding star rational subexpression
+##  End of getTopOp()  --
+
+##  This function scans the array sub_exps and replaces
+##  all the strings that are meant to be star expressions
+##  by the corresponding star rational subexpression
         buildStar := function()
             local i;
-            
+
             if not star_inds = [] then
                 for i in star_inds do
                     if i-1 > 0 then
@@ -415,15 +451,15 @@ InstallGlobalFunction(RationalExpression, function(arg)
                 od;
             fi;
         end;
-        ##  End of buildStar()  --
-        
-        ##  When the "top" most operation is "union", this functions
-        ##  groups the product subexpressions of the union, building
-        ##  the list union_sub_exps to be used in
-        ##  RatExpOnnLetters(I, "union", union_sub_exps
+##  End of buildStar()  --
+
+##  When the "top" most operation is "union", this functions
+##  groups the product subexpressions of the union, building
+##  the list union_sub_exps to be used in
+##  RatExpOnnLetters(I, "union", union_sub_exps
         buildProduct := function()
             local i, j, k, list, len;
-            
+
             list := [];
             j    := 1;
             len  := Length(sub_exps);
@@ -451,8 +487,8 @@ InstallGlobalFunction(RationalExpression, function(arg)
                 Add(union_sub_exps, RatExpOnnLetters(I, "product", list));
             fi;
         end;
-        ##  End of buildProduct()  --
-           
+##  End of buildProduct()  --
+
         op := getTopOp(S);
         buildStar();
         if op = "star" then
@@ -474,7 +510,7 @@ InstallGlobalFunction(RationalExpression, function(arg)
             return(RatExpOnnLetters(I, "union", union_sub_exps));
         fi;
     end;
-    
+
     return(RationalExp(S0, I0));
 end);
 
@@ -506,7 +542,7 @@ end );
 ##
 InstallGlobalFunction(RandomRatExp, function(arg)
     local aut, m, n;
-    
+
     if Length(arg) = 0 then
         Error("Please specify the number of letters of the alphabet of the rational expression or a string");
     fi;
@@ -540,7 +576,7 @@ InstallMethod(SizeRatExp,
         [IsRatExpOnnLettersObj],
         function( r )
     local str, e, flag, count;
-    
+
     if not IsRatExpOnnLettersObj(r) then
         Error("The argument to RatExpToString must be a rational expression");
     fi;
@@ -595,7 +631,7 @@ InstallGlobalFunction(AlphabetOfRatExpAsList, function( R )
     fi;
     return(a);
 end
-        
+
         );
 
 ############################################################################
@@ -607,17 +643,17 @@ InstallGlobalFunction(IsRationalExpression, function(R)
 end);
 ############################################################################
 ##
-#M Methods for the comparison operations. 
+#M Methods for the comparison operations.
 ##
 InstallMethod( \=,
     "for two rational sets",
     ReturnTrue,
-        [ IsRatExpOnnLettersObj and IsRationalExpressionRep, 
-          IsRatExpOnnLettersObj and IsRationalExpressionRep,  ], 
+        [ IsRatExpOnnLettersObj and IsRationalExpressionRep,
+          IsRatExpOnnLettersObj and IsRationalExpressionRep,  ],
     0,
-        function( L1, L2 ) 
+        function( L1, L2 )
     local i;
-    
+
     return( AlphabetOfRatExp(L1) = AlphabetOfRatExp(L2) and L1!.op = L2!.op and L1!.list_exp = L2!.list_exp );
 end );
 
@@ -625,8 +661,8 @@ InstallMethod( \<,
         "for two rational expressions",
             #    IsIdenticalObj,
         true,
-        [ IsRatExpOnnLettersObj and IsRationalExpressionRep, 
-          IsRatExpOnnLettersObj and IsRationalExpressionRep,  ], 
+        [ IsRatExpOnnLettersObj and IsRationalExpressionRep,
+          IsRatExpOnnLettersObj and IsRationalExpressionRep,  ],
         0,
         function( x, y )
     if x = y then

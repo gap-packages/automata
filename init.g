@@ -1,21 +1,13 @@
 #############################################################################
 ##
 #W  init.g                            Manuel Delgado <mdelgado@fc.up.pt>
-#W                                    Jose Morais    <jjoao@netcabo.pt>
+#W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: init.g,v 1.07 $
+#H  @(#)$Id: init.g,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
-
-# announce the package version
-DeclareAutoPackage("automata", "1.07", ReturnTrue);
-
-# install the documentation
-DeclarePackageAutoDocumentation( "automata", "doc" );
-
-
 #############################################################################
 ##
 #R  Read the actual code.

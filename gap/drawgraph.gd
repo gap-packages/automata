@@ -2,7 +2,7 @@
 ##
 #W  drawgraph.gd      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gd,v 1.07 $
+#H  @(#)$Id: drawgraph.gd,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

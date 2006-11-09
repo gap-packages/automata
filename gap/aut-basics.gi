@@ -1,9 +1,9 @@
 ############################################################################
 ##
 #W  aut-basics.gi                        Manuel Delgado <mdelgado@fc.up.pt>
-#W                                      Jose Morais    <jjoao@netcabo.pt>
+#W                                      Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-basics.gi,v 1.07 $
+#H  @(#)$Id: aut-basics.gi,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -554,12 +554,12 @@ InstallGlobalFunction(IsRecognizedByAutomaton, function(arg)
         od;
     else
         if alph < 22 then
-            alph := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"];
+            alph := "abcdefghijklmnopqrstu";
         else
             alph := List([1..alph], k -> Concatenation("a", String(k)));
         fi;
     fi;
-    
+
     s := A!.initial[1];
     for c in w do
         a := Position(alph, c);

@@ -1,9 +1,9 @@
 #############################################################################
 ##
 #W  drawgraph.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
-#W                                     Jose Morais    <jjoao@netcabo.pt>
+#W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gi,v 1.07 $
+#H  @(#)$Id: drawgraph.gi,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -20,6 +20,9 @@ InstallGlobalFunction(dotAutomaton, function(A, fich)
           nome, R, l, s, t, tdir, xs, xout;
 
     tdir := DirectoryTemporary();
+    if tdir = fail then
+        tdir := Directory(GAPInfo.UserHome);
+    fi;
     name := Filename(tdir, Concatenation(fich, ".dot"));
     aut := A;
 
@@ -137,7 +140,7 @@ end);
 ##  automaton A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawAutomaton, function(arg)
-    local path, gv, dot, tdir, name, res;
+    local path, gv, dot, d__, name__, s1__, tdir, name, res;
 
     if Length(arg) = 0 then
         Error("Please give me an automaton to draw");
@@ -152,13 +155,29 @@ InstallGlobalFunction(DrawAutomaton, function(arg)
         gv := Filename( path, "gsview32" );
     fi;
     if gv = fail then
+        gv := Filename( path, "gsview64" );
+    fi;
+    if gv = fail then
         gv := Filename( path, "gv" );
     fi;
     if gv = fail then
         Error("Please install evince, ggv, gsview or gv");
     fi;
 
-    dot := Filename( path, "dot" );
+    if ARCH_IS_UNIX( ) then
+        dot := Filename( path, "dot" );
+    elif ARCH_IS_WINDOWS( ) then
+        for d__ in path do
+            name__ := LowercaseString(Filename(d__, ""));
+            s1__ := ReplacedString(name__, "graphviz", "xx");
+            if s1__ <> name__ then
+                dot := Filename( d__, "dot" );
+                break;
+            fi;
+        od;
+    else
+
+    fi;
     if dot = fail then
         Error("Please install GraphViz (http://www.graphviz.org )");
     fi;
@@ -176,7 +195,13 @@ InstallGlobalFunction(DrawAutomaton, function(arg)
     name := res[2];
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
     Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
-    Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null &")));
+    if ARCH_IS_UNIX( ) then
+        Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
+    elif ARCH_IS_WINDOWS( ) then
+        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(name, ".ps")]);
+    else
+
+    fi;
 
 end);
 
@@ -192,6 +217,9 @@ InstallGlobalFunction(dotGraph, function(G, fich)
         Error("The second argument must be a string");
     fi;
     tdir := DirectoryTemporary();
+    if tdir = fail then
+        tdir := Directory(GAPInfo.UserHome);
+    fi;
 	name := Filename(tdir, Concatenation(fich, ".dot"));
 
     nome := "grafo";
@@ -216,7 +244,7 @@ end);
 ## Graph A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawGraph, function(arg)
-    local path, gv, dot, tdir, name, res;
+    local path, gv, dot, d__, name__, s1__, tdir, name, res;
 
     if Length(arg) = 0 then
         Error("Please give me an automaton to draw");
@@ -231,13 +259,29 @@ InstallGlobalFunction(DrawGraph, function(arg)
         gv := Filename( path, "gsview32" );
     fi;
     if gv = fail then
+        gv := Filename( path, "gsview64" );
+    fi;
+    if gv = fail then
         gv := Filename( path, "gv" );
     fi;
     if gv = fail then
         Error("Please install evince, ggv, gsview or gv");
     fi;
 
-    dot := Filename( path, "dot" );
+    if ARCH_IS_UNIX( ) then
+        dot := Filename( path, "dot" );
+    elif ARCH_IS_WINDOWS( ) then
+        for d__ in path do
+            name__ := LowercaseString(Filename(d__, ""));
+            s1__ := ReplacedString(name__, "graphviz", "xx");
+            if s1__ <> name__ then
+                dot := Filename( d__, "dot" );
+                break;
+            fi;
+        od;
+    else
+
+    fi;
     if dot = fail then
         Error("Please install GraphViz (http://www.graphviz.org )");
     fi;
@@ -250,8 +294,13 @@ InstallGlobalFunction(DrawGraph, function(arg)
     name := res[2];
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
     Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
-    Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null &")));
+    if ARCH_IS_UNIX( ) then
+        Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
+    elif ARCH_IS_WINDOWS( ) then
+        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(name, ".ps")]);
+    else
 
+    fi;
 end);
 
 ############################################################################
@@ -271,12 +320,18 @@ InstallGlobalFunction(dotAutomata, function(A)
 
     if Length(A) = 3 then
         tdir := DirectoryTemporary();
+    if tdir = fail then
+        tdir := Directory(GAPInfo.UserHome);
+    fi;
 	name := Filename(tdir, Concatenation(String(A[3]), ".dot"));
  xname := Concatenation(String(A[3]), ".dot");
         aut1 := A[1];
         aut2 := A[2];
     elif Length(A) = 2 then
         tdir := DirectoryTemporary();
+    if tdir = fail then
+        tdir := Directory(GAPInfo.UserHome);
+    fi;
 	name := Filename(tdir, "automato.dot");
  xname := "automato.dot";
         aut1 := A[1];
@@ -404,7 +459,7 @@ end);
 ## automaton A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawAutomata, function(arg)
-    local fich, A, B, q, a, k, path, gv, dot, tdir, name, res;
+    local fich, A, B, q, a, k, path, gv, dot, d__, name__, s1__, tdir, name, res;
 
     if not (IsBound(arg[1]) and IsBound(arg[2])) then
         Error("This function takes two automata as arguments");
@@ -442,13 +497,29 @@ InstallGlobalFunction(DrawAutomata, function(arg)
         gv := Filename( path, "gsview32" );
     fi;
     if gv = fail then
+        gv := Filename( path, "gsview64" );
+    fi;
+    if gv = fail then
         gv := Filename( path, "gv" );
     fi;
     if gv = fail then
         Error("Please install evince, ggv, gsview or gv");
     fi;
 
-    dot := Filename( path, "dot" );
+    if ARCH_IS_UNIX( ) then
+        dot := Filename( path, "dot" );
+    elif ARCH_IS_WINDOWS( ) then
+        for d__ in path do
+            name__ := LowercaseString(Filename(d__, ""));
+            s1__ := ReplacedString(name__, "graphviz", "xx");
+            if s1__ <> name__ then
+                dot := Filename( d__, "dot" );
+                break;
+            fi;
+        od;
+    else
+
+    fi;
     if dot = fail then
         Error("Please install GraphViz (http://www.graphviz.org )");
     fi;
@@ -476,7 +547,13 @@ InstallGlobalFunction(DrawAutomata, function(arg)
     name := res[2];
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
     Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
-    Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null &")));
+    if ARCH_IS_UNIX( ) then
+        Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
+    elif ARCH_IS_WINDOWS( ) then
+        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(name, ".ps")]);
+    else
+
+    fi;
 end);
 #############################################################################
 ##
@@ -486,7 +563,7 @@ end);
 ##
 InstallGlobalFunction(DrawSCCAutomaton, function(arg)
     local G, G2, A, fich, au, aut, l1, l2,  arr, array, colors, i, j, k, letters, max, name,
-          nome, R, l, s, t, path, gv, dot, tdir;
+          nome, R, l, s, t, path, gv, dot, d__, name__, s1__, tdir;
 
     if not IsBound(arg[1]) then
         Error("The first argument must be an automaton");
@@ -511,13 +588,29 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
         gv := Filename( path, "gsview32" );
     fi;
     if gv = fail then
+        gv := Filename( path, "gsview64" );
+    fi;
+    if gv = fail then
         gv := Filename( path, "gv" );
     fi;
     if gv = fail then
         Error("Please install evince, ggv, gsview or gv");
     fi;
 
-    dot := Filename( path, "dot" );
+    if ARCH_IS_UNIX( ) then
+        dot := Filename( path, "dot" );
+    elif ARCH_IS_WINDOWS( ) then
+        for d__ in path do
+            name__ := LowercaseString(Filename(d__, ""));
+            s1__ := ReplacedString(name__, "graphviz", "xx");
+            if s1__ <> name__ then
+                dot := Filename( d__, "dot" );
+                break;
+            fi;
+        od;
+    else
+
+    fi;
     if dot = fail then
         Error("Please install GraphViz (http://www.graphviz.org )");
     fi;
@@ -533,6 +626,9 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
 
 
     tdir := DirectoryTemporary();
+    if tdir = fail then
+        tdir := Directory(GAPInfo.UserHome);
+    fi;
     name := Filename(tdir, Concatenation(fich, ".dot"));
     aut := A;
 
@@ -651,8 +747,13 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
 
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", Concatenation(fich, ".dot"), "-o", Concatenation(fich, ".dot.ps")]);
     Print(Concatenation("Displaying file: ", name, ".ps\n"));
-    Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", Concatenation(fich, ".dot"), ".ps 2>/dev/null &")));
+    if ARCH_IS_UNIX( ) then
+           Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", Concatenation(fich, ".dot"), ".ps 2>/dev/null 1>/dev/null &")));
+    elif ARCH_IS_WINDOWS( ) then
+        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(Concatenation(fich, ".dot"), ".ps")]);
+    else
 
+    fi;
 end);
 
 ##

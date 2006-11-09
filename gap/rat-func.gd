@@ -1,12 +1,12 @@
 #############################################################################
 ##
 #W  rat-func.gd                         Manuel Delgado <mdelgado@fc.up.pt>
-##                                      Jose Morais <jjoao@netcabo.pt>
+##                                      Jose Morais <josejoao@fc.up.pt>
 ##
 ##  This file declares functions that perform tests on the languages
 ##  of automata.
 ##
-#H  @(#)$Id: rat-func.gd,v 1.07 $
+#H  @(#)$Id: rat-func.gd,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

@@ -1,9 +1,9 @@
 ############################################################################
 ##
 #W  finitelang.gi                        Manuel Delgado <mdelgado@fc.up.pt>
-#W                                       Jose Morais    <jjoao@netcabo.pt>
+#W                                       Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: finitelang.gi,v 1.07 $
+#H  @(#)$Id: finitelang.gi,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

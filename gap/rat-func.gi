@@ -1,11 +1,11 @@
 #############################################################################
 ##
 #W  rat-func.gi                         Manuel Delgado <mdelgado@fc.up.pt>
-##                                      Jose Morais <jjoao@netcabo.pt>
+##                                      Jose Morais <josejoao@fc.up.pt>
 ##
 ##  This file contains functions that perform tests on automata
 ##
-#H  @(#)$Id: rat-func.gi,v 1.07 $
+#H  @(#)$Id: rat-func.gi,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

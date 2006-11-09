@@ -2,9 +2,9 @@
 ##
 ##
 #W  miscelaneous.gi                       Manuel Delgado <mdelgado@fc.up.pt>
-#W                                        Jose Morais    <jjoao@netcabo.pt>
+#W                                        Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: miscelaneous.gi,v 1.07 $
+#H  @(#)$Id: miscelaneous.gi,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 #############################################################################
@@ -128,7 +128,7 @@ end);
 ##
 ##  A pseudo ascci character table
 ##
-InstallValue(jascii, SSortedList(" !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ\n\\\r\t"));
+InstallValue(jascii, SSortedList(" !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¸º»ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖ×ÙÚÛÜàáâãäåçèéêëìíîïñòóôõö÷ùúûü\n\\\r\t"));
 MakeImmutable(jascii);
         
 #############################################################################

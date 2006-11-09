@@ -38,11 +38,11 @@ Subtitle := "A package on automata",
 ##  See '?Extending: Version Numbers' in GAP help for an explanation
 ##  of valid version numbers. For an automatic package distribution update
 ##  you must provide a new version number even after small changes.
-Version := "1.07",
+Version := "1.09",
 
 ##  Release date of the current version in dd/mm/yyyy format.
 # 
-Date := "05/01/2006",
+Date := "09/11/2006",
 
 ##  URL of the archive(s) of the current package release, but *without*
 ##  the format extension(s), like '.zoo', which are given next.
@@ -53,7 +53,7 @@ Date := "05/01/2006",
 ##  example/init.g, ...    or  example-1.3/init.g, ...  )
 # 
 ArchiveURL := 
-          "http://www.fc.up.pt/cmup/mdelgado/automata/automata-1.07",
+          "http://www.fc.up.pt/cmup/mdelgado/automata/automata-1.09",
 
 ##  All provided formats as list of file extensions, separated by white
 ##  space or commas.
@@ -168,15 +168,17 @@ Persons := [
     FirstNames    := "Jose",
     IsAuthor      := true,
     IsMaintainer  := true,
-    Email         := "jjoao@netcabo.pt",
+    Email         := "josejoao@fc.up.pt",
 #    WWWHome       := "",
     PostalAddress := Concatenation( [
                        "Jose Morais\n",
-                       "Av. da Republica 1651 4Dto\n",
-                       "4430-206 Vila Nova de Gaia\n",
-                       "Portugal\n" ] ),
-    Place         := "Vila Nova de Gaia",
-    Institution   := "Faculdade de Ciencias"
+                       "Departamento de Matemática Pura\n",
+                   "Faculdade de Ciências\n",
+                   "Rua do Campo Alegre, 687\n",
+                   "Porto\n",
+                   "Portugal" ] ),
+    Place         := "Porto",
+    Institution   := "Faculdade de Ciências"
   )
 # provide such a record for each author and/or maintainer ...
   

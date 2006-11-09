@@ -1,11 +1,11 @@
 #############################################################################
 ##
 #W  aut-func.gd                          Manuel Delgado <mdelgado@fc.up.pt>
-#W                                       Jose Morais    <jjoao@netcabo.pt>
+#W                                       Jose Morais    <josejoao@fc.up.pt>
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: automataoperations.gi,v 1.07 $
+#H  @(#)$Id: aut-func.gd,v 1.09 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
