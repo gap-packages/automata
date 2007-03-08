@@ -5,7 +5,7 @@ The GAP 4 package `automata'
 Introduction
 ------------
 
-This is release 1.09 of  the package `automata'.
+This is release 1.10 of  the package `automata'.
 
 The features of this package include
 
@@ -20,6 +20,7 @@ The features of this package include
 There is a manual in the sub-directory 'doc' written using the GAP package
 gapdoc which describes the available functions in detail. The dvi, pdf, html
 versions of the manual are also available there.
+
 
 If you have used this package, please let us know by sending
 us an email.  If you  have found important features missing or if there is a

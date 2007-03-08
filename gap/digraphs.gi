@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.09 $
+#H  @(#)$Id: digraphs.gi,v 1.10 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

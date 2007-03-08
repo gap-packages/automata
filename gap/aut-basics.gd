@@ -3,7 +3,7 @@
 #W  aut-basics.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                       Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-basics.gd,v 1.09 $
+#H  @(#)$Id: aut-basics.gd,v 1.10 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

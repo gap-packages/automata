@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gi,v 1.09 $
+#H  @(#)$Id: rat-def.gi,v 1.10 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

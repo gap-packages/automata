@@ -3,13 +3,32 @@
 #W  drawgraph.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gi,v 1.09 $
+#H  @(#)$Id: drawgraph.gi,v 1.10 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
 ##  The functions in this file make use of the external program dot (from
 ##  the freely available software package graphviz, for graph visualization)
 ##  to display the graphs.
+############################################################################
+
+############################################################################
+##
+#F  SetDrawingsExtraFormat(f)
+##
+##  This function sets the value of DrawingsExtraFormat to <f>.
+##
+InstallGlobalFunction(SetDrawingsExtraFormat, function(f)
+    
+    if not f in DrawingsListOfExtraFormats then
+        Print("The specified format is not valid.\nThe valid formats are:\n", DrawingsListOfExtraFormats, ".\nPlease check  http://www.graphviz.org/doc/info/output.html\nfor more info.\n");
+        return;
+    fi;
+    MakeReadWriteGlobal("DrawingsExtraFormat");
+    DrawingsExtraFormat := f;
+    MakeReadOnlyGlobal("DrawingsExtraFormat");
+end);
+
 ############################################################################
 ##
 #F  dotAutomaton( <A>, fich ) . . . . . . . . . . . Prepares a file in the DOT
@@ -195,6 +214,10 @@ InstallGlobalFunction(DrawAutomaton, function(arg)
     name := res[2];
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
     Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
+    if DrawingsExtraFormat <> "none" then
+        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
+        Print(Concatenation("The extra output format file: ", Filename(tdir, name), ".", DrawingsExtraFormat, "\nhas also been created.\n"));
+    fi;
     if ARCH_IS_UNIX( ) then
         Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
     elif ARCH_IS_WINDOWS( ) then
@@ -222,7 +245,7 @@ InstallGlobalFunction(dotGraph, function(G, fich)
     fi;
 	name := Filename(tdir, Concatenation(fich, ".dot"));
 
-    nome := "grafo";
+    nome := "Graph__";
 
     PrintTo(name, "digraph  ", nome, "{", "\n");
     for l  in [ 1 .. Length( G ) ]  do
@@ -294,6 +317,10 @@ InstallGlobalFunction(DrawGraph, function(arg)
     name := res[2];
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
     Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
+    if DrawingsExtraFormat <> "none" then
+        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
+        Print(Concatenation("The extra output format file: ", Filename(tdir, name), ".", DrawingsExtraFormat, "\nhas also been created.\n"));
+    fi;
     if ARCH_IS_UNIX( ) then
         Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
     elif ARCH_IS_WINDOWS( ) then
@@ -338,7 +365,7 @@ InstallGlobalFunction(dotAutomata, function(A)
         aut2 := A[2];
     fi;
 
-    nome := "automato";
+    nome := "Automaton";
     letters := [];
 
     au := StructuralCopy(aut2!.transitions);
@@ -547,6 +574,10 @@ InstallGlobalFunction(DrawAutomata, function(arg)
     name := res[2];
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
     Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
+    if DrawingsExtraFormat <> "none" then
+        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
+        Print(Concatenation("The extra output format file: ", Filename(tdir, name), ".", DrawingsExtraFormat, "\nhas also been created.\n"));
+    fi;
     if ARCH_IS_UNIX( ) then
         Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
     elif ARCH_IS_WINDOWS( ) then
@@ -747,6 +778,10 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
 
     Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", Concatenation(fich, ".dot"), "-o", Concatenation(fich, ".dot.ps")]);
     Print(Concatenation("Displaying file: ", name, ".ps\n"));
+    if DrawingsExtraFormat <> "none" then
+        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
+        Print(Concatenation("The extra output format file: ", name, ".", DrawingsExtraFormat, "\nhas also been created.\n"));
+    fi;
     if ARCH_IS_UNIX( ) then
            Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", Concatenation(fich, ".dot"), ".ps 2>/dev/null 1>/dev/null &")));
     elif ARCH_IS_WINDOWS( ) then

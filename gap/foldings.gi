@@ -3,7 +3,7 @@
 #W  foldings.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: foldings.gi,v 1.09 $
+#H  @(#)$Id: foldings.gi,v 1.10 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -243,6 +243,11 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
     ####################################
     identify := function(p1,p2)
         local a, i, q;
+        
+        if p2 = 1 then  # let the initial state never be removed
+            p2 := p1;
+            p1 := 1;
+        fi;
         if bool then
             Print("I am identifying states ",p1, " and ",p2, "\n");
         fi;
@@ -269,6 +274,7 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
         if bool then
             n := n+1;
             DrawAutomaton(Automaton("nondet",ns,na,T,[1],[1]),String(n));
+#            Error("...");
         fi;
         
     end;
@@ -349,7 +355,8 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
     while b do
         b := false;
         aut := Automaton("det", Length(newtable[1]), na, newtable,[1],[1]);
-        ug := UnderlyingGraphOfAutomaton(aut);
+        ug := UnderlyingMultiGraphOfAutomaton(aut);
+#        ug := UnderlyingGraphOfAutomaton(aut);
         T := aut!.transitions;
         s := []; #list of vertices of degree 1
         for r in [2..aut!.states] do

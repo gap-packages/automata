@@ -2,10 +2,36 @@
 ##
 #W  drawgraph.gd      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gd,v 1.09 $
+#H  @(#)$Id: drawgraph.gd,v 1.10 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
+
+############################################################################
+##
+#V  DrawingsExtraFormat
+##
+##  This variable holds a string which is a dot output format.
+##  If it is different from "none", any drawing will generate also
+##  an output in this format.
+##
+BindGlobal( "DrawingsExtraFormat", "none" );
+
+############################################################################
+##
+#V  DrawingsListOfExtraFormats
+##
+##  This variable holds a list of possible dot output formats.
+##
+BindGlobal( "DrawingsListOfExtraFormats", ["dia", "fig", "gd", "gd2", "gif", "hpgl", "jpg", "mif", "mp", "pcl", "pic", "plain", "plain-ext", "png", "ps", "ps2", "svg", "svgz", "vrml", "vtx", "wbmp", "none"]);
+
+############################################################################
+##
+#F  SetDrawingsExtraFormat(f)
+##
+##  This function sets the value of DrawingsExtraFormat to <f>.
+##
+DeclareGlobalFunction( "SetDrawingsExtraFormat" );
 
 ############################################################################
 ##
