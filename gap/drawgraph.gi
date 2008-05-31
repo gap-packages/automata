@@ -3,7 +3,7 @@
 #W  drawgraph.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gi,v 1.10 $
+#H  @(#)$Id: drawgraph.gi,v 1.11 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -19,7 +19,6 @@
 ##  This function sets the value of DrawingsExtraFormat to <f>.
 ##
 InstallGlobalFunction(SetDrawingsExtraFormat, function(f)
-    
     if not f in DrawingsListOfExtraFormats then
         Print("The specified format is not valid.\nThe valid formats are:\n", DrawingsListOfExtraFormats, ".\nPlease check  http://www.graphviz.org/doc/info/output.html\nfor more info.\n");
         return;
@@ -29,203 +28,291 @@ InstallGlobalFunction(SetDrawingsExtraFormat, function(f)
     MakeReadOnlyGlobal("DrawingsExtraFormat");
 end);
 
+
 ############################################################################
 ##
-#F  dotAutomaton( <A>, fich ) . . . . . . . . . . . Prepares a file in the DOT
-## language to draw the automaton A using dot
+#F  SetDrawingsExtraGraphAttributes(L)
 ##
-InstallGlobalFunction(dotAutomaton, function(A, fich)
-    local au, aut, l1, l2,  arr, array, colors, i, j, k, letters, max, name,
-          nome, R, l, s, t, tdir, xs, xout;
-
-    tdir := DirectoryTemporary();
-    if tdir = fail then
-        tdir := Directory(GAPInfo.UserHome);
+##  This function sets the value of DrawingsExtraGraphAttributes to <L>.
+##  For example if we wanted to define the graph size to be 7x9, we would call
+##  SetDrawingsExtraGraphAttributes(["size=7,9"]);
+##
+InstallGlobalFunction(SetDrawingsExtraGraphAttributes, function(L)
+    if not (IsList(L) and ForAll(L, l -> IsString(l))) then
+        Error("The argument must be a list of strings");
     fi;
-    name := Filename(tdir, Concatenation(fich, ".dot"));
-    aut := A;
+    MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
+    DrawingsExtraGraphAttributes := L;
+    MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
+end);
 
-    nome := "Automaton";
-    letters := [];
-    au := StructuralCopy(aut!.transitions);
-    for i in [1 .. Length(aut!.transitions)] do
-        for j in [1 .. Length(aut!.transitions[1])] do
-            if not IsBound(au[i][j]) or au[i][j] = 0 or au[i][j] = [0] then
-                au[i][j] := " ";
+############################################################################
+##
+#F  ClearDrawingsExtraGraphAttributes()
+##
+##  This function sets DrawingsExtraGraphAttributes to "none"
+##  Thus indicating that the graph should be drawn with dot's default parameters.
+##
+InstallGlobalFunction(ClearDrawingsExtraGraphAttributes, function()
+    MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
+    DrawingsExtraGraphAttributes := "none";
+    MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
+end);
+
+
+
+
+#========================================================================
+# This function parses the arguments for the functions DrawAutomaton and DrawSCCAutomaton.
+#------------------------------------------------------------------------
+InstallGlobalFunction(AUX__parseDrawAutArgs, function(LA)
+    local   A,  fich,  state_names,  states_to_colorize,  l,  s;
+    
+    A := LA[1];  # the automaton to draw
+    fich := "automaton";  # this is a string with the name of the .dot file
+    state_names := List([1..A!.states], s -> String(s));  # this is a list of strings with new state names
+    states_to_colorize := [];
+    
+    # ------------------------------------------------------------------------------
+    # ----- Treat the arguments ----------------------------------------------------
+    # Check if there is a second argument
+    if IsBound(LA[2]) then
+        if IsString(LA[2]) then  # this is a string with the name of the .dot file
+            fich := LA[2];
+        elif IsList(LA[2]) and IsString(LA[2][1]) then  # this is a list of strings with new state names
+            state_names := LA[2];
+            if Length(state_names) <> A!.states then
+                Error("The list of new state names must have length equal to the number of states of the automaton");
             fi;
-        od;
-    od;
-
-    if IsInt(AlphabetOfAutomaton(aut)) then
-        if aut!.alphabet < 7 then       ##  for small alphabets, the letters
-                                        ##  a, b, c, d are used
-            letters := ["a", "b", "c", "d", "e", "f"];
-            colors := ["red", "blue", "green", "yellow", "brown", "black"];
+        elif IsList(LA[2]) and IsList(LA[2][1]) and IsPosInt(LA[2][1][1]) then  # this is a list of lists of state numbers to draw in colorize
+            states_to_colorize := LA[2];
+            for l in states_to_colorize do
+                for s in l do
+                    if s < 1 or s > A!.states then
+                        Error("The states to colorize must be integers in [1 ..", A!.states, "]");
+                    fi;
+                od;
+            od;
         else
-            for i in [1 .. aut!.alphabet] do
-                Add(letters, Concatenation("a", String(i)));
-            od;
-            colors := [];
-            for i in [1 .. aut!.alphabet] do
-                colors[i]:= "black";
-            od;
+            Error("Wrong second argument, please check the manual");
         fi;
-    else
-        if aut!.alphabet < 7 then       ##  for small alphabets, the letters
-                                        ##  a, b, c, d are used
-            letters := [];
-            for i in AlphabetOfAutomaton(A) do
-                Add(letters, [i]);
-            od;
-            colors := ["red", "blue", "green", "yellow", "brown", "black"];
-        else
-            letters := [];
-            for i in AlphabetOfAutomaton(A) do
-                Add(letters, [i]);
-            od;
-            colors := [];
-            for i in [1 .. aut!.alphabet] do
-                colors[i]:= "black";
-            od;
-        fi;
-    fi;
-    if aut!.type = "epsilon" then
-        letters[aut!.alphabet] := "@";
-    fi;
-    l2 := [];
-    array := [];
-    s := [];
-    arr := List( au, x -> List( x, String ) );
-    max := Maximum( List( arr, x -> Maximum( List(x,Length) ) ) );
-
-
-    for i in [1 .. aut!.states] do
-        for j in [1 .. aut!.alphabet] do
-            xs := "";
-            xout := OutputTextString(xs, false);
-            PrintTo(xout, letters[j]);
-            if IsBound(au[j]) and IsBound(au[j][i]) and au[j][i] <> " " then
-                if IsList(au[j][i]) then
-                    for k in au[j][i] do
-                        Add(array, [i, " -> ", k," [label=", "\"", xs,"\"",",color=", colors[j], "];"]);
+        # Check if there is a third argument
+        if IsBound(LA[3]) then
+            if IsString(LA[3]) then  # this is a string with the name of the .dot file
+                fich := LA[3];
+            elif IsList(LA[3]) and IsString(LA[3][1]) then  # this is a list of strings with new state names
+                state_names := LA[3];
+                if Length(state_names) <> A!.states then
+                    Error("The list of new state names must have length equal to the number of states of the automaton");
+                fi;
+            elif IsList(LA[3]) and IsList(LA[3][1]) and IsPosInt(LA[3][1][1]) then  # this is a list of lists of state numbers to draw in colorize
+                states_to_colorize := LA[3];
+                for l in states_to_colorize do
+                    for s in l do
+                        if s < 1 or s > A!.states then
+                            Error("The states to colorize must be integers in [1 ..", A!.states, "]");
+                        fi;
+                    od;
+                od;
+            else
+                Error("Wrong third argument, please check the manual");
+            fi;
+            # Check if there is a fourth argument
+            if IsBound(LA[4]) then
+                if IsString(LA[4]) then  # this is a string with the name of the .dot file
+                    fich := LA[4];
+                elif IsList(LA[4]) and IsString(LA[4][1]) then  # this is a list of strings with new state names
+                    state_names := LA[4];
+                    if Length(state_names) <> A!.states then
+                        Error("The list of new state names must have length equal to the number of states of the automaton");
+                    fi;
+                elif IsList(LA[4]) and IsList(LA[4][1]) and IsPosInt(LA[4][1][1]) then  # this is a list of lists of state numbers to draw in colorize
+                    states_to_colorize := LA[4];
+                    for l in states_to_colorize do
+                        for s in l do
+                            if s < 1 or s > A!.states then
+                                Error("The states to colorize must be integers in [1 ..", A!.states, "]");
+                            fi;
+                        od;
                     od;
                 else
-                    Add(array, [i, " -> ", au[j][i]," [label=", "\"", xs,"\"",",color=", colors[j], "];"]);
+                    Error("Wrong fourth argument, please check the manual");
                 fi;
             fi;
-            CloseStream(xout);
-        od;
-    od;
-
-
-
-    arr := List( array, x -> List( x, String ) );
-
-    PrintTo(name, "digraph  ", nome, "{", "\n");
-    for l  in [ 1 .. Length( arr ) ]  do
-        for k  in [ 1 .. Length( arr[ l ] ) ]  do
-            AppendTo(name,  String( arr[ l ][ k ]) );
- #           if k = Length( arr[ l ] )  then
- #               AppendTo(name,  " " );
- #           else
- #               AppendTo(name,  " " );
- #           fi;
-        od;
-        if l = Length( arr )  then
-            AppendTo(name,  "\n" );
-        else
-            AppendTo(name,  "\n" );
         fi;
-    od;
-    for i in Difference(aut!.initial, aut!.accepting) do
-        AppendTo(name, i, " [shape=triangle];","\n");
-    od;
-    for j in aut!.accepting do
-        if j in aut!.initial then
-            AppendTo(name, j, " [shape=triangle,peripheries=2];","\n");
-        else
-            AppendTo(name, j, " [shape=doublecircle];","\n");
-        fi;
-    od;
-    for k in Difference([1..aut!.states],Concatenation(aut!.initial, aut!.accepting)) do
-        AppendTo(name, k, " [shape=circle];","\n");
-    od;
-    AppendTo(name,"}","\n");
-    return([tdir, Concatenation(fich, ".dot")]);
+    fi;
+    # ----- End of  Treat the arguments --------------------------------------------
+    # ------------------------------------------------------------------------------
+    return [A, fich, state_names, states_to_colorize];
 end);
+
+
+
+#========================================================================
+# This function writes the .dot file specifying a graph.
+# It is used by DrawAutomaton and DrawSCCAutomaton.
+#
+# The argument 'who_called' specifies which function requested the .dot file:
+# who_called = 1  --->  DrawAutomaton
+# who_called = 2  --->  DrawSCCAutomaton
+#------------------------------------------------------------------------
+InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_colorize, who_called)
+    local   alph, letters,  edge_colors,  node_colors,  tdir,  name,  T,  a,  
+            q,  str,  out_str,  p,  color_of_node,  k, scc, G;
+    
+    letters := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"];
+    edge_colors := ["red", "blue", "green", "purple", "orange", "brown", "darksalmon", "darkseagreen", "darkturquoise",
+                    "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick", "forestgreen", "gold"];
+    node_colors := [ "white", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
+                     "crimson", "cyan", "darkgoldenrod", "darkkhaki", "darkorange", "darkorchid", "darksalmon", 
+                     "darkseagreen", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick",
+                     "forestgreen", "gold", "goldenrod", "green", "greenyellow", "grey", "hotpink", "indianred", "khaki", 
+                     "lawngreen", "lightblue", "lightcoral", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", 
+                     "lightslateblue", "lightslategrey", "limegreen", "magenta", "maroon", "mediumaquamarine", "mediumorchid", 
+                     "mediumpurple", "mediumseagreen", "mediumspringgreen", "mediumturquoise", "mediumvioletred",
+                     "moccasin", "navajowhite", "olivedrab2", "orange", "orangered", "orchid", "palegreen", "paleturquoise", 
+                     "palevioletred", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue1", 
+                     "saddlebrown", "salmon", "sandybrown", "seagreen", "skyblue", "slateblue", "slategrey", "springgreen", 
+                     "steelblue", "tan", "thistle", "tomato", "turquoise", "violet", "violetred", "wheat", "yellow", "yellowgreen" ];
+
+    tdir := CMUP__getTempDir();
+    name := Filename(tdir, Concatenation(fich, ".dot"));
+
+    # ---------------------------------------------------------------------------------    
+    # Prepare the letters to be used in edge labels and their colors (if alphabet > 16)
+    alph := Length(AlphabetOfAutomatonAsList(A));
+    if alph > 16 then
+        edge_colors := List([1 .. alph], _ -> "black");
+        if IsInt(AlphabetOfAutomaton(A)) then
+            letters := List([1 .. A!.alphabet], i -> Concatenation("a", String(i)));
+        fi;
+    fi;
+    if IsList(AlphabetOfAutomaton(A)) then
+        letters := List(AlphabetOfAutomaton(A), a -> [a]);
+    fi;
+    if A!.type = "epsilon" then
+        letters[alph] := "@";
+    fi;
+    # ---------------------------------------------------------------------------------
+
+    T := StructuralCopy(A!.transitions);
+    str := "digraph  Automaton{\n";  # the string that will hold the code of the .dot file
+    out_str := OutputTextString(str, true);
+    
+    # ---------------------------------------------------------------------------------
+    # If we were called by DrawSCCAutomaton, determine the edges to be drawn with dotted lines
+    if who_called = 2 then
+        scc := GraphStronglyConnectedComponents(UnderlyingGraphOfAutomaton(A));
+        G := [];
+        for p in scc do
+            for q in p do
+                G[q] := p;
+            od;
+        od;
+    fi;
+    # ---------------------------------------------------------------------------------
+    
+    # ---------------------------------------------------------------------------------
+    # Write the edges
+    for a in [1 .. alph] do
+        for p in [1 .. A!.states] do
+            if IsList(T[a][p]) then  # this is a nondet or epsilon automaton
+                if who_called = 1 then
+                    for q in T[a][p] do  # write edge  p --a--> q
+                        AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
+                    od;
+                elif who_called = 2 then
+                    for q in T[a][p] do  # write edge  p --a--> q
+                        if p in G[p] and q in G[p] and IsBound(G[p][2]) then
+                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
+                        else
+                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], ",style = dotted];\n");
+                        fi;
+                    od;
+                fi;
+            else
+                q := T[a][p];
+                if q > 0 then
+                    if who_called = 1 then
+                        AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
+                    elif who_called = 2 then
+                        if p in G[p] and q in G[p] and IsBound(G[p][2]) then
+                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
+                        else
+                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], ",style = dotted];\n");
+                        fi;
+                    fi;
+                    
+                fi;
+            fi;
+        od;
+    od;
+    # ---------------------------------------------------------------------------------
+        
+    # ---------------------------------------------------------------------------------
+    # Prepare the list color_of_node, such that state p will be in color node_colors[k] <==> color_of_node[p] = k
+    color_of_node := List([1 .. A!.states], _ -> 1);
+    for k in [1 .. Length(states_to_colorize)] do
+        for p in states_to_colorize[k] do
+            color_of_node[p] := k+1;
+        od;
+    od;
+    # ---------------------------------------------------------------------------------
+    
+    # ---------------------------------------------------------------------------------
+    # Write the nodes
+    for p in Difference(A!.initial, A!.accepting) do
+        AppendTo(out_str, "\"", map[p], "\" [shape=triangle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+    od;
+    for p in A!.accepting do
+        if p in A!.initial then
+            AppendTo(out_str, "\"", map[p], "\" [shape=triangle,peripheries=2, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+        else
+            AppendTo(out_str, "\"", map[p], "\" [shape=doublecircle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+        fi;
+    od;
+    for p in Difference([1 .. A!.states], Concatenation(A!.initial, A!.accepting)) do
+        AppendTo(out_str, "\"", map[p], "\" [shape=circle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+    od;
+    AppendTo(out_str,"}","\n");
+    # ---------------------------------------------------------------------------------
+
+    CloseStream(out_str);
+    PrintTo(name, str);
+        
+    return tdir;
+end);
+## ----  End of WriteDotFileForGraph()  ---- 
+#========================================================================
+
+
+
 #############################################################################
 ##
 #F  DrawAutomaton( arg ) . . . . . . . . . . .  produces a ps file with the
 ##  automaton A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawAutomaton, function(arg)
-    local path, gv, dot, d__, name__, s1__, tdir, name, res;
+    local   A,  fich,  state_names,  states_to_colorize,  l,  s,  gv,  
+            dot,  tdir, res;
 
     if Length(arg) = 0 then
         Error("Please give me an automaton to draw");
     fi;
-    # Search for a program to display .ps
-    path := DirectoriesSystemPrograms();
-    gv := Filename( path, "evince" );
-    if gv = fail then
-        gv := Filename( path, "ggv" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview32" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview64" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gv" );
-    fi;
-    if gv = fail then
-        Error("Please install evince, ggv, gsview or gv");
-    fi;
-
-    if ARCH_IS_UNIX( ) then
-        dot := Filename( path, "dot" );
-    elif ARCH_IS_WINDOWS( ) then
-        for d__ in path do
-            name__ := LowercaseString(Filename(d__, ""));
-            s1__ := ReplacedString(name__, "graphviz", "xx");
-            if s1__ <> name__ then
-                dot := Filename( d__, "dot" );
-                break;
-            fi;
-        od;
-    else
-
-    fi;
-    if dot = fail then
-        Error("Please install GraphViz (http://www.graphviz.org )");
-    fi;
-
-
     if not IsAutomatonObj(arg[1]) then
         Error("The first argument must be an automaton");
     fi;
-    if IsBound(arg[2]) then
-        res := dotAutomaton(arg[1], arg[2]);
-    else
-        res := dotAutomaton(arg[1], "automaton");
-    fi;
-    tdir := res[1];
-    name := res[2];
-    Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
-    Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
-    if DrawingsExtraFormat <> "none" then
-        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
-        Print(Concatenation("The extra output format file: ", Filename(tdir, name), ".", DrawingsExtraFormat, "\nhas also been created.\n"));
-    fi;
-    if ARCH_IS_UNIX( ) then
-        Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
-    elif ARCH_IS_WINDOWS( ) then
-        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(name, ".ps")]);
-    else
-
-    fi;
-
+    
+    res := AUX__parseDrawAutArgs(arg);  # parse the arguments
+    A := res[1];
+    fich := res[2];
+    state_names := res[3];
+    states_to_colorize := res[4];
+    
+    gv := CMUP__getPsViewer();
+    dot := CMUP__getDotExecutable();
+    tdir := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 1);
+    CMUP__executeDotAndViewer(tdir, dot, gv, Concatenation(fich, ".dot"));
 end);
 
 #############################################################################
@@ -239,11 +326,8 @@ InstallGlobalFunction(dotGraph, function(G, fich)
     if not IsString(fich) then
         Error("The second argument must be a string");
     fi;
-    tdir := DirectoryTemporary();
-    if tdir = fail then
-        tdir := Directory(GAPInfo.UserHome);
-    fi;
-	name := Filename(tdir, Concatenation(fich, ".dot"));
+    tdir := CMUP__getTempDir();
+    name := Filename(tdir, Concatenation(fich, ".dot"));
 
     nome := "Graph__";
 
@@ -267,47 +351,15 @@ end);
 ## Graph A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawGraph, function(arg)
-    local path, gv, dot, d__, name__, s1__, tdir, name, res;
+    local gv, dot, tdir, name, res;
 
     if Length(arg) = 0 then
-        Error("Please give me an automaton to draw");
-    fi;
-    # Search for a program to display .ps
-    path := DirectoriesSystemPrograms();
-    gv := Filename( path, "evince" );
-    if gv = fail then
-        gv := Filename( path, "ggv" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview32" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview64" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gv" );
-    fi;
-    if gv = fail then
-        Error("Please install evince, ggv, gsview or gv");
+        Error("Please give me a graph to draw");
     fi;
 
-    if ARCH_IS_UNIX( ) then
-        dot := Filename( path, "dot" );
-    elif ARCH_IS_WINDOWS( ) then
-        for d__ in path do
-            name__ := LowercaseString(Filename(d__, ""));
-            s1__ := ReplacedString(name__, "graphviz", "xx");
-            if s1__ <> name__ then
-                dot := Filename( d__, "dot" );
-                break;
-            fi;
-        od;
-    else
+    gv := CMUP__getPsViewer();
+    dot := CMUP__getDotExecutable();
 
-    fi;
-    if dot = fail then
-        Error("Please install GraphViz (http://www.graphviz.org )");
-    fi;
     if IsBound(arg[2]) then
         res := dotGraph(arg[1], arg[2]);
     else
@@ -315,19 +367,7 @@ InstallGlobalFunction(DrawGraph, function(arg)
     fi;
     tdir := res[1];
     name := res[2];
-    Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
-    Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
-    if DrawingsExtraFormat <> "none" then
-        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
-        Print(Concatenation("The extra output format file: ", Filename(tdir, name), ".", DrawingsExtraFormat, "\nhas also been created.\n"));
-    fi;
-    if ARCH_IS_UNIX( ) then
-        Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
-    elif ARCH_IS_WINDOWS( ) then
-        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(name, ".ps")]);
-    else
-
-    fi;
+    CMUP__executeDotAndViewer(tdir, dot, gv, name);
 end);
 
 ############################################################################
@@ -344,23 +384,16 @@ InstallGlobalFunction(dotAutomata, function(A)
             IsAutomatonObj(A[1]) and IsAutomatonObj(A[2]) ) then
         Error("The argument of dotAutomata is a list of automata");
     fi;
-
+    
+    tdir := CMUP__getTempDir();
     if Length(A) = 3 then
-        tdir := DirectoryTemporary();
-    if tdir = fail then
-        tdir := Directory(GAPInfo.UserHome);
-    fi;
-	name := Filename(tdir, Concatenation(String(A[3]), ".dot"));
- xname := Concatenation(String(A[3]), ".dot");
+        name := Filename(tdir, Concatenation(String(A[3]), ".dot"));
+        xname := Concatenation(String(A[3]), ".dot");
         aut1 := A[1];
         aut2 := A[2];
     elif Length(A) = 2 then
-        tdir := DirectoryTemporary();
-    if tdir = fail then
-        tdir := Directory(GAPInfo.UserHome);
-    fi;
-	name := Filename(tdir, "automato.dot");
- xname := "automato.dot";
+ 	name := Filename(tdir, "automaton.dot");
+        xname := "automato.dot";
         aut1 := A[1];
         aut2 := A[2];
     fi;
@@ -486,7 +519,7 @@ end);
 ## automaton A using the dot language and stops after showing it
 ##
 InstallGlobalFunction(DrawAutomata, function(arg)
-    local fich, A, B, q, a, k, path, gv, dot, d__, name__, s1__, tdir, name, res;
+    local fich, A, B, q, a, k, gv, dot, tdir, name, res;
 
     if not (IsBound(arg[1]) and IsBound(arg[2])) then
         Error("This function takes two automata as arguments");
@@ -514,42 +547,8 @@ InstallGlobalFunction(DrawAutomata, function(arg)
         return;
     fi;
 
-    # Search for a program to display .ps
-    path := DirectoriesSystemPrograms();
-    gv := Filename( path, "evince" );
-    if gv = fail then
-        gv := Filename( path, "ggv" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview32" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview64" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gv" );
-    fi;
-    if gv = fail then
-        Error("Please install evince, ggv, gsview or gv");
-    fi;
-
-    if ARCH_IS_UNIX( ) then
-        dot := Filename( path, "dot" );
-    elif ARCH_IS_WINDOWS( ) then
-        for d__ in path do
-            name__ := LowercaseString(Filename(d__, ""));
-            s1__ := ReplacedString(name__, "graphviz", "xx");
-            if s1__ <> name__ then
-                dot := Filename( d__, "dot" );
-                break;
-            fi;
-        od;
-    else
-
-    fi;
-    if dot = fail then
-        Error("Please install GraphViz (http://www.graphviz.org )");
-    fi;
+    gv := CMUP__getPsViewer();
+    dot := CMUP__getDotExecutable();
 
     for a in [1 .. A!.alphabet] do
         for q in [1 .. A!.states] do
@@ -572,19 +571,7 @@ InstallGlobalFunction(DrawAutomata, function(arg)
 
     tdir := res[1];
     name := res[2];
-    Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", "-o", Concatenation(name, ".ps"), name]);
-    Print(Concatenation("Displaying file: ", Filename(tdir, name), ".ps\n"));
-    if DrawingsExtraFormat <> "none" then
-        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
-        Print(Concatenation("The extra output format file: ", Filename(tdir, name), ".", DrawingsExtraFormat, "\nhas also been created.\n"));
-    fi;
-    if ARCH_IS_UNIX( ) then
-        Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", name, ".ps 2>/dev/null 1>/dev/null &")));
-    elif ARCH_IS_WINDOWS( ) then
-        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(name, ".ps")]);
-    else
-
-    fi;
+    CMUP__executeDotAndViewer(tdir, dot, gv, name);
 end);
 #############################################################################
 ##
@@ -593,202 +580,26 @@ end);
 ## emphasized.
 ##
 InstallGlobalFunction(DrawSCCAutomaton, function(arg)
-    local G, G2, A, fich, au, aut, l1, l2,  arr, array, colors, i, j, k, letters, max, name,
-          nome, R, l, s, t, path, gv, dot, d__, name__, s1__, tdir;
+    local   A,  fich,  state_names,  states_to_colorize,  l,  s,  gv,  
+            dot,  tdir, res;
 
-    if not IsBound(arg[1]) then
+    if Length(arg) = 0 then
+        Error("Please give me an automaton to draw");
+    fi;
+    if not IsAutomatonObj(arg[1]) then
         Error("The first argument must be an automaton");
     fi;
-    A := arg[1];
-    if not IsAutomatonObj(A) then
-        Error("The first argument must be an automaton");
-    fi;
-    if not IsBound(arg[2]) then
-        fich := "sccautomaton";
-    else
-        fich := arg[2];
-    fi;
-
-    # Search for a program to display .ps
-    path := DirectoriesSystemPrograms();
-    gv := Filename( path, "evince" );
-    if gv = fail then
-        gv := Filename( path, "ggv" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview32" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gsview64" );
-    fi;
-    if gv = fail then
-        gv := Filename( path, "gv" );
-    fi;
-    if gv = fail then
-        Error("Please install evince, ggv, gsview or gv");
-    fi;
-
-    if ARCH_IS_UNIX( ) then
-        dot := Filename( path, "dot" );
-    elif ARCH_IS_WINDOWS( ) then
-        for d__ in path do
-            name__ := LowercaseString(Filename(d__, ""));
-            s1__ := ReplacedString(name__, "graphviz", "xx");
-            if s1__ <> name__ then
-                dot := Filename( d__, "dot" );
-                break;
-            fi;
-        od;
-    else
-
-    fi;
-    if dot = fail then
-        Error("Please install GraphViz (http://www.graphviz.org )");
-    fi;
-
-
-    G := GraphStronglyConnectedComponents(UnderlyingGraphOfAutomaton(A));
-    G2 := [];
-    for i in G do
-        for j in i do
-            G2[j] := i;
-        od;
-    od;
-
-
-    tdir := DirectoryTemporary();
-    if tdir = fail then
-        tdir := Directory(GAPInfo.UserHome);
-    fi;
-    name := Filename(tdir, Concatenation(fich, ".dot"));
-    aut := A;
-
-    nome := "Automaton";
-    letters := [];
-    au := StructuralCopy(aut!.transitions);
-    for i in [1 .. Length(aut!.transitions)] do
-        for j in [1 .. Length(aut!.transitions[1])] do
-            if not IsBound(au[i][j]) or au[i][j] = 0 or au[i][j] = [0] then
-                au[i][j] := " ";
-            fi;
-        od;
-    od;
-
-    if IsInt(AlphabetOfAutomaton(aut)) then
-        if aut!.alphabet < 7 then       ##  for small alphabets, the letters
-                                        ##  a, b, c, d are used
-            letters := ["a", "b", "c", "d", "e", "f"];
-            colors := ["red", "blue", "green", "yellow", "brown", "black"];
-        else
-            for i in [1 .. aut!.alphabet] do
-                Add(letters, Concatenation("a", String(i)));
-            od;
-            colors := [];
-            for i in [1 .. aut!.alphabet] do
-                colors[i]:= "black";
-            od;
-        fi;
-    else
-        if aut!.alphabet < 7 then       ##  for small alphabets, the letters
-                                        ##  a, b, c, d are used
-            letters := [];
-            for i in AlphabetOfAutomaton(A) do
-                Add(letters, [i]);
-            od;
-            colors := ["red", "blue", "green", "yellow", "brown", "black"];
-        else
-            letters := [];
-            for i in AlphabetOfAutomaton(A) do
-                Add(letters, [i]);
-            od;
-            colors := [];
-            for i in [1 .. aut!.alphabet] do
-                colors[i]:= "black";
-            od;
-        fi;
-    fi;
-    l2 := [];
-    array := [];
-    s := [];
-    arr := List( au, x -> List( x, String ) );
-    max := Maximum( List( arr, x -> Maximum( List(x,Length) ) ) );
-
-    for i in [1 .. aut!.states] do
-        for j in [1 .. aut!.alphabet] do
-            if IsBound(au[j]) and IsBound(au[j][i]) and
-               au[j][i] <> " " then
-                if IsList(au[j][i]) then
-                    for k in au[j][i] do
-                        if i in G2[i] and k in G2[i] and Length(G2[i]) > 1 then
-                            Add(array, [i, " -> ", k," [label=", "\"", letters[j],"\"",",color=", colors[j], "];"]);
-                        else
-                            Add(array, [i, " -> ", k," [label=", "\"", letters[j],"\"",",color=", colors[j], ",style = dotted];"]);
-                        fi;
-                    od;
-                else
-                    if i in G2[i] and au[j][i] in G2[i] and Length(G2[i]) > 1 then
-                        Add(array, [i, " -> ", au[j][i]," [label=", "\"", letters[j],"\"",",color=", colors[j], "];"]);
-                    else
-                        Add(array, [i, " -> ", au[j][i]," [label=", "\"", letters[j],"\"",",color=", colors[j], ",style = dotted];"]);
-                    fi;
-                fi;
-            fi;
-
-        od;
-    od;
-
-    arr := List( array, x -> List( x, String ) );
-
-    PrintTo(name, "digraph  ", nome, "{", "\n");
-    for l  in [ 1 .. Length( arr ) ]  do
-        for k  in [ 1 .. Length( arr[ l ] ) ]  do
-            AppendTo(name,  String( arr[ l ][ k ]) );
- #           if k = Length( arr[ l ] )  then
- #               AppendTo(name,  " " );
- #           else
- #               AppendTo(name,  " " );
- #           fi;
-        od;
-        if l = Length( arr )  then
-            AppendTo(name,  "\n" );
-        else
-            AppendTo(name,  "\n" );
-        fi;
-    od;
-    for i in aut!.initial do
-        AppendTo(name,"{rank = same; \" \";", i,"}","\n");
-        AppendTo(name,"\" \" [shape=plaintext];","\n");
-        AppendTo(name,"\" \" ", " -> ", i, " [style=bold, color=black];","\n");
-    od;
-    for j in aut!.accepting do
-        if Length(G2[j]) = 1 then
-            AppendTo(name, j, " [shape=doublecircle,color=gray];","\n");
-        else
-            AppendTo(name, j, " [shape=doublecircle];","\n");
-        fi;
-    od;
-    for k in Difference([1..aut!.states],aut!.accepting) do
-        if Length(G2[k]) = 1 then
-            AppendTo(name, k, " [shape=circle,color=gray];","\n");
-        else
-            AppendTo(name, k, " [shape=circle];","\n");
-        fi;
-    od;
-    AppendTo(name,"}","\n");
-
-    Process(tdir, dot, InputTextUser(), OutputTextUser(), ["-Tps", Concatenation(fich, ".dot"), "-o", Concatenation(fich, ".dot.ps")]);
-    Print(Concatenation("Displaying file: ", name, ".ps\n"));
-    if DrawingsExtraFormat <> "none" then
-        Process(tdir, dot, InputTextUser(), OutputTextUser(), [Concatenation("-T", DrawingsExtraFormat), "-o", Concatenation(name, ".", DrawingsExtraFormat), name]);
-        Print(Concatenation("The extra output format file: ", name, ".", DrawingsExtraFormat, "\nhas also been created.\n"));
-    fi;
-    if ARCH_IS_UNIX( ) then
-           Exec(Concatenation("cd ", Filename(tdir, ""), "; ", gv, Concatenation(" ", Concatenation(fich, ".dot"), ".ps 2>/dev/null 1>/dev/null &")));
-    elif ARCH_IS_WINDOWS( ) then
-        Process(tdir, gv, InputTextUser(), OutputTextUser(), [Concatenation(Concatenation(fich, ".dot"), ".ps")]);
-    else
-
-    fi;
+    
+    res := AUX__parseDrawAutArgs(arg);  # parse the arguments
+    A := res[1];
+    fich := res[2];
+    state_names := res[3];
+    states_to_colorize := res[4];
+    
+    gv := CMUP__getPsViewer();
+    dot := CMUP__getDotExecutable();
+    tdir := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 2);
+    CMUP__executeDotAndViewer(tdir, dot, gv, Concatenation(fich, ".dot"));
 end);
 
 ##

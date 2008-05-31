@@ -3,7 +3,7 @@
 #W  finitelang.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                       Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: finitelang.gd,v 1.10 $
+#H  @(#)$Id: finitelang.gd,v 1.11 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

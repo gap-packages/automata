@@ -1,4 +1,4 @@
-<!-- $Id: graphs.xml,v 1.10  Exp $ -->
+<!-- $Id: graphs.xml,v 1.11  Exp $ -->
 <Appendix><Heading>Directed graphs</Heading>
 Automata are frequently described through directed labeled graphs. This appendix on directed graphs (digraphs) is devoted to some functions designed with the purpose of being used as auxiliary functions to deal with automata, but may have independent interest.
 

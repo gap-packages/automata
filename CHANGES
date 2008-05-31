@@ -1,0 +1,15 @@
+                     -----------------------------------
+                     | CHANGES of the Automata package |
+                     -----------------------------------
+
+1.10 -> 1.11
+
+- Added the possibility to define dot's graph attributes, affecting all
+  drawings;
+
+- DrawAutomaton() and DrawSCCAutomaton():
+  - As optional argument, we may define the text label of each state;
+  - As optional argument, we may define sets of states to be colored
+    in different colors;
+
+- Corrected a bug in the function  IsContainedLang;

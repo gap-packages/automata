@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-15"?>
-  <!-- $Id: drawing.xml,v 1.10  Exp $ -->
+  <!-- $Id: drawing.xml,v 1.11  Exp $ -->
   <Appendix>
     <Heading>
       Drawing automata
@@ -18,35 +18,74 @@
       </Alt>
     </Alt>
     T Labs, that can be obtained at
-    <C>http://www.graphviz.org/</C>.
+    <URL>http://www.graphviz.org/</URL>.
     <Section>
       <Heading>
         Installing some external programs
       </Heading>
-      If you work under
-      <C>LINUX</C>, you should install <C>graphviz</C>.
+      In order to create the drawings you should install <URL Text="graphviz">http://www.graphviz.org/</URL>
+      and to view them you should install one of <URL Text="evince">http://www.gnome.org/projects/evince/</URL>,
+      <URL Text="ggv">http://directory.fsf.org/GNU/ggv.html</URL>,
+      <URL Text="gsview">http://pages.cs.wisc.edu/~ghost/gsview/</URL> or
+      <URL Text="gv">http://www.gnu.org/software/gv/</URL>.
     </Section>
     <Section>
       <Heading>
         Functions to draw automata
       </Heading>
       <ManSection>
-        <Func Arg="A [, file]" Name="DrawAutomaton" />
+        <Func Arg="A [,state_names, L, file]" Name="DrawAutomaton" />
         <Description>
           This function draws automaton
-          <C>A</C>.
+          <A>A</A>.
+	  The arguments <A>state_names</A>, <A>L</A> and <A>file</A> are optional.
+
+	  <P />
+	  An automaton with <C>n</C> states will be drawn with numbers <C>1</C> to <C>n</C>
+	  written inside the corresponding graph node.
+	  The argument <A>state_names</A> is a list of <C>n</C> strings which will be the new text
+	  written inside the corresponding graph node.
+
+	  <P />
+	  The argument <A>L</A> is a list of lists of integers, each of which specifies a set
+	  of states to be drawn in a different color.
+
+	  <P />
+	  The argument <A>file</A> is a string that specifies the name of the file containing the drawing.
+	  If it is not give, it defaults to <C>"automaton"</C>.
 <Example><![CDATA[
 gap> x:=Automaton("det",3,2,[ [ 2, 3, 0 ], [ 0, 1, 2 ] ],[ 1 ],[ 1, 2, 3 ]);;
-gap> DrawAutomaton(x,"exx");
-Displaying file: /tmp/tmp.LKoc7O/exx.dot.ps
+gap> DrawAutomaton(x,"file_name");
+Displaying file: /tmp/tmp.Rj0v1s/file_name.dot.ps
+
+gap> DrawAutomaton(x,["st 1", "2", "C"],"file_name");
+Displaying file: /tmp/tmp.BCH3FO/file_name.dot.ps
+
+gap> DrawAutomaton(x,["st 1", "2", "C"],[[2],[1,3]]);
+Displaying file: /tmp/tmp.LPnJMq/automaton.dot.ps
 ]]></Example>
-The output would be the following diagram displayed in a <E>ghostview</E> window.
+The output of the three previous <C>DrawAutomaton</C> commands would be the following diagrams displayed in a <E>ghostview</E> window,
+respectively.
 <P />
     <Alt Only="LaTeX">
-      \begin{figure}[htbp] \begin{center} \leavevmode \includegraphics[bb=0 0 132 304]{aut2} \end{center} \label{fig:aut2} \end{figure}
+      \begin{figure}[htbp] \begin{center} \leavevmode \includegraphics[bb=0 0 74 250]{aut2.jpg} \end{center} \label{fig:aut2} \end{figure}
     </Alt>
     <Alt Only="HTML">
-      &#60;br&#62;&#60;center&#62;&#60;img src=&#34;aut2.gif&#34;&#62;&#60;/center&#62;&#60;br&#62;
+      &#60;br&#62;&#60;center&#62;&#60;img src=&#34;aut2.jpg&#34;&#62;&#60;/center&#62;&#60;br&#62;
+    </Alt>
+    <P />
+    <Alt Only="LaTeX">
+      \begin{figure}[htbp] \begin{center} \leavevmode \includegraphics[bb=0 0 100 250]{aut2_1.jpg} \end{center} \label{fig:aut2_1} \end{figure}
+    </Alt>
+    <Alt Only="HTML">
+      &#60;br&#62;&#60;center&#62;&#60;img src=&#34;aut2_1.jpg&#34;&#62;&#60;/center&#62;&#60;br&#62;
+    </Alt>
+    <P />
+    <Alt Only="LaTeX">
+      \begin{figure}[htbp] \begin{center} \leavevmode \includegraphics[bb=0 0 100 250]{aut2_2.jpg} \end{center} \label{fig:aut2_2} \end{figure}
+    </Alt>
+    <Alt Only="HTML">
+      &#60;br&#62;&#60;center&#62;&#60;img src=&#34;aut2_2.jpg&#34;&#62;&#60;/center&#62;&#60;br&#62;
     </Alt>
     <P />
         </Description>
@@ -81,14 +120,33 @@ The output would be the following diagram displayed in a <E>ghostview</E> window
         </Description>
       </ManSection>
       <ManSection>
-        <Func Arg="A [, file]" Name="DrawSCCAutomaton" />
+        <Func Arg="A [,state_names, L, file]" Name="DrawSCCAutomaton" />
         <Description>
           Draws automaton
           <C>
             A
           </C>
           and highlights it&#39;s strongly connected components by drawing the other edges in a dotted style.
+	  <P />
+	  The optional arguments <A>state_names</A>, <A>L</A> and <A>file</A> are as described in
+	  <Ref Func="DrawAutomaton" />.
         </Description>
       </ManSection>
+    </Section>
+
+    <Section>
+       <Heading>Drawings output formats</Heading>
+       Since drawings are mostly used in the <Package>SgpViz</Package> package, please
+       refer to that package's
+       <URL Text="manual">http://www.gap-system.org/Manuals/pkg/sgpviz/doc/manual.html</URL>
+       section of the same name.
+    </Section>
+    
+    <Section>
+            <Heading>Drawings extra graph attributes</Heading>
+       Since drawings are mostly used in the <Package>SgpViz</Package> package, please
+       refer to that package's
+       <URL Text="manual">http://www.gap-system.org/Manuals/pkg/sgpviz/doc/manual.html</URL>
+       section of the same name.
     </Section>
   </Appendix>

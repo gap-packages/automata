@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.10 $
+#H  @(#)$Id: digraphs.gi,v 1.11 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -163,11 +163,11 @@ end);
 InstallGlobalFunction(AutoConnectedComponents, function(G)
     local acc, cC, i, j, fl,
           n, # number of vertices
-          uG, # undirected graph (an edge of the undirected graph may be 
-              #                 seen as a pair of edges of the directed graph) 
+          uG, # undirected graph (an edge of the undirected graph may be
+              #                 seen as a pair of edges of the directed graph)
           visit,
           dfs;
-    
+   
     if not IsList(G) then
         Error("The first argument must be a list of lists of positive integers");
     fi;
@@ -177,23 +177,30 @@ InstallGlobalFunction(AutoConnectedComponents, function(G)
     if not ForAll(G, el -> ForAll(el, x -> IsPosInt(x))) then
         Error("The first argument must be a list of lists of positive integers");
     fi;
-    
+   
     cC := [];
     fl := [];
-    n := Length(G);
+    if Flat(G)=[] then                ##md
+        n := Length(G);
+    else
+        n := Maximum(Length(G),Maximum(Flat(G)));
+    fi;
     uG := StructuralCopy(G);
+    while Length(uG) < n do
+        Add(uG,[]);
+    od;
     for i in [1..n] do
-        for j in G[i] do
+        for j in uG[i] do
             UniteSet(uG[j],[i]);
         od;
-    od;
-    
-    
+    od;                            ##md
+   
+   
     visit := [];          # mark the vertices an unvisited
     for i in [1..n] do
         visit[i] := 0;
     od;
-    
+   
     dfs := function(v) #recursive call to Depth First Search
         local w;
         visit[v] := 1;
@@ -203,13 +210,13 @@ InstallGlobalFunction(AutoConnectedComponents, function(G)
             fi;
         od;
     end;
-    
+   
     for i in [1..n] do
-        if not i in fl then 
+        if not i in fl then
             dfs(i);
-            # vertices which are accessible from i 
+            # vertices which are accessible from i
             #(which is the connected component of i)
-            acc := Filtered([1..n], i -> visit[i] = 1 and not i in fl); 
+            acc := Filtered([1..n], i -> visit[i] = 1 and not i in fl);
             Add(cC,acc);
             UniteSet(fl, acc);
         fi;

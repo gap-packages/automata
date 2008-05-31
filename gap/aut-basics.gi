@@ -3,7 +3,7 @@
 #W  aut-basics.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-basics.gi,v 1.10 $
+#H  @(#)$Id: aut-basics.gi,v 1.11 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -50,7 +50,7 @@ InstallGlobalFunction(AlphabetOfAutomaton,
     if not IsAutomaton(A) then
         Error("The argument must be an automaton");
     fi;
-    return(ShallowCopy(FamilyObj(A)!.alphabet));
+    return(ShallowCopy(A!.alphabet));
 end);
 #############################################################################
 ##
@@ -472,55 +472,34 @@ end);
 ##  Removes the sink states of the automaton A
 ##
 InstallGlobalFunction(RemovedSinkStates, function(A)
-    local s, I, F, q, a, i, T, t, Q, acc, len;
+    local   aut,  ls,  initial_states,  final_states,  new_ini,  new_fin,  
+            transitions,  n_states,  matrix,  p,  a,  q;
     
     if not IsDeterministicAutomaton(A) then
         Error("The argument must be a deterministic automaton");
     fi;
-    
-    A := CopyAutomaton(A);
-    s := ListSinkStatesAut(A);
-    T := StructuralCopy(A!.transitions);
-    acc := Difference([1 .. A!.states], s);
-    F := [];
-    for i in A!.accepting do
-        Add(F, Position(acc, i));
-    od;
-    I := Position(acc, A!.initial[1]);
-    len := A!.states;
-    for i in s do
-        for q in Difference([1 .. A!.states], [i]) do
-            for a in [1 .. A!.alphabet] do
-                t := A!.transitions[a][q];
-                if q < i then
-                    if t = i then
-                        T[a][q] := 0;
-                    elif t < i then
-                        T[a][q] := t;
-                    else
-                        T[a][q] := t-1;
-                    fi;
-                else
-                    if t = i then
-                        T[a][q-1] := 0;
-                    elif t < i then
-                        T[a][q-1] := t;
-                    else
-                        T[a][q-1] := t-1;
-                    fi;
-                fi;
-            od;
+    aut := CopyAutomaton(A);
+    ls := Difference([1..aut!.states], ListSinkStatesAut(aut));
+    initial_states := Intersection(aut!.initial, ls);
+    final_states := Intersection(aut!.accepting, ls);
+    new_ini := List(initial_states, s -> Position(ls, s));
+    new_fin := List(final_states,   s -> Position(ls, s));
+    transitions := aut!.transitions;  # the transition matrix of the  original automaton
+    A := aut!.alphabet;
+    if IsList(A) then
+        A := Length(A);
+    fi;
+    n_states := Length(ls);  # the number of states of the subautomaton
+    matrix := NullMat(A, n_states);  # the transition matrix of the subautomaton
+    for p in [1 .. n_states] do  # for each new state p
+        for a  in [1 .. A]  do  # for each letter of the alphabet of CG
+            q := transitions[a][ls[p]];  # here we found the edge:   Position(ls, p) --a--> q
+            if q in ls then  # if q is in ls
+                matrix[a][p] := Position(ls, q);  # the edge belongs to the subautomaton, so add it
+            fi;
         od;
-        for a in [1 .. A!.alphabet] do
-            Unbind(T[a][len]);
-        od;
-        len := len - 1;
     od;
-    A!.states := Length(acc);
-    A!.transitions := T;
-    A!.initial := [I];
-    A!.accepting := F;
-    return(A);
+    return Automaton("det", n_states, A, matrix, new_ini, new_fin);
 end);
 
 

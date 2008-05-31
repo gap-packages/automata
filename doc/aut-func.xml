@@ -1,4 +1,4 @@
-<!-- $Id: aut-func.xml,v 1.10  Exp $ -->
+<!-- $Id: aut-func.xml,v 1.11  Exp $ -->
 
 <Chapter><Heading>Some functions involving automata</Heading>
 This chapter describes some functions involving automata. It starts with functions to obtain equivalent automata of other type. Then the minimalization is considered.

@@ -6,7 +6,7 @@
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: aut-func.gi,v 1.10 $
+#H  @(#)$Id: aut-func.gi,v 1.11 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -611,9 +611,8 @@ end);
 ##  corresponding minimal automata are isomorphic.
 ##
 InstallGlobalFunction(AreEquivAut, function(A1, A2)
-    local bijection, dom, range, visited, i_dom, i_range,
-          i, a, q, p1, p2,
-          fifo, in_fifo, out_fifo;
+    local   I1,  I2,  bijection,  dom,  range,  see_this_time,  
+            see_next_time,  q,  a,  p2,  p1;
     
     if IsAutomaton(A1) then
         A1 := MinimalAutomaton(A1);
@@ -639,48 +638,38 @@ InstallGlobalFunction(AreEquivAut, function(A1, A2)
         return(false);
     fi;
     
-    bijection := [];
-    dom       := [];
-    i_dom     := 1;
-    range     := [];
-    i_range   := 1;
-    fifo      := [];
-    in_fifo   := 1;
-    out_fifo  := 1;
-    visited   := [];
-    for i in [1 .. A1!.states] do
-        visited[i]:=false;
-    od;
-    bijection[A1!.initial[1]] := A2!.initial[1];
-    dom[i_dom]:=A1!.initial[1];
-    i_dom := i_dom+1;
-    fifo[in_fifo] := A1!.initial[1];
-    in_fifo := in_fifo+1;
-    while not ForAll(visited, i -> i=true) and out_fifo < in_fifo do
-        q := fifo[out_fifo];
-        out_fifo := out_fifo+1;
-        for a in [1 .. A1!.alphabet] do
-            p2 := A2!.transitions[a][bijection[q]];
-            p1 := A1!.transitions[a][q];
-            if p1 in dom then
-                if bijection[p1] <> p2 then
-                    return(false);
-                fi;
-            else
-                if p2 in range then
-                    return(false);
+    I1 := A1!.initial[1];
+    I2 := A2!.initial[1];
+    bijection     := [];
+    dom           := List([1 .. A1!.states], s -> false);
+    range         := List([1 .. A2!.states], s -> false);
+    bijection[I1] := I2;
+    dom[I1]       := true;
+    range[I2]     := true;
+    see_this_time := [I1];
+    see_next_time := [];
+    while IsBound(see_this_time[1]) do
+        for q in see_this_time do
+            for a in [1 .. A1!.alphabet] do
+                p2 := A2!.transitions[a][bijection[q]];
+                p1 := A1!.transitions[a][q];
+                if dom[p1] then
+                    if bijection[p1] <> p2 then
+                        return(false);
+                    fi;
                 else
+                    if range[p2] then
+                        return(false);
+                    fi;
                     bijection[p1] := p2;
-                    dom[i_dom]    := p1;
-                    i_dom := i_dom+1;
-                    range[i_range]:= p2;
-                    i_range := i_range+1;
-                    fifo[in_fifo] := p1;
-                    in_fifo := in_fifo+1;
+                    dom[p1]  := true;
+                    range[p2]:= true;
+                    Add(see_next_time, p1);
                 fi;
-            fi;
+            od;
         od;
-        visited[q] := true;
+        see_this_time := List(see_next_time, s -> s);
+        see_next_time := [];
     od;
     return(Set(List(A1!.accepting, x -> bijection[x])) = Set(A2!.accepting));
 end);
@@ -873,7 +862,7 @@ InstallGlobalFunction(ProductAutomaton, function(A1,A2)
         elif RemInt(s,n2) = 0 then
             p := QuoInt(s,n2);
             q := n2;
-        fi;              ## s corrensponds to (p,q) via the bijection above
+        fi;              ## s corresponds to (p,q) via the bijection above
         for i in [1..a] do
             if IsBound(T1[i][p]) and T1[i][p] <> 0 and IsBound(T2[i][q])
                and T2[i][q] <> 0 then
