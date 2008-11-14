@@ -4,7 +4,7 @@
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: aut-def.gi,v 1.11 $
+#H  @(#)$Id: aut-def.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -58,24 +58,38 @@ DeclareRepresentation( "IsAutomatonRep", IsComponentObjectRep,
 ##  ListAccepting )
 ##
 ##  Produces an automaton
+##  The Alphabet may be given as a list of symbols (e.g. "xy" or "01")
+##  or as an integer, representing its size. In the latter case, the alphabet
+##  is taken as "abc..." (or "a_1,a_2,a_3,..." for an alphabet of more than 
+##  26 symbols.
+##  The meaning of the other arguments is clear.
 ##
 InstallGlobalFunction( Automaton, function(Type, Size, Alphabet, 
         TransitionTable, ListInitial, ListAccepting )
-        
-        local A, aut, F, i, j, x, y, TT, l;
-    
+
+        local A, alph, aut, F, i, j, x, y, TT, l;
+
     #some tests...
     if not IsPosInt(Size) then
         Error("The size of the automaton must be a positive integer");
     elif not (IsPosInt(Alphabet) or IsList(Alphabet)) then
         Error("The size of the alphabet must be a positive integer or a list");
     fi;
-    
+
     # Construct the family of all automata.
     F:= NewFamily( "Automata" ,
                 IsAutomatonObj );
     if IsPosInt(Alphabet) then
-        F!.alphabet := Alphabet;
+        if Alphabet < 27 then
+            alph := (List([1..Alphabet], i -> jascii[68+i]));
+        else
+            alph := (List([1..Alphabet], i -> Concatenation("a", String(i))));
+        fi;
+        if Type = "epsilon" then
+            alph[Length(alph)] := '@';
+        fi;
+
+        F!.alphabet := alph;
     else
         if Type = "epsilon" then
             if not Alphabet[Length(Alphabet)] = '@' then
@@ -94,7 +108,7 @@ InstallGlobalFunction( Automaton, function(Type, Size, Alphabet,
         F!.alphabet := Alphabet;
         Alphabet := Length(F!.alphabet);
     fi;
-    
+
     if not IsList(TransitionTable) then
         Error("The transition table must be given as a matrix");
     elif not IsList(ListInitial) then
@@ -104,13 +118,13 @@ InstallGlobalFunction( Automaton, function(Type, Size, Alphabet,
     elif (Length(TransitionTable) <> Alphabet) then
         Error("The number of rows of the transition table matrix must equal the size of the alphabet");
     fi;
-    
+
     #The type of the automaton: deterministic or not must be given
     if Type <> "det" and Type <> "nondet" and Type <> "epsilon" then
         Error( "Please specify the type of the automaton as \"det\" or \"nondet\" or \"epsilon\"");
     fi;
-    
-    
+
+
     # Fill the holes in the transition table with <0> in the case of 
     # deterministic automata and with <[0]> in the case of non 
     # deterministic automata
@@ -170,18 +184,18 @@ InstallGlobalFunction( Automaton, function(Type, Size, Alphabet,
             fi;
         od;
     od;
-    
+
     aut := rec(type := Type,
                alphabet := Alphabet,
                states := Size,
                initial := ListInitial,
                accepting := ListAccepting,
                transitions := TT );
-    
+
     A := Objectify( NewType( F, IsAutomatonObj and 
                  IsAutomatonRep and IsAttributeStoringRep ),
                  aut );
-    
+
     # Return the automaton.
     return A;
 end);
@@ -192,10 +206,10 @@ end);
 #M  ViewObj( <A> ) . . . . . . . . . . . print automata
 ##
 InstallMethod( ViewObj,
-    "displays an automaton",
-    true,
-    [IsAutomatonObj and IsAutomatonRep], 0,
-function( A )
+        "displays an automaton",
+        true,
+        [IsAutomatonObj and IsAutomatonRep], 0,
+        function( A )
     if A!.type = "det" then
         Print("< deterministic automaton on ", A!.alphabet, " letters with ", A!.states, " states >");
     elif A!.type = "nondet" then
@@ -211,10 +225,10 @@ end);
 #M  PrintObj( <A> ) . . . . . . . . . . . print automata
 ##
 InstallMethod( PrintObj,
-    "displays an automaton",
-    true,
-    [IsAutomatonObj and IsAutomatonRep], 0,
-function( A )
+        "displays an automaton",
+        true,
+        [IsAutomatonObj and IsAutomatonRep], 0,
+        function( A )
     Print(String(A),"\n");
 end);
 
@@ -223,270 +237,148 @@ end);
 #M  Display( <A> ) . . . . . . . . . . . print automata
 ##
 InstallMethod( Display,
-    "displays an automaton",
-    true,
-    [IsAutomatonObj and IsAutomatonRep], 0,
-function( A )
+        "displays an automaton",
+        true,
+        [IsAutomatonObj and IsAutomatonRep], 0,
+        function( A )
     local a, i, j, q, str, letters, sizea, sizeq, lsizeq, len, xout, xs;
-    
-    if IsPosInt(AlphabetOfAutomaton(A)) then
-        letters := ["a","b","c","d","e","f","g"];
-    else
-        letters := [];
-        for i in AlphabetOfAutomaton(A) do
-            Add(letters, [i]);
-        od;
-    fi;
+
+
+    letters := [];
+    for i in AlphabetOfAutomatonAsList(A) do
+        Add(letters, [i]);
+    od;
+
     if A!.states < 10 then
         if A!.type = "det" then
-            if A!.alphabet < 8 then
-                str := "   |  ";
+            str := "   |  ";
+            for i in [1 .. A!.states] do
+                str := Concatenation(str, String(i), "  ");
+            od;
+            str := Concatenation(str, "\n-----");
+            for i in [1 .. A!.states] do
+                str := Concatenation(str, "---");
+            od;
+            str := Concatenation(str, "\n");
+            for a in [1 .. A!.alphabet] do
+                xs := "";
+                xout := OutputTextString(xs, false);
+                PrintTo(xout, letters[a]);
+                str := Concatenation(str, " ", xs, " |  ");
+                CloseStream(xout);
                 for i in [1 .. A!.states] do
-                    str := Concatenation(str, String(i), "  ");
-                od;
-                str := Concatenation(str, "\n-----");
-                for i in [1 .. A!.states] do
-                    str := Concatenation(str, "---");
+                    q := A!.transitions[a][i];
+                    if q = 0 then
+                        str := Concatenation(str, "   ");
+                    else
+                        str := Concatenation(str, String(q),"  ");
+                    fi;
                 od;
                 str := Concatenation(str, "\n");
-                for a in [1 .. A!.alphabet] do
-                    xs := "";
-                    xout := OutputTextString(xs, false);
-                    PrintTo(xout, letters[a]);
-                    str := Concatenation(str, " ", xs, " |  ");
-                    CloseStream(xout);
-                    for i in [1 .. A!.states] do
-                        q := A!.transitions[a][i];
-                        if q = 0 then
-                            str := Concatenation(str, "   ");
-                        else
-                            str := Concatenation(str, String(q),"  ");
-                        fi;
-                    od;
-                    str := Concatenation(str, "\n");
-                od;
-                if IsBound(A!.accepting[2]) then
-                    xs := "";
-                    xout := OutputTextString(xs, false);
-                    PrintTo(xout, A!.initial);
-                    str := Concatenation(str, "Initial state:    ", String(xs), "\n");
-                    CloseStream(xout);
-                    xs := "";
-                    xout := OutputTextString(xs, false);
-                    PrintTo(xout, A!.accepting);
-                    str := Concatenation(str, "Accepting states: ", xs, "\n");
-                    CloseStream(xout);
-                else
-                    xs := "";
-                    xout := OutputTextString(xs, false);
-                    PrintTo(xout, A!.initial);
-                    str := Concatenation(str, "Initial state:   ", xs, "\n");
-                    CloseStream(xout);
-                    xs := "";
-                    xout := OutputTextString(xs, false);
-                    PrintTo(xout, A!.accepting);
-                    str := Concatenation(str, "Accepting state: ", xs, "\n");
-                    CloseStream(xout);
-                fi;
+            od;
+            if IsBound(A!.accepting[2]) then
+                xs := "";
+                xout := OutputTextString(xs, false);
+                PrintTo(xout, A!.initial);
+                str := Concatenation(str, "Initial state:    ", String(xs), "\n");
+                CloseStream(xout);
+                xs := "";
+                xout := OutputTextString(xs, false);
+                PrintTo(xout, A!.accepting);
+                str := Concatenation(str, "Accepting states: ", xs, "\n");
+                CloseStream(xout);
             else
-                sizea := Length(String(A!.alphabet));
-                str := "   ";
-                for i in [1 .. sizea] do
+                xs := "";
+                xout := OutputTextString(xs, false);
+                PrintTo(xout, A!.initial);
+                str := Concatenation(str, "Initial state:   ", xs, "\n");
+                CloseStream(xout);
+                xs := "";
+                xout := OutputTextString(xs, false);
+                PrintTo(xout, A!.accepting);
+                str := Concatenation(str, "Accepting state: ", xs, "\n");
+                CloseStream(xout);
+            fi;
+
+        elif A!.type = "nondet" then
+            lsizeq := [];
+            for i in [1 .. A!.states] do
+                sizeq := 0;
+                for a in [1 .. A!.alphabet] do
+                    len := Length(A!.transitions[a][i]);
+                    if len > sizeq then
+                        sizeq := len;
+                    fi;
+                od;
+                sizeq := sizeq + 2*(sizeq-1) + 4;
+                lsizeq[i] := sizeq;
+            od;
+
+            str := "   |  ";
+            for i in [1 .. A!.states-1] do
+                str := Concatenation(str, String(i), "  ");
+                for j in [1 .. lsizeq[i]] do
                     str := Concatenation(str, " ");
                 od;
-                str := Concatenation(str, "|  ");
-                for i in [1 .. A!.states] do
-                    str := Concatenation(str, String(i), "  ");
-                od;
-                str := Concatenation(str, "\n----");
-                for i in [1 .. sizea] do
+            od;
+            str := Concatenation(str, String(A!.states), "\n---");
+            for i in [1 .. A!.states] do
+                str := Concatenation(str, "---");
+                for j in [1 .. lsizeq[i]] do
                     str := Concatenation(str, "-");
                 od;
+            od;
+            str := Concatenation(str, "\n");
+            for a in [1 .. A!.alphabet] do
+                str := Concatenation(str, " ", letters[a], " | ");
                 for i in [1 .. A!.states] do
-                    str := Concatenation(str, "---");
+                    q := A!.transitions[a][i];
+
+                    if q = [] then
+                        str := Concatenation(str, "   ");
+                        for j in [1 .. lsizeq[i]] do
+                            str := Concatenation(str, " ");
+                        od;
+                    else
+                        str := Concatenation(str, String(q),"  ");
+                        len := Length(q);
+                        len := len + 2*(len-1) + 4;
+                        for j in [len .. lsizeq[i]] do
+                            str := Concatenation(str, " ");
+                        od;
+                    fi;
                 od;
-                str := Concatenation(str, "-\n");
-                for a in [1 .. A!.alphabet] do
-                    str := Concatenation(str, " a", String(a));
-                    for i in [Length(String(a)) .. sizea] do
-                        str := Concatenation(str, " ");
-                    od;
-                    str := Concatenation(str, "|  ");
-                    for i in [1 .. A!.states] do
-                        q := A!.transitions[a][i];
-                        if q = 0 then
-                            str := Concatenation(str, "   ");
-                        else
-                            str := Concatenation(str, String(q),"  ");
-                        fi;
-                    od;
-                    str := Concatenation(str, "\n");
-                od;
+                str := Concatenation(str, "\n");
+            od;
+            if IsBound(A!.initial[2]) then
+                if IsBound(A!.accepting[2]) then
+                    str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
+                elif A!.accepting = [] then
+                    str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
+                else
+                    str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
+                fi;
+            elif A!.initial = [] then
+                if IsBound(A!.accepting[2]) then
+                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
+                elif A!.accepting = [] then
+                else
+                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
+                fi;
+            else
                 if IsBound(A!.accepting[2]) then
                     str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
                     str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
                 elif A!.accepting = [] then
-                    str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
                 else
                     str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
                     str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
                 fi;
             fi;
-        elif A!.type = "nondet" then
-            lsizeq := [];
-            for i in [1 .. A!.states] do
-                sizeq := 0;
-                for a in [1 .. A!.alphabet] do
-                    len := Length(A!.transitions[a][i]);
-                    if len > sizeq then
-                        sizeq := len;
-                    fi;
-                od;
-                sizeq := sizeq + 2*(sizeq-1) + 4;
-                lsizeq[i] := sizeq;
-            od;
-            if A!.alphabet < 8 then
-                str := "   |  ";
-                for i in [1 .. A!.states-1] do
-                    str := Concatenation(str, String(i), "  ");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, " ");
-                    od;
-                od;
-                str := Concatenation(str, String(A!.states), "\n---");
-                for i in [1 .. A!.states] do
-                    str := Concatenation(str, "---");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, "-");
-                    od;
-                od;
-                str := Concatenation(str, "\n");
-                for a in [1 .. A!.alphabet] do
-                    str := Concatenation(str, " ", letters[a], " | ");
-                    for i in [1 .. A!.states] do
-                        q := A!.transitions[a][i];
-                        
-                        if q = [] then
-                            str := Concatenation(str, "   ");
-                            for j in [1 .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        else
-                            str := Concatenation(str, String(q),"  ");
-                            len := Length(q);
-                            len := len + 2*(len-1) + 4;
-                            for j in [len .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        fi;
-                    od;
-                    str := Concatenation(str, "\n");
-                od;
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    elif A!.accepting = [] then
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                elif A!.initial = [] then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    elif A!.accepting = [] then
-                    else
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    elif A!.accepting = [] then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                fi;
-            else
-                sizea := Length(String(A!.alphabet));
-                str := "   ";
-                for i in [1 .. sizea] do
-                    str := Concatenation(str, " ");
-                od;
-                str := Concatenation(str, "|  ");
-                for i in [1 .. A!.states-1] do
-                    str := Concatenation(str, String(i), "  ");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, " ");
-                    od;
-                od;
-                str := Concatenation(str,String(A!.states),  "\n---");
-                for i in [1 .. sizea] do
-                    str := Concatenation(str, "-");
-                od;
-                for i in [1 .. A!.states] do
-                    str := Concatenation(str, "---");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, "-");
-                    od;
-                od;
-                str := Concatenation(str, "\n");
-                for a in [1 .. A!.alphabet] do
-                    str := Concatenation(str, " a", String(a));
-                    for i in [Length(String(a)) .. sizea] do
-                        str := Concatenation(str, " ");
-                    od;
-                    str := Concatenation(str, "| ");
-                    for i in [1 .. A!.states] do
-                        q := A!.transitions[a][i];
-                        if q = [] then
-                            str := Concatenation(str, "   ");
-                            for j in [1 .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        else
-                            str := Concatenation(str, String(q),"  ");
-                            len := Length(q);
-                            len := len + 2*(len-1) + 4;
-                            for j in [len .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        fi;
-                    od;
-                    str := Concatenation(str, "\n");
-                od;
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    elif A!.accepting = [] then
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                elif A!.initial = [] then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    elif A!.accepting = [] then
-                    else
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    elif A!.accepting = [] then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                fi;
-            fi;
+
         else
             lsizeq := [];
             for i in [1 .. A!.states] do
@@ -500,132 +392,27 @@ function( A )
                 sizeq := sizeq + 2*(sizeq-1) + 4;
                 lsizeq[i] := sizeq;
             od;
-            if A!.alphabet < 8 then
-                str := "   |  ";
-                for i in [1 .. A!.states-1] do
-                    str := Concatenation(str, String(i), "  ");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, " ");
-                    od;
-                od;
-                str := Concatenation(str, String(A!.states), "\n---");
-                for i in [1 .. A!.states] do
-                    str := Concatenation(str, "---");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, "-");
-                    od;
-                od;
-                str := Concatenation(str, "\n");
-                for a in [1 .. A!.alphabet-1] do
-                    str := Concatenation(str, " ", letters[a], " | ");
-                    for i in [1 .. A!.states] do
-                        q := A!.transitions[a][i];
-                        
-                        if q = [] then
-                            str := Concatenation(str, "   ");
-                            for j in [1 .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        else
-                            str := Concatenation(str, String(q),"  ");
-                            len := Length(q);
-                            len := len + 2*(len-1) + 4;
-                            for j in [len .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        fi;
-                    od;
-                    str := Concatenation(str, "\n");
-                od;
-                a := A!.alphabet;
-                str := Concatenation(str, " @ | ");
-                for i in [1 .. A!.states] do
-                    q := A!.transitions[a][i];
-                    if q = [] then
-                        str := Concatenation(str, "   ");
-                        for j in [1 .. lsizeq[i]] do
-                            str := Concatenation(str, " ");
-                        od;
-                    else
-                        str := Concatenation(str, String(q),"  ");
-                        len := Length(q);
-                        len := len + 2*(len-1) + 4;
-                        for j in [len .. lsizeq[i]] do
-                            str := Concatenation(str, " ");
-                        od;
-                    fi;
-                od;
-                str := Concatenation(str, "\n");
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                fi;
-            else
-                sizea := 6;
-                str := "   ";
-                for i in [1 .. sizea] do
+
+            str := "   |  ";
+            for i in [1 .. A!.states-1] do
+                str := Concatenation(str, String(i), "  ");
+                for j in [1 .. lsizeq[i]] do
                     str := Concatenation(str, " ");
                 od;
-                str := Concatenation(str, "|  ");
-                for i in [1 .. A!.states-1] do
-                    str := Concatenation(str, String(i), "  ");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, " ");
-                    od;
-                od;
-                str := Concatenation(str,String(A!.states),  "\n---");
-                for i in [1 .. sizea] do
+            od;
+            str := Concatenation(str, String(A!.states), "\n---");
+            for i in [1 .. A!.states] do
+                str := Concatenation(str, "---");
+                for j in [1 .. lsizeq[i]] do
                     str := Concatenation(str, "-");
                 od;
-                for i in [1 .. A!.states] do
-                    str := Concatenation(str, "---");
-                    for j in [1 .. lsizeq[i]] do
-                        str := Concatenation(str, "-");
-                    od;
-                od;
-                str := Concatenation(str, "\n");
-                for a in [1 .. A!.alphabet-1] do
-                    str := Concatenation(str, " a", String(a));
-                    for i in [Length(String(a)) .. sizea] do
-                        str := Concatenation(str, " ");
-                    od;
-                    str := Concatenation(str, "| ");
-                    for i in [1 .. A!.states] do
-                        q := A!.transitions[a][i];
-                        if q = [] then
-                            str := Concatenation(str, "   ");
-                            for j in [1 .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        else
-                            str := Concatenation(str, String(q),"  ");
-                            len := Length(q);
-                            len := len + 2*(len-1) + 4;
-                            for j in [len .. lsizeq[i]] do
-                                str := Concatenation(str, " ");
-                            od;
-                        fi;
-                    od;
-                    str := Concatenation(str, "\n");
-                od;
-                a := A!.alphabet;
-                str := Concatenation(str, " epsilon ");
-                str := Concatenation(str, "| ");
+            od;
+            str := Concatenation(str, "\n");
+            for a in [1 .. A!.alphabet-1] do
+                str := Concatenation(str, " ", letters[a], " | ");
                 for i in [1 .. A!.states] do
                     q := A!.transitions[a][i];
+
                     if q = [] then
                         str := Concatenation(str, "   ");
                         for j in [1 .. lsizeq[i]] do
@@ -641,231 +428,98 @@ function( A )
                     fi;
                 od;
                 str := Concatenation(str, "\n");
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
+            od;
+            a := A!.alphabet;
+            str := Concatenation(str, " @ | ");
+            for i in [1 .. A!.states] do
+                q := A!.transitions[a][i];
+                if q = [] then
+                    str := Concatenation(str, "   ");
+                    for j in [1 .. lsizeq[i]] do
+                        str := Concatenation(str, " ");
+                    od;
                 else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
+                    str := Concatenation(str, String(q),"  ");
+                    len := Length(q);
+                    len := len + 2*(len-1) + 4;
+                    for j in [len .. lsizeq[i]] do
+                        str := Concatenation(str, " ");
+                    od;
+                fi;
+            od;
+            str := Concatenation(str, "\n");
+            if IsBound(A!.initial[2]) then
+                if IsBound(A!.accepting[2]) then
+                    str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
+                else
+                    str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
+                fi;
+            else
+                if IsBound(A!.accepting[2]) then
+                    str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
+                else
+                    str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
                 fi;
             fi;
+
         fi;
     else
         sizeq := Length(String(A!.states));
         if A!.type = "det" then
-            if A!.alphabet < 8 then
-                str := "";
-                for i in [1 .. A!.states] do
-                    for a in [1 .. A!.alphabet] do
-                        q := A!.transitions[a][i];
-                        if q > 0 then
-                            str := Concatenation(str, String(i));
-                            for j in [Length(String(i)) .. sizeq] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  ", letters[a], "   ", String(q), "\n");
-                        fi;
-                    od;
+            str := "";
+            for i in [1 .. A!.states] do
+                for a in [1 .. A!.alphabet] do
+                    q := A!.transitions[a][i];
+                    if q > 0 then
+                        str := Concatenation(str, String(i));
+                        for j in [Length(String(i)) .. sizeq] do
+                            str := Concatenation(str, " ");
+                        od;
+                        str := Concatenation(str, "  ", letters[a], "   ", String(q), "\n");
+                    fi;
                 od;
-                if IsBound(A!.accepting[2]) then
-                    str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                else
-                    str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                fi;
+            od;
+            if IsBound(A!.accepting[2]) then
+                str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
+                str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
             else
-                str := "";
-                sizea := Length(String(A!.alphabet));
-                for i in [1 .. A!.states] do
-                    for a in [1 .. A!.alphabet] do
-                        q := A!.transitions[a][i];
-                        if q > 0 then
-                            str := Concatenation(str, String(i));
-                            for j in [Length(String(i)) .. sizeq] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  a", String(a));
-                            for j in [Length(String(a)) .. sizea] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  ", String(q), "\n");
-                        fi;
-                    od;
-                od;
-                if IsBound(A!.accepting[2]) then
-                    str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                else
-                    str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                fi;
+                str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
+                str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
             fi;
-        elif A!.type = "nondet" then
-            if A!.alphabet < 8 then
-                str := "";
-                for i in [1 .. A!.states] do
-                    for a in [1 .. A!.alphabet] do
-                        q := A!.transitions[a][i];
-                        if IsBound(q[1]) then
-                            str := Concatenation(str, String(i));
-                            for j in [Length(String(i)) .. sizeq] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  ", letters[a], "   ", String(q), "\n");
-                        fi;
-                    od;
-                od;
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                fi;
-            else
-                str := "";
-                sizea := Length(String(A!.alphabet));
-                for i in [1 .. A!.states] do
-                    for a in [1 .. A!.alphabet] do
-                        q := A!.transitions[a][i];
-                        if IsBound(q[1]) then
-                            str := Concatenation(str, String(i));
-                            for j in [Length(String(i)) .. sizeq] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  a", String(a));
-                            for j in [Length(String(a)) .. sizea] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  ", String(q), "\n");
-                        fi;
-                    od;
-                od;
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
-                fi;
-            fi;
-        else
-            if A!.alphabet < 8 then
-                str := "";
-                for i in [1 .. A!.states] do
-                    for a in [1 .. A!.alphabet-1] do
-                        q := A!.transitions[a][i];
-                        if IsBound(q[1]) then
-                            str := Concatenation(str, String(i));
-                            for j in [Length(String(i)) .. sizeq] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  ", letters[a], "         ", String(q), "\n");
-                        fi;
-                    od;
-                    a := A!.alphabet;
+
+        elif A!.type = "nondet" or A!.type = "epsilon" then
+            str := "";
+            for i in [1 .. A!.states] do
+                for a in [1 .. A!.alphabet] do
                     q := A!.transitions[a][i];
                     if IsBound(q[1]) then
                         str := Concatenation(str, String(i));
                         for j in [Length(String(i)) .. sizeq] do
                             str := Concatenation(str, " ");
                         od;
-                        str := Concatenation(str, "  epsilon   ", String(q), "\n");
+                        str := Concatenation(str, "  ", letters[a], "   ", String(q), "\n");
                     fi;
                 od;
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
+            od;
+            if IsBound(A!.initial[2]) then
+                if IsBound(A!.accepting[2]) then
+                    str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
                 else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
+                    str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
                 fi;
             else
-                str := "";
-                sizea := 6;
-                for i in [1 .. A!.states] do
-                    for a in [1 .. A!.alphabet-1] do
-                        q := A!.transitions[a][i];
-                        if IsBound(q[1]) then
-                            str := Concatenation(str, String(i));
-                            for j in [Length(String(i)) .. sizeq] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  a", String(a));
-                            for j in [Length(String(a)) .. sizea] do
-                                str := Concatenation(str, " ");
-                            od;
-                            str := Concatenation(str, "  ", String(q), "\n");
-                        fi;
-                    od;
-                    a := A!.alphabet;
-                    q := A!.transitions[a][i];
-                    if IsBound(q[1]) then
-                        str := Concatenation(str, String(i));
-                        for j in [Length(String(i)) .. sizeq] do
-                            str := Concatenation(str, " ");
-                        od;
-                        str := Concatenation(str, "  epsilon ");
-                        str := Concatenation(str, "  ", String(q), "\n");
-                    fi;
-                od;
-                if IsBound(A!.initial[2]) then
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial states:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial states:  ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
+                if IsBound(A!.accepting[2]) then
+                    str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
                 else
-                    if IsBound(A!.accepting[2]) then
-                        str := Concatenation(str, "Initial state:    ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting states: ", String(A!.accepting), "\n");
-                    else
-                        str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
-                        str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
-                    fi;
+                    str := Concatenation(str, "Initial state:   ", String(A!.initial), "\n");
+                    str := Concatenation(str, "Accepting state: ", String(A!.accepting), "\n");
                 fi;
             fi;
         fi;
@@ -896,21 +550,21 @@ end);
 ##
 InstallGlobalFunction(RandomAutomaton, function(T, Q, A)
     local i, transitions, a;
-    
+
     if not IsPosInt(Q) then
         Error("The number of states must be a positive integer");
     fi;
     if not (IsPosInt(A) or IsList(A)) then
         Error("The number of symbols of the input alphabet must be a positive integer or a string");
     fi;
-    
+
     if IsPosInt(A) then
         a := A;
     else
         a := ShallowCopy(A);
         A := Length(a);
     fi;
-        
+
     if T = "det" then
         transitions := [];
         for i in [1 .. A] do
@@ -945,46 +599,36 @@ end);
 #M  String( <A> ) . . . . . . . . . . . outputs the definition of an automaton as a string
 ##
 InstallMethod( String,
-    "Automaton to string",
-    true,
-    [IsAutomatonObj and IsAutomatonRep], 0,
-function( A )
-    local s;
-    if IsPosInt(AlphabetOfAutomaton(A)) then
-        s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",", String(A!.alphabet), ",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
-    else
-            if A!.type = "epsilon" then
-                s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", AlphabetOfAutomaton(A), "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
-                           else
-        s:=Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", AlphabetOfAutomaton(A), "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
-                   fi;
-    fi;
-    return(s);
+        "Automaton to string",
+        true,
+        [IsAutomatonObj and IsAutomatonRep], 0,
+        function( A )
+    return Concatenation("Automaton(\"", String(A!.type), "\",", String(A!.states), ",\"", AlphabetOfAutomatonAsList(A), "\",", String(A!.transitions), ",", String(A!.initial), ",", String(A!.accepting), ");;");
 end);
 
-
+    
 ############################################################################
 ##
 #M Methods for the comparison operations for automata. 
 ##
 InstallMethod( \=,
-    "for two automata",
-#    IsIdenticalObj,
+        "for two automata",
+        #    IsIdenticalObj,
         [ IsAutomatonObj and IsAutomatonRep, 
           IsAutomatonObj and IsAutomatonRep,  ], 
-    0,
-    function( x, y ) 
+        0,
+        function( x, y ) 
     return(String(x) = String(y));
-      
-      end );
+
+end );
 
 InstallMethod( \<,
-    "for two automata",
-#    IsIdenticalObj,
+        "for two automata",
+        #    IsIdenticalObj,
         [ IsAutomatonObj and IsAutomatonRep, 
           IsAutomatonObj and IsAutomatonRep,  ], 
-    0,
-    function( x, y ) 
+        0,
+        function( x, y ) 
     return(String(x) < String(y)); 
 end );
 
@@ -992,3 +636,4 @@ end );
 
 #E
 ##
+    

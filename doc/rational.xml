@@ -1,4 +1,4 @@
-<!-- $Id: rational.xml,v 1.11  Exp $ -->
+<!-- $Id: rational.xml,v 1.12  Exp $ -->
 
 <Chapter><Heading>Rational languages</Heading>
 Rational languages are conveniently represented through rational expressions. These are finite expressions involving letters of the alphabet; <C>concatenation</C>, corresponding to the <E>product</E>; the symbol <C>U</C>, corresponding to the <E>union</E>; and  the symbol <C>*</C>, corresponding to the Kleene's star.
@@ -80,7 +80,7 @@ Returns the size, i.e. the number of symbols of the alphabet, of the rational ex
 gap> a:=RationalExpression("0*1(@U0U1)");
 0*1(@U0U1)
 gap> SizeRatExp(a);
-4
+5
 ]]></Example>
 </Description> 
 </ManSection> 
@@ -102,7 +102,7 @@ true
 <Func Name="AlphabetOfRatExp" Arg="R"/>
 <Description>
 
-Returns the alphabet of the rational expression <C>R</C>.
+Returns the number of symbols in the alphabet of the rational expression <C>R</C>.
 <Example><![CDATA[
 gap> r:=RandomRatExp(2);
 a*(ba*U@)
@@ -111,7 +111,7 @@ gap> AlphabetOfRatExp(r);
 gap> r:=RandomRatExp("01");
 1*(01*U@)
 gap> AlphabetOfRatExp(r);
-"01"
+2
 gap> a:=RandomTransformation(3);;
 gap> b:=RandomTransformation(3);;
 gap> r:=RandomRatExp([a,b]);
@@ -128,7 +128,7 @@ gap> AlphabetOfRatExp(r);
 
 Returns the alphabet of the rational expression <C>R</C> always
 as a list.
-If the alphabet of the rational expression is an integer
+If the alphabet of the rational expression is given by means of an integer
 less than 27 it returns the list <C>"abcd...."</C>,
 otherwise returns <C>[ "a1", "a2", "a3", "a4", ... ]</C>.
 <Example><![CDATA[

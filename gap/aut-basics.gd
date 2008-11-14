@@ -3,7 +3,7 @@
 #W  aut-basics.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                       Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-basics.gd,v 1.11 $
+#H  @(#)$Id: aut-basics.gd,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -36,7 +36,7 @@ DeclareGlobalFunction( "IsEpsilonAutomaton" );
 ##
 #F AlphabetOfAutomaton(A)
 ##
-## returns the alphabet of the automaton
+## returns the number of symbols in the alphabet of the automaton
 ##
 DeclareGlobalFunction("AlphabetOfAutomaton");
 #############################################################################
@@ -44,9 +44,11 @@ DeclareGlobalFunction("AlphabetOfAutomaton");
 #F  AlphabetOfAutomatonAsList(A)
 ##
 ##  Returns the alphabet of the automaton as a list.
-##  If the alphabet of the automaton is an integer
-##  less than 27 it returns the list "abcd....",
-##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
+##
+##  Note that when the alphabet of the automaton is given as an integer 
+##  (meaning the number of symbols) less than 27 it returns the list "abcd....".
+##  If the alphabet is given by means of an integer greater than 27, the 
+##  function returns [ "a1", "a2", "a3", "a4", ... ].
 ##
 DeclareGlobalFunction("AlphabetOfAutomatonAsList");
 #############################################################################

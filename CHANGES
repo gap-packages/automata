@@ -13,3 +13,7 @@
     in different colors;
 
 - Corrected a bug in the function  IsContainedLang;
+
+1.11 -> 1.12
+
+- Corrected some inconsistencies concerning alphabets of automata and rational languages

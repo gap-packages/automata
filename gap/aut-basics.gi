@@ -3,7 +3,7 @@
 #W  aut-basics.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-basics.gi,v 1.11 $
+#H  @(#)$Id: aut-basics.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -43,7 +43,7 @@ end);
 ##
 #F  AlphabetOfAutomaton(A)
 ##
-##  Returns the alphabet of the automaton
+##  Returns the number of symbols in the alphabet of the automaton
 ##
 InstallGlobalFunction(AlphabetOfAutomaton,
         function( A )
@@ -57,9 +57,11 @@ end);
 #F  AlphabetOfAutomatonAsList(A)
 ##
 ##  Returns the alphabet of the automaton as a list.
-##  If the alphabet of the automaton is an integer
-##  less than 27 it returns the list "abcd....",
-##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
+##
+##  Note that when the alphabet of the automaton is given as an integer 
+##  (meaning the number of symbols) less than 27 it returns the list "abcd....".
+##  If the alphabet is given by means of an integer greater than 27, the 
+##  function returns [ "a1", "a2", "a3", "a4", ... ].
 ##
 InstallGlobalFunction(AlphabetOfAutomatonAsList,
         function( A )
@@ -67,15 +69,7 @@ InstallGlobalFunction(AlphabetOfAutomatonAsList,
     if not IsAutomaton(A) then
         Error("The argument must be an automaton");
     fi;
-    a := ShallowCopy(FamilyObj(A)!.alphabet);
-    if IsInt(a) then
-        if a < 27 then
-            return(List([1..a], i -> jascii[68+i]));
-        else
-            return(List([1..a], i -> Concatenation("a", String(i))));
-        fi;
-    fi;
-    return(a);
+    return(ShallowCopy(FamilyObj(A)!.alphabet));
 end);
 #############################################################################
 ##
@@ -188,7 +182,7 @@ InstallGlobalFunction(CopyAutomaton, function ( A )
         Error("The argument must be an automaton");
     fi;
     return Automaton( ShallowCopy( A!.type ), A!.states,
-                   AlphabetOfAutomaton(A), StructuralCopy( A!.transitions ), 
+                   AlphabetOfAutomatonAsList(A), StructuralCopy( A!.transitions ), 
                    ShallowCopy( A!.initial ),
                    ShallowCopy( A!.accepting ) );
 end);
@@ -223,7 +217,7 @@ InstallGlobalFunction(NullCompletionAutomaton, function(aut)
             fi;
         od;
     od;
-    return Automaton("det", b, AlphabetOfAutomaton(aut), t, aut!.initial, aut!.accepting);
+    return Automaton("det", b, AlphabetOfAutomatonAsList(aut), t, aut!.initial, aut!.accepting);
 end);
 
 
@@ -259,7 +253,7 @@ InstallGlobalFunction(ListPermutedAutomata, function(A)
                     fi;
                 od;
             od;
-            Add(list, Automaton("epsilon", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+            Add(list, Automaton("epsilon", A!.states, AlphabetOfAutomatonAsList(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
         od;
     elif A!.type = "nondet" then
         list := [];                           # List of the permuted automata
@@ -293,7 +287,7 @@ InstallGlobalFunction(ListPermutedAutomata, function(A)
                     fi;
                 od;
             od;
-            Add(list, Automaton("det", A!.states, AlphabetOfAutomaton(A), T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
+            Add(list, Automaton("det", A!.states, AlphabetOfAutomatonAsList(A), T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
         od;
     fi;
     return(list);
@@ -330,7 +324,7 @@ InstallGlobalFunction(PermutedAutomaton, function(A, perm)
                 fi;
             od;
         od;
-        return(Automaton("det", A!.states, AlphabetOfAutomaton(A), T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
+        return(Automaton("det", A!.states, AlphabetOfAutomatonAsList(A), T, [perm[A!.initial[1]]], List(A!.accepting, q -> perm[q])));
     elif A!.type = "nondet" then
         for a in [1 .. A!.alphabet] do
             T[a] := [];
@@ -342,7 +336,7 @@ InstallGlobalFunction(PermutedAutomaton, function(A, perm)
                 fi;
             od;
         od;
-        return(Automaton("nondet", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+        return(Automaton("nondet", A!.states, AlphabetOfAutomatonAsList(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
     else
         for a in [1 .. A!.alphabet] do
             T[a] := [];
@@ -354,7 +348,7 @@ InstallGlobalFunction(PermutedAutomaton, function(A, perm)
                 fi;
             od;
         od;
-        return(Automaton("epsilon", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+        return(Automaton("epsilon", A!.states, AlphabetOfAutomatonAsList(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
     fi;
     
 end);
@@ -473,7 +467,7 @@ end);
 ##
 InstallGlobalFunction(RemovedSinkStates, function(A)
     local   aut,  ls,  initial_states,  final_states,  new_ini,  new_fin,  
-            transitions,  n_states,  matrix,  p,  a,  q;
+            transitions,  n_states,  matrix,  p,  a,  q, alph, Al;
     
     if not IsDeterministicAutomaton(A) then
         Error("The argument must be a deterministic automaton");
@@ -485,21 +479,19 @@ InstallGlobalFunction(RemovedSinkStates, function(A)
     new_ini := List(initial_states, s -> Position(ls, s));
     new_fin := List(final_states,   s -> Position(ls, s));
     transitions := aut!.transitions;  # the transition matrix of the  original automaton
-    A := aut!.alphabet;
-    if IsList(A) then
-        A := Length(A);
-    fi;
+    Al := aut!.alphabet;
+    alph := FamilyObj(aut)!.alphabet;
     n_states := Length(ls);  # the number of states of the subautomaton
-    matrix := NullMat(A, n_states);  # the transition matrix of the subautomaton
+    matrix := NullMat(Al, n_states);  # the transition matrix of the subautomaton
     for p in [1 .. n_states] do  # for each new state p
-        for a  in [1 .. A]  do  # for each letter of the alphabet of CG
+        for a  in [1 .. Al]  do  # for each letter of the alphabet of CG
             q := transitions[a][ls[p]];  # here we found the edge:   Position(ls, p) --a--> q
             if q in ls then  # if q is in ls
                 matrix[a][p] := Position(ls, q);  # the edge belongs to the subautomaton, so add it
             fi;
         od;
     od;
-    return Automaton("det", n_states, A, matrix, new_ini, new_fin);
+    return Automaton("det", n_states, alph, matrix, new_ini, new_fin);
 end);
 
 
@@ -524,21 +516,23 @@ InstallGlobalFunction(IsRecognizedByAutomaton, function(arg)
     fi;
     A := MinimalAutomaton(arg[1]);
     w := arg[2];
-    alph := AlphabetOfAutomaton(A);
-    if IsList(alph) then
+    alph := AlphabetOfAutomatonAsList(A);
+#    if IsList(alph) then
         for a in w do
             if not a in alph then
+                Error("....");
                 return(false);
+                Error("..");
             fi;
         od;
-    else
-        if alph < 22 then
-            alph := "abcdefghijklmnopqrstu";
-        else
-            alph := List([1..alph], k -> Concatenation("a", String(k)));
-        fi;
-    fi;
-
+#    else
+#        if alph < 22 then
+#            alph := "abcdefghijklmnopqrstu";
+#        else
+#            alph := List([1..alph], k -> Concatenation("a", String(k)));
+#        fi;
+#    fi;
+#
     s := A!.initial[1];
     for c in w do
         a := Position(alph, c);
@@ -627,7 +621,7 @@ InstallGlobalFunction(UnionAutomata, function(A, B)
     if B!.type = "epsilon" then
         B := NFAtoDFA(EpsilonToNFA(B));
     fi;
-    if not AlphabetOfAutomaton(A) = AlphabetOfAutomaton(B) then
+    if not AlphabetOfAutomatonAsList(A) = AlphabetOfAutomatonAsList(B) then
         Error("The arguments must be two automata over the same alphabet");
     fi;
     
@@ -648,7 +642,7 @@ InstallGlobalFunction(UnionAutomata, function(A, B)
     for i in B!.accepting do
         Add(F, QA + i);
     od;
-    return(Automaton("nondet", QA + B!.states, AlphabetOfAutomaton(A), T, I, F));
+    return(Automaton("nondet", QA + B!.states, AlphabetOfAutomatonAsList(A), T, I, F));
 end);
 
 #############################################################################
@@ -685,7 +679,7 @@ InstallGlobalFunction(ReversedAutomaton, function(A)
             fi;
         od;
     od;
-    return(Automaton("nondet", A!.states, AlphabetOfAutomaton(A), T, ShallowCopy(A!.accepting), ShallowCopy(A!.initial)));
+    return(Automaton("nondet", A!.states, AlphabetOfAutomatonAsList(A), T, ShallowCopy(A!.accepting), ShallowCopy(A!.initial)));
 end);
 
 

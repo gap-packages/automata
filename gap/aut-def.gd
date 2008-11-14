@@ -3,7 +3,7 @@
 #W  aut-def.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-def.gd,v 1.11 $
+#H  @(#)$Id: aut-def.gd,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -21,10 +21,15 @@ DeclareCategoryCollections( "IsAutomatonObj" );
 
 #############################################################################
 ##
-#F  Automaton(Type, Size, SizeAlphabet, TransitionTable, ListInitial, 
+#F  Automaton(Type, Size, Alphabet, TransitionTable, ListInitial, 
 ##                 ListAccepting)
 ##
-##  Returns an automaton. The meaning of each of the arguments above is clear.
+##  Returns an automaton. 
+##  The Alphabet may be given as a list of symbols (e.g. "xy" or "01")
+##  or as an integer, representing its size. In the latter case, the alphabet
+##  is taken as "abc..." (or "a_1,a_2,a_3,..." for an alphabet of more than 
+##  26 symbols.
+##  The meaning of the other arguments is clear.
 ##
 DeclareGlobalFunction( "Automaton" );
 #############################################################################

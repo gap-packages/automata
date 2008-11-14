@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.11 $
+#H  @(#)$Id: digraphs.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -380,7 +380,9 @@ InstallGlobalFunction(MSccAutomaton, function(A)
     if not IsAutomatonObj(A) then
         Error("The argument must be an automaton");
     fi;
-    if not IsInt(AlphabetOfAutomaton(A)) then
+    a := AlphabetOfAutomatonAsList(A);
+    if not (Intersection(a, List([1..Length(a)], i -> jascii[68+i])) = a or 
+      Intersection(a,List([1..Length(a)], i -> Concatenation("a", String(i)))) = a) then
         Error("The automaton must be defined over the alphabet abc...");
     fi;
     CC := GraphStronglyConnectedComponents(UnderlyingGraphOfAutomaton(A));

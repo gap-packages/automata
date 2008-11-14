@@ -6,13 +6,13 @@
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: aut-func.gi,v 1.11 $
+#H  @(#)$Id: aut-func.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
 
 
-BindGlobal("ComplementDA", da -> Automaton("det",da!.states, AlphabetOfAutomaton(da), da!.transitions,
+BindGlobal("ComplementDA", da -> Automaton("det",da!.states, AlphabetOfAutomatonAsList(da), da!.transitions,
         da!.initial, Difference([1..da!.states], da!.accepting)));
 
 InfoAutomataSL:=NewInfoClass("InfoAutomataSL");
@@ -28,7 +28,7 @@ SetInfoLevel(InfoAutomataSL,0);
 InstallGlobalFunction(EpsilonToNFA, function(A)
     local abc, epsilon, a, t, p, q, targ, I,
           eClosure;
-    
+
     if not IsAutomatonObj(A) then
         Error("The argument to EpsilonToNFA must be an automaton");
     fi;
@@ -50,7 +50,7 @@ end);
 ##
 InstallGlobalFunction(EpsilonCompactedAut, function(aut)
     local   n,  parts,  partmap,  m,  p,  x,  tm,  r,  i;
-    
+
     if not IsAutomatonObj(aut) then
         Error("The argument to EpsilonCompactedAut must be an automaton");
     fi;
@@ -77,7 +77,7 @@ InstallGlobalFunction(EpsilonCompactedAut, function(aut)
         RemoveSet(r[i],i);
     od;
     Info(InfoAutomataSL,1,"Epsilon compacted from ",aut!.states," to ",Length(parts));
-    return Automaton("epsilon", Length(parts), aut!.alphabet, tm,
+    return Automaton("epsilon", Length(parts), AlphabetOfAutomatonAsList(aut), tm,
                    Set(partmap{aut!.initial}), Set(partmap{aut!.accepting}));
 end);
 
@@ -89,16 +89,16 @@ end);
 ##  EpsilonToNFASet(aut)
 ##
 InstallGlobalFunction(EpsilonToNFASet, function(aut)
-    
+
     local   eclos,  i,  comb,  n,  newet,  t;
-    
+
     if not IsAutomatonObj(aut) then
         Error("The argument to EpsilonToNFASet must be an automaton");
     fi;
     if not aut!.type = "epsilon" then
         Error("The argument to EpsilonToNFASet must be an 'epsilon' automaton");
     fi;
-    
+
     eclos := List(aut!.transitions[aut!.alphabet],ShallowCopy);
     for i in [1..aut!.states] do
         AddSet(eclos[i],i);
@@ -120,7 +120,8 @@ InstallGlobalFunction(EpsilonToNFASet, function(aut)
     Info(InfoAutomataSL,2,"Finished Computing Closures, total size ",
          Sum(eclos, Length));
     t := List([1..aut!.alphabet-1], a -> List(aut!.transitions[a], x -> Union(eclos{x})));
-    return Automaton("nondet",aut!.states, aut!.alphabet-1, t,
+    #    return Automaton("nondet",aut!.states, aut!.alphabet-1, t,
+    return Automaton("nondet",aut!.states, AlphabetOfAutomatonAsList(aut){[1..AlphabetOfAutomaton(aut)-1]}, t,
                    Union(eclos{aut!.initial}), 
                    Filtered([1..aut!.states], i->
                            ForAny(eclos[i],x->x in aut!.accepting)));
@@ -134,10 +135,10 @@ end);
 ##  
 ##
 InstallGlobalFunction(EpsilonToNFABlist, function(aut)
-    
+
     local   index,  eclos,  i,  comb,  n,  newet,  t, al;
-    
-    
+
+
     index := [1..aut!.states];
     eclos := List(aut!.transitions[aut!.alphabet],x->BlistList(index,x));
     for i in [1..aut!.states] do
@@ -161,20 +162,12 @@ InstallGlobalFunction(EpsilonToNFABlist, function(aut)
     Info(InfoAutomataSL,2,"Finished Computing Closures, total size ",
          Sum(eclos, Length));
     t := List([1..aut!.alphabet-1], a -> List(aut!.transitions[a], x -> Union(eclos{x})));
-    
-    if IsInt(AlphabetOfAutomaton(aut)) then
-        return Automaton("nondet",aut!.states, aut!.alphabet-1, t,
-                       Union(eclos{aut!.initial}), 
-                       Filtered([1..aut!.states], i->
-                               ForAny(eclos[i],x->x in aut!.accepting)));
-    else
-        al := AlphabetOfAutomaton(aut);
-        Unbind(al[Length(al)]);
-        return Automaton("nondet",aut!.states, al, t,
-                       Union(eclos{aut!.initial}), 
-                       Filtered([1..aut!.states], i->
-                               ForAny(eclos[i],x->x in aut!.accepting)));
-    fi;
+    al := AlphabetOfAutomatonAsList(aut);
+    Unbind(al[Length(al)]);
+    return Automaton("nondet",aut!.states, al, t,
+                   Union(eclos{aut!.initial}), 
+                   Filtered([1..aut!.states], i->
+                           ForAny(eclos[i],x->x in aut!.accepting)));
 end);
 
 
@@ -187,9 +180,9 @@ end);
 InstallGlobalFunction(ReducedNFA, function(aut)
     local   removeFromList,  n,  m,  a1,  a2,  partn,  partmap,  
             links,  head,  count,  x,  nparts,  itrans,  t,  it,  i,  
-            j,  p,  a,  splitself,  pi,  k,  q,  x1,  x2,  tm,  ra;
-    
-    
+            j,  p,  a,  splitself,  pi,  k,  q,  x1,  x2,  tm,  ra, alph;
+
+
     if not IsAutomatonObj(aut) then
         Error("The argument to ReducedNFA must be an automaton");
     fi;
@@ -215,6 +208,7 @@ InstallGlobalFunction(ReducedNFA, function(aut)
         return aut;
     fi;
     m := aut!.alphabet;
+    alph := AlphabetOfAutomatonAsList(aut);
     a1 := Set(aut!.accepting);
     a2 := Difference([1..n], a1);
     if Length(a1) = 0 or Length(a2) = 0 then
@@ -230,7 +224,7 @@ InstallGlobalFunction(ReducedNFA, function(aut)
         links := [[2,2],[1,1]];
         head := 1;
         count := 2;
-        
+
         for x in a1 do
             partmap[x] := 1;
         od;
@@ -249,12 +243,12 @@ InstallGlobalFunction(ReducedNFA, function(aut)
         od;
         Add(itrans, it);
     od;
-    
+
     while count > 0 do
         j := head;
         p := partn[j];
         removeFromList(j);
-        
+
         for a in [1..m] do
             splitself := false;
             pi := Union(itrans[a]{p});
@@ -275,9 +269,9 @@ InstallGlobalFunction(ReducedNFA, function(aut)
                         for x in x1 do
                             partmap[x] := nparts;
                         od;
-                        
+
                         removeFromList(k);
-                        
+
                         if head = 0 then
                             head := nparts;
                             links[nparts] := [k,k];
@@ -302,14 +296,14 @@ InstallGlobalFunction(ReducedNFA, function(aut)
     od;
     tm := List([1..m], a->
                List(partn, p->Set(partmap{aut!.transitions[a][p[1]]})));
-    
-    ra :=  Automaton("nondet", Length(partn), m, tm,
+
+    ra :=  Automaton("nondet", Length(partn), alph, tm,
                    Set(partmap{aut!.initial}),
                    Filtered([1..Length(partn)], i->partn[i][1] in aut!.accepting));
     Info(InfoAutomataSL,1,"Reduced ",aut!.states," to ",Length(partn));
     Assert(2,AreEquivAut(aut, ra));
     return ra;
-    
+
 end);
 
 
@@ -333,9 +327,9 @@ InstallGlobalFunction(NFAtoDFA, function(A)
     elif A!.type = "epsilon" then
         A := EpsilonToNFA(A);
     fi;
-    
+
     HashSet := s->HashKeyBag(s,57,0,4+4*Length(s));
-    
+
     initstate := Immutable(Set(A!.initial));
     states := [initstate];
     sstates := SparseHashTable(HashSet);
@@ -348,7 +342,7 @@ InstallGlobalFunction(NFAtoDFA, function(A)
     fi;
     m := A!.alphabet;
     trans := List([1..m], i->[]);
-    
+
     Atrans := A!.transitions;
     for r in Atrans do
         for i in [1..Length(r)] do
@@ -383,7 +377,7 @@ InstallGlobalFunction(NFAtoDFA, function(A)
         i := i+1;
     od;
     Info(InfoAutomataSL,1,"Determinized ",A!.states," to ",Length(states));
-    return Automaton("det",Length(states),AlphabetOfAutomaton(A),trans,
+    return Automaton("det",Length(states),AlphabetOfAutomatonAsList(A),trans,
                    [1],accepting);
 end);
 
@@ -399,7 +393,7 @@ InstallGlobalFunction(UsefulAutomaton, function(A)
           R,
           i, a, q, q1,
           newacc, map, T;
-    
+
     if not IsAutomatonObj(A) then
         Error("The argument to UsefulAutomaton must be an automaton");
     fi;
@@ -413,10 +407,10 @@ InstallGlobalFunction(UsefulAutomaton, function(A)
     if A!.initial = [] then
         Error("The automaton must have an initial state");
     fi;
-    
+
     fifo     := ShallowCopy(A!.initial);
     R := BlistList([1..A!.states],A!.initial);
-    
+
     for q in fifo do
         for a in [1 .. A!.alphabet] do
             q1 := A!.transitions[a][q];
@@ -429,28 +423,28 @@ InstallGlobalFunction(UsefulAutomaton, function(A)
     od;
 
     if Length(fifo) < A!.states then
-         map := [];
-         i   := 1;
-         for q in [1..A!.states] do
-             if R[q] then
-                 map[q] := i;
-                 i := i + 1;
-             fi;
-         od;
-         T := [];
-         for a in [1 .. A!. alphabet] do
-             T[a] := [];
-             for q in [1 .. A!.states] do
-                 if R[q] then
-                     T[a][map[q]] := map[A!.transitions[a][q]];
-                 fi;
-             od;
-         od;
-         newacc := Filtered(A!.accepting, q->R[q]);
-         return(Automaton("det", Length(fifo),
-AlphabetOfAutomaton(A), T, [map[A!.initial[1]]], map{newacc}));  
-else        return(A);
-    fi;
+        map := [];
+        i   := 1;
+        for q in [1..A!.states] do
+            if R[q] then
+                map[q] := i;
+                i := i + 1;
+            fi;
+        od;
+        T := [];
+        for a in [1 .. A!. alphabet] do
+            T[a] := [];
+            for q in [1 .. A!.states] do
+                if R[q] then
+                    T[a][map[q]] := map[A!.transitions[a][q]];
+                fi;
+            od;
+        od;
+        newacc := Filtered(A!.accepting, q->R[q]);
+        return(Automaton("det", Length(fifo),
+                      AlphabetOfAutomatonAsList(A), T, [map[A!.initial[1]]], map{newacc}));  
+    else        return(A);
+fi;
 end);
 
 #############################################################################
@@ -474,7 +468,7 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
     local   n,  m,  a1,  a2,  x,  partn,  partmap,  itrans,  t,  it,  
             i,  qlinks,  qstarts,  qcount,  a,  c,  ci,  j,  p,  x1,  
             x2,  tm, mma;
-    
+
     if not IsAutomatonObj(aut) then
         Error("The argument to MinimalizedAut must be an automaton");
     fi;
@@ -491,7 +485,7 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
         partn := [[1..n]];
         partmap := List([1..n],One);
     else
-        
+
         if Length(a2) < Length(a1) then
             x := a1;
             a1 := a2;
@@ -502,11 +496,11 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
         for x in a1 do
             partmap[x] := 1;
         od;
-        
+
         for x in a2 do
             partmap[x] := 2;
         od;
-        
+
         itrans := [];
         for t in aut!.transitions do
             it := [];
@@ -525,11 +519,11 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
             od;
             Add(itrans, it);
         od;
-        
+
         qlinks := List([1..m], i->[0]);
         qstarts := List([1..m], i->1);
         qcount := m;
-        
+
         while qcount > 0 do
             Info(InfoAutomataSL, 3, "P: ",partn,"\n");
             for a in [1..m] do
@@ -583,13 +577,13 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
     fi;
     tm := List([1..m], a->
                List(partn, p->partmap[aut!.transitions[a][p[1]]]));
-    
-    mma :=  Automaton("det", Length(partn), AlphabetOfAutomaton(aut), tm,
-                   [partmap[aut!.initial[1]]],
+
+    mma :=  Automaton("det", Length(partn), AlphabetOfAutomatonAsList(aut), tm,
+                    [partmap[aut!.initial[1]]],
                     Filtered([1..Length(partn)], i->partn[i][1] in aut!.accepting));
     Info(InfoAutomataSL,1,"Minimized ",aut!.states," to ",Length(partn));
     Assert(2,AreEquivAut(aut, mma));
-#    Assert(2,mma!.states = MinimalAutomaton(aut)!.states);
+    #    Assert(2,mma!.states = MinimalAutomaton(aut)!.states);
     return NullCompletionAut(mma);
 end);
 
@@ -600,8 +594,8 @@ end);
 ##  Minimalizes the automaton A
 ##
 InstallMethod(MinimalAutomaton,"for finite automata", true,
-              [IsAutomatonObj and IsAutomatonRep], 0,
-    function(A)
+        [IsAutomatonObj and IsAutomatonRep], 0,
+        function(A)
     return MinimalizedAut(A);
 end);
 #############################################################################
@@ -613,7 +607,7 @@ end);
 InstallGlobalFunction(AreEquivAut, function(A1, A2)
     local   I1,  I2,  bijection,  dom,  range,  see_this_time,  
             see_next_time,  q,  a,  p2,  p1;
-    
+
     if IsAutomaton(A1) then
         A1 := MinimalAutomaton(A1);
     elif IsRationalExpression(A1) then
@@ -628,7 +622,8 @@ InstallGlobalFunction(AreEquivAut, function(A1, A2)
     else
         Error("The arguments must be rational expressions or automata");
     fi;
-    if not AlphabetOfAutomaton(A1) = AlphabetOfAutomaton(A2) then
+    if not AlphabetOfAutomatonAsList(A1) = AlphabetOfAutomatonAsList(A2) then
+        Print("The given languages are not over the same alphabet","\n");
         return(false);
     fi;
     if A1!.states <> A2!.states then
@@ -637,7 +632,7 @@ InstallGlobalFunction(AreEquivAut, function(A1, A2)
     if not Length(A1!.accepting) = Length(A2!.accepting) then
         return(false);
     fi;
-    
+
     I1 := A1!.initial[1];
     I2 := A2!.initial[1];
     bijection     := [];
@@ -673,7 +668,7 @@ InstallGlobalFunction(AreEquivAut, function(A1, A2)
     od;
     return(Set(List(A1!.accepting, x -> bijection[x])) = Set(A2!.accepting));
 end);
-    
+
 #############################################################################
 ##
 #F  AccessibleStates(aut[,p])
@@ -684,16 +679,16 @@ end);
 ##
 InstallGlobalFunction(AccessibleStates, function(arg)
     local A, a, acc, aut, N, newacc, q;
-    
+
     aut := arg[1];
     if not IsAutomaton(aut) then
         Error(" aut must be an automaton");
     fi;
-    
+
     if not(aut!.type = "det" or aut!.type = "nondet") then
         Error(" aut must be a deterministic or nondeterministic automaton");
     fi;
-    
+
     if IsBound(arg[2]) then
         if IsPosInt(arg[2]) then
             newacc:= [arg[2]];
@@ -703,9 +698,9 @@ InstallGlobalFunction(AccessibleStates, function(arg)
     else
         newacc:= aut!.initial;
     fi;
-    
+
     acc := [];           #list of accessible states
-    
+
     while newacc <> [] do  
         N := [];
         acc := Union(acc, newacc);    
@@ -734,7 +729,7 @@ end);
 InstallGlobalFunction(AccessibleAutomaton, function(aut)
     local A, a, acc, f, i, init, n, n1, n2, newacc, newtable, newnewtable, 
           nt, p, q, r, s, qa, qqa, F1, L, N, TR;
-    
+
     if not IsAutomatonObj(aut) then
         Error("The argument must be an automaton");
     fi;
@@ -745,11 +740,11 @@ InstallGlobalFunction(AccessibleAutomaton, function(aut)
     else
         Error(" aut must be a deterministic or nondeterministic automaton");
     fi;
-    
+
     L := A!.alphabet;
     acc := [];           #list of accessible states
     newacc:= A!.initial;
-    
+
     while newacc <> [] do  
         N := [];
         acc := Union(acc, newacc);    
@@ -760,18 +755,18 @@ InstallGlobalFunction(AccessibleAutomaton, function(aut)
                     ## automaton is not dense
                     N := Union(N, A!.transitions[a][q]);
                 fi;
-                
+
             od;
         od;
         newacc := Difference(N, acc);
     od;
     acc := Filtered(acc, n -> IsPosInt(n)); 
-        
+
     ###delete the columns corresponding to inaccessible states
     TR := TransposedMat(A!.transitions);
     nt := TR{acc};
     newtable := TransposedMat(nt);         
-    
+
     ### unbind the entries corresponding to non accessible states
     for qqa in newtable do
         for qa in qqa do
@@ -791,7 +786,7 @@ InstallGlobalFunction(AccessibleAutomaton, function(aut)
     newnewtable := NullMat(n1,n2);
     for r in [1 .. n1] do
         for s in [1 .. n2] do
-#            newnewtable[r][s] := [0];
+            #            newnewtable[r][s] := [0];
             newnewtable[r][s] := [];
         od;
     od;
@@ -801,11 +796,11 @@ InstallGlobalFunction(AccessibleAutomaton, function(aut)
                 if newtable[r][s][i] <> 0 then
                     newnewtable[r][s][i] := Position(acc, newtable[r][s][i]);
                 fi;
-                
+
             od;
         od;
     od;
-    
+
     p := Intersection(A!.initial, acc);
     init := [];
     for i in p do
@@ -816,7 +811,7 @@ InstallGlobalFunction(AccessibleAutomaton, function(aut)
     for i in q do
         Add(f, Position(acc, i));
     od;
-    
+
     return Automaton(A!.type, Length(acc), L, newnewtable, 
                    init, f);
 end);
@@ -830,7 +825,7 @@ end);
 ##
 InstallGlobalFunction(ProductAutomaton, function(A1,A2)
     local a, fin, i, init, n, n1, n2, p, pi, q, qi, s, T, T1, T2;
-    
+
     if not IsAutomatonObj(A1) then
         Error("The first argument must be a deterministic automaton");
     fi;
@@ -844,7 +839,7 @@ InstallGlobalFunction(ProductAutomaton, function(A1,A2)
         Error("The second argument must be a deterministic automaton");
     fi;
     a := A1!.alphabet;
-    if not AlphabetOfAutomaton(A1) = AlphabetOfAutomaton(A2) then
+    if not AlphabetOfAutomatonAsList(A1) = AlphabetOfAutomatonAsList(A2) then
         Error("A1 and A2 must have the same alphabet");
     fi;
     n1 := A1!.states;
@@ -887,7 +882,7 @@ InstallGlobalFunction(ProductAutomaton, function(A1,A2)
         od;
     fi;
 
-    return Automaton("det",n,AlphabetOfAutomaton(A1),T,init,fin);
+    return Automaton("det",n,AlphabetOfAutomatonAsList(A1),T,init,fin);
 end);
 
 
@@ -901,7 +896,7 @@ end);
 InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
     local   ht,  init,  states,  m,  i,  t1,  t2,  t,  st,  a,  nst,  
             he,  finals,  p,  q, HashPair;
-    
+
     if IsAutomaton(a1) then
     elif IsRationalExpression(a1) then
         a1 := RatExpToAut(a1);
@@ -914,11 +909,11 @@ InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
     else
         Error("The second argument must be an automaton or a rational expression");
     fi;
-    
-    if not AlphabetOfAutomaton(a1) = AlphabetOfAutomaton(a2) then
+
+    if not AlphabetOfAutomatonAsList(a1) = AlphabetOfAutomatonAsList(a2) then
         Error("A1 and A2 must have the same alphabet");
     fi;
-    
+
     if a1!.type = "nondet" then
         a1 := NFAtoDFA(a1);
     fi;
@@ -933,9 +928,9 @@ InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
     fi;
     a1 := NullCompletionAut(a1);
     a2 := NullCompletionAut(a2);
-    
+
     HashPair := s->HashKeyBag(s,57,0,12);
-    
+
     ht := SparseHashTable(HashPair);
     init := [a1!.initial[1],a2!.initial[1]];
     AddHashEntry(ht,init,1);
@@ -969,7 +964,7 @@ InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
             fi;
         od;
     od;
-    return Automaton("det",Length(states),AlphabetOfAutomaton(a1),t,[1],finals);
+    return Automaton("det",Length(states),AlphabetOfAutomatonAsList(a1),t,[1],finals);
 end);
 
 
@@ -982,8 +977,8 @@ end);
 ##  
 ##
 InstallGlobalFunction(FuseSymbolsAut, function(aut, n1, n2)
-    local   tm,  ntm,  i, j, a,  row;
-    
+    local   tm,  ntm,  i, j, a,  row, alph;
+
     if not IsAutomatonObj(aut) then
         Error("The first argument to FuseSymbolsAut must be an automaton");
     fi;
@@ -1009,7 +1004,11 @@ InstallGlobalFunction(FuseSymbolsAut, function(aut, n1, n2)
             ntm[a][i] := Set(Compacted(row));
         od;
     od;
-    return Automaton("nondet",aut!.states, aut!.alphabet-1,ntm,
+    alph := AlphabetOfAutomatonAsList(aut);
+    Unbind(alph[n2]);
+    alph := Compacted(alph);
+#    Error(",,");
+    return Automaton("nondet",aut!.states, alph, ntm,
                    aut!.initial, aut!.accepting);
 end);
 
@@ -1024,11 +1023,11 @@ end);
 InstallGlobalFunction(AutomatonAllPairsPaths, function(A)
     local i, j, V, G, paths, visited,
           BFS, pathClosure;
-    
-    
+
+
     pathClosure := function(list)
         local i, j, p, len, len2, lenx, list2, list3, listx, flag;
-        
+
         list2 := [];
         i := 1;
         while IsBound(list[i]) do
@@ -1094,11 +1093,11 @@ InstallGlobalFunction(AutomatonAllPairsPaths, function(A)
         od;
     end;
     ## End of pathClosure()  --
-    
-    
+
+
     BFS := function(v)
         local w, i, p;
-        
+
         if not visited[v] then
             visited[v] := true;
             for w in G[v] do
@@ -1111,12 +1110,12 @@ InstallGlobalFunction(AutomatonAllPairsPaths, function(A)
     end;
     ##  End of BFS()  --
     #==============================================
-    
-    
+
+
     if not IsAutomaton(A) then
         Error("The argument must be an automaton");
     fi;
-    
+
     G := UnderlyingGraphOfAutomaton(A);
     V := Length(G);
     paths := [];
@@ -1129,7 +1128,7 @@ InstallGlobalFunction(AutomatonAllPairsPaths, function(A)
         od;
     od;
     BFS(A!.initial[1]);
-    
+
     return(paths);
 end);
 

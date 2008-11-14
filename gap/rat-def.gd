@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gd,v 1.11 $
+#H  @(#)$Id: rat-def.gd,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -62,7 +62,7 @@ DeclareAttribute("SizeRatExp", IsRatExpOnnLettersObj);
 ##
 #A AlphabetOfRatExp(A)
 ##
-## returns the alphabet of the rational expression
+## returns the number of symbols in the alphabet of the rational expression
 ##
 DeclareGlobalFunction("AlphabetOfRatExp");
 
@@ -71,7 +71,7 @@ DeclareGlobalFunction("AlphabetOfRatExp");
 #F  AlphabetOfRatExpAsList(R)
 ##
 ##  Returns the alphabet of the rational expression as a list.
-##  If the alphabet of the rational expression is an integer
+##  If the alphabet of the rational expression is given by means of an integer
 ##  less than 27 it returns the list "abcd....",
 ##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
 ##

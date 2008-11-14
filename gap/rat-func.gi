@@ -5,7 +5,7 @@
 ##
 ##  This file contains functions that perform tests on automata
 ##
-#H  @(#)$Id: rat-func.gi,v 1.11 $
+#H  @(#)$Id: rat-func.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -87,14 +87,14 @@ BindGlobal("Automata_BONE_IsContainedLang", function(L1,L2)
         Error("The arguments must be rational expressions or automata");
     fi;
     if IsAutomaton(L1) then
-        alph1 := AlphabetOfAutomaton(L1);
+        alph1 := AlphabetOfAutomatonAsList(L1);
     else
-        alph1 := AlphabetOfRatExp(L1);
+        alph1 := AlphabetOfRatExpAsList(L1);
     fi;
     if IsAutomaton(L2) then
-        alph2 := AlphabetOfAutomaton(L2);
+        alph2 := AlphabetOfAutomatonAsList(L2);
     else
-        alph2 := AlphabetOfRatExp(L2);
+        alph2 := AlphabetOfRatExpAsList(L2);
     fi;
     if alph1 <> alph2 then
         return(fail);
@@ -187,10 +187,10 @@ InstallGlobalFunction(ProductRatExp,  function(a, b)
     local empty;
     if not (IsRatExpOnnLettersObj(a) and IsRatExpOnnLettersObj(b)) then
         Error("<a> and <b> must be rational expressions");
-    elif not AlphabetOfRatExp(a) = AlphabetOfRatExp(b) then
+    elif not AlphabetOfRatExpAsList(a) = AlphabetOfRatExpAsList(b) then
         Error("<a> and <b> must be on the same alphabet");
     fi;
-    empty := RatExpOnnLetters(AlphabetOfRatExp(a), [], "empty_set");
+    empty := RatExpOnnLetters(AlphabetOfRatExpAsList(a), [], "empty_set");
     if a!.list_exp = "empty_set" or b!.list_exp = "empty_set" then
         return empty;
     fi;
@@ -200,16 +200,16 @@ InstallGlobalFunction(ProductRatExp,  function(a, b)
         return a;
     fi;
     if a!.op = "product" and b!.op = "product" then
-        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", 
+        return RatExpOnnLetters(AlphabetOfRatExpAsList(a),"product", 
                        Concatenation(a!.list_exp, b!.list_exp )); 
     elif a!.op = "product" then   
-        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", 
+        return RatExpOnnLetters(AlphabetOfRatExpAsList(a),"product", 
                        Concatenation(a!.list_exp, [b] )); 
     elif b!.op = "product" then   
-        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", 
+        return RatExpOnnLetters(AlphabetOfRatExpAsList(a),"product", 
                        Concatenation( [a], b!.list_exp)); 
     else
-        return RatExpOnnLetters(AlphabetOfRatExp(a),"product", [a, b]);
+        return RatExpOnnLetters(AlphabetOfRatExpAsList(a),"product", [a, b]);
     fi;        
 end);
 
@@ -223,7 +223,7 @@ InstallGlobalFunction(UnionRatExp, function(a, b)
     local alist, alistrat, blist, blistrat, c, list, n, ss;
     if not (IsRatExpOnnLettersObj(a) and IsRatExpOnnLettersObj(b)) then
         Error("<a> and <b> must be rational expressions");
-    elif not AlphabetOfRatExp(a) = AlphabetOfRatExp(b) then
+    elif not AlphabetOfRatExpAsList(a) = AlphabetOfRatExpAsList(b) then
         Error("<a> and <b> must be on the same alphabet");
     fi;
     if a!.list_exp = "empty_set" then
@@ -231,7 +231,7 @@ InstallGlobalFunction(UnionRatExp, function(a, b)
     elif b!.list_exp = "empty_set" then
         return(a);
     else
-        return(RatExpOnnLetters(AlphabetOfRatExp(a),"union",[a,b]));
+        return(RatExpOnnLetters(AlphabetOfRatExpAsList(a),"union",[a,b]));
     fi;
 end); 
 
@@ -249,7 +249,7 @@ InstallGlobalFunction(StarRatExp, function(a)
     if a!.op = "star" then
         return a;
         else
-        return RatExpOnnLetters(AlphabetOfRatExp(a),"star", a);
+        return RatExpOnnLetters(AlphabetOfRatExpAsList(a),"star", a);
     fi;
 end);
 #######################################################################

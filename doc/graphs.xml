@@ -1,4 +1,4 @@
-<!-- $Id: graphs.xml,v 1.11  Exp $ -->
+<!-- $Id: graphs.xml,v 1.1  Exp $ -->
 <Appendix><Heading>Directed graphs</Heading>
 Automata are frequently described through directed labeled graphs. This appendix on directed graphs (digraphs) is devoted to some functions designed with the purpose of being used as auxiliary functions to deal with automata, but may have independent interest.
 
@@ -79,8 +79,6 @@ obtained from G by reversing the edges.
 <Example><![CDATA[
 gap> G:=RandomDiGraph(4);
 [ [  ], [ 4 ], [ 2 ], [ 1, 4 ] ]
-gap> ReverseD
-    identifier has no completions
 gap> ReversedGraph(G);
 [ [ 4 ], [ 3 ], [  ], [ 2, 4 ] ]
 ]]></Example>

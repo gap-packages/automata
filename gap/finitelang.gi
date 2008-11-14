@@ -3,7 +3,7 @@
 #W  finitelang.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                       Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: finitelang.gi,v 1.11 $
+#H  @(#)$Id: finitelang.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -83,10 +83,8 @@ InstallGlobalFunction(FiniteRegularLanguageToListOfWords, function(A)
     
     
     res := [];
-    alph := AlphabetOfAutomaton(A);
-    if IsInt(alph) then
-        alph := List([1..alph], x -> jascii[68+x]);
-    fi;
+    alph := AlphabetOfAutomatonAsList(A);
+
     str := "";
     P := AutomatonAllPairsPaths(A);
     lp := [];

@@ -3,7 +3,7 @@
 #W  foldings.gd                       Manuel Delgado <mdelgado@fc.up.pt>
 #W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: foldings.gd,v 1.11 $
+#H  @(#)$Id: foldings.gd,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

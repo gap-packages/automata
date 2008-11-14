@@ -3,7 +3,7 @@
 #W  drawgraph.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gi,v 1.11 $
+#H  @(#)$Id: drawgraph.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -180,19 +180,21 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
 
     # ---------------------------------------------------------------------------------    
     # Prepare the letters to be used in edge labels and their colors (if alphabet > 16)
-    alph := Length(AlphabetOfAutomatonAsList(A));
-    if alph > 16 then
-        edge_colors := List([1 .. alph], _ -> "black");
-        if IsInt(AlphabetOfAutomaton(A)) then
-            letters := List([1 .. A!.alphabet], i -> Concatenation("a", String(i)));
-        fi;
-    fi;
-    if IsList(AlphabetOfAutomaton(A)) then
-        letters := List(AlphabetOfAutomaton(A), a -> [a]);
-    fi;
-    if A!.type = "epsilon" then
-        letters[alph] := "@";
-    fi;
+#    alph := Length(AlphabetOfAutomatonAsList(A));
+#    if alph > 16 then
+#        edge_colors := List([1 .. alph], _ -> "black");
+#        if IsInt(AlphabetOfAutomaton(A)) then
+#            letters := List([1 .. A!.alphabet], i -> Concatenation("a", String(i)));
+#        fi;
+#    fi;
+#    if IsList(AlphabetOfAutomaton(A)) then
+#        letters := List(AlphabetOfAutomaton(A), a -> [a]);
+#    fi;
+#    if A!.type = "epsilon" then
+#        letters[alph] := "@";
+    #    fi;
+    alph := AlphabetOfAutomaton(A);
+    letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
     # ---------------------------------------------------------------------------------
 
     T := StructuralCopy(A!.transitions);
@@ -399,8 +401,9 @@ InstallGlobalFunction(dotAutomata, function(A)
     fi;
 
     nome := "Automaton";
-    letters := [];
-
+#    letters := [];
+    letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
+    
     au := StructuralCopy(aut2!.transitions);
     au1 := StructuralCopy(aut1!.transitions);
     for i in [1 .. Length(aut1!.transitions)] do
@@ -422,12 +425,12 @@ InstallGlobalFunction(dotAutomata, function(A)
 
     if aut2!.alphabet < 7 then     ##  for small alphabets, the letters
                                       ##  a, b, c, d are used
-        letters := ["a", "b", "c", "d", "e", "f"];
+#        letters := ["a", "b", "c", "d", "e", "f"];
         colors := ["red", "blue", "green", "yellow", "brown", "black"];
     else
-        for i in [1 .. aut2!.alphabet] do
-            Add(letters, Concatenation("a", String(i)));
-        od;
+#        for i in [1 .. aut2!.alphabet] do
+#            Add(letters, Concatenation("a", String(i)));
+#        od;
         colors := [];
         for i in [1 .. aut2!.alphabet] do
             colors[i]:= "black";

@@ -3,7 +3,7 @@
 #W  aut-rat.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-rat.gi,v 1.11 $
+#H  @(#)$Id: aut-rat.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -38,11 +38,17 @@ InstallGlobalFunction(FAtoRatExp, function(A)
           computeWeight,
           computeBest,   # Returns the state whose removal augments less the wheight of WT
           flag,
-          i, q, r, l;
+          i, q, r, l,
+          alph; #alphabet of the automaton
     
     if not IsAutomatonObj(A) then
         Error("The argument to FAtoRatExp must be an automaton");
     fi;
+    alph := AlphabetOfAutomatonAsList(A);
+    if A!.type = "epsilon" then
+        Unbind(alph[Length(alph)]);
+    fi;
+            
     T  := [];  # Transition function of the GTG
     WT := [];
     WL := [];
@@ -95,14 +101,14 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         T[p][q] := 0;  # 0 means the empty_set
                         WT[p][q] := -1;
                     elif IsBound(list[2]) then
-                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), "union", List(list, a -> RatExpOnnLetters(AlphabetOfAutomaton(A), [], [a])));
+                        T[p][q] := RatExpOnnLetters(alph, "union", List(list, a -> RatExpOnnLetters(alph, [], [a])));
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
                             Nin[q] := Nin[q] + 1;
                         fi;
                     else
-                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], list);
+                        T[p][q] := RatExpOnnLetters(alph, [], list);
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
@@ -112,10 +118,6 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                 od;
             od;
         elif A!.type = "epsilon" then
-            if IsList(AlphabetOfAutomaton(A)) then
-                l := AlphabetOfAutomaton(A);
-                Unbind(l[Length(l)]);
-            fi;
             for p in [1 .. A!.states] do
                 T[p] := [];
                 WT[p] := [];
@@ -148,24 +150,12 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         list2 := [];
                         for x in list do
                             if x = 0 then
-                                if IsList(AlphabetOfAutomaton(A)) then
-                                    Add(list2, RatExpOnnLetters(l, [], []));
-                                else
-                                    Add(list2, RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []));
-                                fi;
-                            else
-                                if IsList(AlphabetOfAutomaton(A)) then
-                                    Add(list2, RatExpOnnLetters(l, [], [x]));
-                                else
-                                    Add(list2, RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], [x]));
-                                fi;
+                                    Add(list2, RatExpOnnLetters(alph, [], []));
+                           else
+                                    Add(list2, RatExpOnnLetters(alph, [], [x]));
                             fi;
                         od;
-                        if IsList(AlphabetOfAutomaton(A)) then
-                            T[p][q] := RatExpOnnLetters(l, "union", list2);
-                        else
-                            T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, "union", list2);
-                        fi;
+                            T[p][q] := RatExpOnnLetters(alph, "union", list2);
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
@@ -173,17 +163,9 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         fi;
                     else
                         if list = [0] then
-                            if IsList(AlphabetOfAutomaton(A)) then
-                                T[p][q] := RatExpOnnLetters(l, [], []);
-                            else
-                                T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []);
-                            fi;
+                                T[p][q] := RatExpOnnLetters(alph, [], []);
                         else
-                            if IsList(AlphabetOfAutomaton(A)) then
-                                T[p][q] := RatExpOnnLetters(l, [], list);
-                            else
-                                T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], list);
-                            fi;
+                                T[p][q] := RatExpOnnLetters(alph, [], list);
                         fi;
                         WT[p][q] := c;
                         if not p = q then
@@ -202,6 +184,7 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                     list := [];
                     c := 0;
                     for a in [1 .. A!.alphabet] do
+#                    for a in alph do
                         if q = A!.transitions[a][p] then  # The only difference to the nondeterministic case
                             Add(list, a);
                             c := c + 1;
@@ -215,14 +198,14 @@ InstallGlobalFunction(FAtoRatExp, function(A)
                         T[p][q] := 0;  # 0 means the empty_set
                         WT[p][q] := -1;
                     elif IsBound(list[2]) then
-                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), "union", List(list, a -> RatExpOnnLetters(AlphabetOfAutomaton(A), [], [a])));
+                        T[p][q] := RatExpOnnLetters(alph, "union", List(list, a -> RatExpOnnLetters(alph, [], [a])));
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
                             Nin[q] := Nin[q] + 1;
                         fi;
                     else
-                        T[p][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], list);
+                        T[p][q] := RatExpOnnLetters(alph, [], list);
                         WT[p][q] := c;
                         if not p = q then
                             Nout[p] := Nout[p] + 1;
@@ -239,13 +222,9 @@ InstallGlobalFunction(FAtoRatExp, function(A)
             WT[p][q0] := -1;
             if p in A!.accepting then
                 if A!.type = "epsilon" then
-                    if IsList(AlphabetOfAutomaton(A)) then
-                        T[p][qf] := RatExpOnnLetters(l, [], []);
-                    else
-                        T[p][qf] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []);
-                    fi;
+                        T[p][qf] := RatExpOnnLetters(alph, [], []);
                 else
-                    T[p][qf] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], []);
+                    T[p][qf] := RatExpOnnLetters(alph, [], []);
                 fi;
                 WT[p][qf] := 0;
                 Nout[p] := Nout[p] + 1;
@@ -259,13 +238,9 @@ InstallGlobalFunction(FAtoRatExp, function(A)
         for q in [1 .. A!.states] do
             if q in A!.initial then
                 if A!.type = "epsilon" then
-                    if IsList(AlphabetOfAutomaton(A)) then
-                        T[q0][q] := RatExpOnnLetters(l, [], []);
-                    else
-                        T[q0][q] := RatExpOnnLetters(AlphabetOfAutomaton(A)-1, [], []);
-                    fi;
+                        T[q0][q] := RatExpOnnLetters(alph, [], []);
                 else
-                    T[q0][q] := RatExpOnnLetters(AlphabetOfAutomaton(A), [], []);
+                    T[q0][q] := RatExpOnnLetters(alph, [], []);
                 fi;
                 WT[q0][q] := 0;
                 Nin[q] := Nin[q] + 1;
@@ -282,7 +257,6 @@ InstallGlobalFunction(FAtoRatExp, function(A)
         WT[q0][q0] := -1; WT[q0][qf] := -1; WT[qf][q0] := -1; WT[qf][qf] := -1;
     end;
     ##  End of computeGTG()  --
-            
     
     ##  Function that deletes a loop in the GTG
     destroyLoop := function(n)
@@ -484,9 +458,9 @@ InstallGlobalFunction(FAtoRatExp, function(A)
     
     if T[1][2] = 0 then
         if A!.type = "epsilon" then
-            r := RatExpOnnLetters(l, [], "empty_set");
+            r := RatExpOnnLetters(alph, [], "empty_set");
         else
-            r := RatExpOnnLetters(AlphabetOfAutomaton(A), [], "empty_set");
+            r := RatExpOnnLetters(alph, [], "empty_set");
         fi;
         Setter(SizeRatExp)(r,0);
         return(r);
@@ -535,7 +509,7 @@ InstallGlobalFunction(RatExpToNDAut, function(R)
     map      := [];
     n        := 1;
     alphabet := FamilyObj(R)!.alphabet;
-    al2 := AlphabetOfRatExp(R);
+    al2 := AlphabetOfRatExpAsList(R);
     
     
     isOnlyEpsilon := function(R)
@@ -766,19 +740,33 @@ InstallGlobalFunction(RatExpToNDAut, function(R)
     markToRExp := function(L)
         local r, list;
         
+#        
+#        if L = [] then
+#            return(RatExpOnnLetters(alphabet, [], []));
+#        elif L[1] = [] then
+#            return(RatExpOnnLetters(n, [], L[2]));
+#        elif L[1] = "star" then
+#            return(RatExpOnnLetters(n, "star", markToRExp(L[2][1])));
+#        else # op = "product" or op = "union"
+#            list := [];
+#            for r in L[2] do
+#                Add(list, markToRExp(r));
+#            od;
+#            return(RatExpOnnLetters(n, L[1], list));
+#        fi;
         
         if L = [] then
-            return(RatExpOnnLetters(alphabet, [], []));
+            return(RatExpOnnLetters(al2, [], []));
         elif L[1] = [] then
-            return(RatExpOnnLetters(n, [], L[2]));
+            return(RatExpOnnLetters(al2, [], L[2]));
         elif L[1] = "star" then
-            return(RatExpOnnLetters(n, "star", markToRExp(L[2][1])));
+            return(RatExpOnnLetters(al2, "star", markToRExp(L[2][1])));
         else # op = "product" or op = "union"
             list := [];
             for r in L[2] do
                 Add(list, markToRExp(r));
             od;
-            return(RatExpOnnLetters(n, L[1], list));
+            return(RatExpOnnLetters(al2, L[1], list));
         fi;
     end;
     

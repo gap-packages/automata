@@ -1,4 +1,4 @@
-<!-- $Id: automata.xml,v 1.11  Exp $ -->
+<!-- $Id: automata.xml,v 1.12  Exp $ -->
 
 <Chapter><Heading>Finite Automata</Heading>
 
@@ -8,7 +8,7 @@ finite automata and some functions to determine information about them.
  We have to remark that the states of an automaton are always named
 <M>1,2,3,\ldots;</M> the alphabet may be given by the user. By default 
 it is <M>\{a,b,c,\ldots\}</M> (or <M>\{a_1,a_2,a_3,\ldots\}</M> in the 
-case of alphabets with more than <M>7</M> letters). 
+case of alphabets with more than <M>26</M> letters). 
 <P/>
 The transition function of an automaton with <M>q</M> states over an alphabet with  <M> n</M> 
 letters is represented by a (not necessarily dense) <M>n\times q</M> 
@@ -176,14 +176,15 @@ do small changes, for example using <E>copy/paste</E>, the use of the function
 <Example><![CDATA[
 gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
 gap> String(x);
-"Automaton(\"det\",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;"
+"Automaton(\"det\",3,\"ab\",[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;"
 gap> Print(String(x));
-Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+Automaton("det",3,"ab",[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
 ]]></Example>
 <Example><![CDATA[
 gap> z:=Automaton("epsilon",2,2,[[[1,2],],[[2],[1]]],[1,2],[1,2]);;
 gap> Print(String(z));
-Automaton("epsilon",2,2,[[[1,2],],[[2],[1]]],[1,2],[1,2]);;
+Automaton("epsilon",2,"a@",[ [ [ 1, 2 ], [ ] ], [ [ 2 ], [ 1 ] ] ],[ 1, 2 ],[ \
+1, 2 ]);;
 ]]></Example>
 </Description> </ManSection>
 
@@ -238,11 +239,11 @@ In this section we describe the functions used to access the internals of an aut
 <Func Name="AlphabetOfAutomaton" Arg="aut"/>
 <Description>
 
-Returns the alphabet of automaton <C>aut</C>.
+Returns the number of symbols in the alphabet of automaton <C>aut</C>.
 <Example><![CDATA[
 gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
 gap> AlphabetOfAutomaton(aut);
-"ab"
+2
 ]]></Example>
 </Description> </ManSection>
 
@@ -253,14 +254,17 @@ gap> AlphabetOfAutomaton(aut);
 
 Returns the alphabet of automaton <C>aut</C> always
 as a list.
-If the alphabet of the automaton is an integer
-less than 27 it returns the list <C>"abcd...."</C>,
-otherwise returns <C>[ "a1", "a2", "a3", "a4", ... ]</C>.
+
+ Note that when the alphabet of the automaton is given as an integer 
+(meaning the number of symbols) 
+not greater than 26 it returns the list <C>"abcd...."</C>.
+If the alphabet is given by means of an integer greater than 26, the 
+function returns <C>[ "a1", "a2", "a3", "a4", ... ]</C>.
 <Example><![CDATA[
 gap> a:=RandomAutomaton("det",5,"cat");
 < deterministic automaton on 3 letters with 5 states >
 gap> AlphabetOfAutomaton(a);
-"cat"
+3
 gap> AlphabetOfAutomatonAsList(a);
 "cat"
 gap> a:=RandomAutomaton("det",5,20);
@@ -317,7 +321,7 @@ Sets the initial states of automaton <C>aut</C>.
 <Example><![CDATA[
 gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,]],[1],[4]);;
 gap> SetInitialStatesOfAutomaton(aut,4);
-gap> InitialStatesOfAutomaton(a);
+gap> InitialStatesOfAutomaton(aut);
 [ 4 ]
 gap> SetInitialStatesOfAutomaton(aut,[2,3]);
 gap> InitialStatesOfAutomaton(aut);
@@ -531,7 +535,7 @@ gap> ListSinkStatesAut(y);
 <ManSection>
 <Func Name="RemovedSinkStates" Arg="aut"/>
 <Description>
-Removes all sink states of the automaton <A>aut</A>, changing its argument and returning nothing.
+Removes all sink states of the automaton <A>aut</A>.
 <Example><![CDATA[
 gap> y:=Automaton("det",3,2,[[ 2, 3, 3 ],[ 1, 2, 3 ]],[ 1 ],[ 2 ]);;Display(y);
    |  1  2  3
@@ -540,7 +544,8 @@ gap> y:=Automaton("det",3,2,[[ 2, 3, 3 ],[ 1, 2, 3 ]],[ 1 ],[ 2 ]);;Display(y);
  b |  1  2  3
 Initial state:   [ 1 ]
 Accepting state: [ 2 ]
-gap> RemovedSinkStates(y);Display(y);
+gap> x := RemovedSinkStates(y);Display(x);
+< deterministic automaton on 2 letters with 2 states >
    |  1  2
 -----------
  a |  2

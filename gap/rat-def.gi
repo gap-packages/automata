@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gi,v 1.11 $
+#H  @(#)$Id: rat-def.gi,v 1.12 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -107,7 +107,11 @@ InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
     # Install the data.
     if IsPosInt(n) then
         F!.alphabet := n;
-        F!.alphabet2 := n;
+        if n < 27 then
+           F!.alphabet2 := List([1..n], i -> jascii[68+i]);
+        else
+           F!.alphabet2 := List([1..n], i -> Concatenation("a", String(i)));
+        fi;
     else
         #        l := SSortedList(n);
         l := n;
@@ -134,25 +138,20 @@ InstallGlobalFunction( RatExpToString, function( r, count )
     local str, e, A, flag, i, ret, xstr, xout,
           hasUnion;
 
+    if not IsRatExpOnnLettersObj(r) then
+        Error("The argument to RatExpToString must be a rational expression");
+    fi;
 
 
-    if IsPosInt(AlphabetOfRatExp(r)) then
-        if AlphabetOfRatExp(r) < 22 then
-            A := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u"];
-        else
-            A := List([1..AlphabetOfRatExp(r)], k -> Concatenation("a", String(k)));
-        fi;
+    A := [];
+    if IsChar(AlphabetOfRatExpAsList(r)[1]) then
+        for i in AlphabetOfRatExpAsList(r) do
+            Add(A, [i]);
+        od;
     else
-        A := [];
-        if IsChar(AlphabetOfRatExp(r)[1]) then
-            for i in AlphabetOfRatExp(r) do
-                Add(A, [i]);
-            od;
-        else
-            for i in AlphabetOfRatExp(r) do
-                Add(A, i);
-            od;
-        fi;
+        for i in AlphabetOfRatExpAsList(r) do
+            Add(A, i);
+        od;
     fi;
 
     # Tests if a rational expression has a union rational subexpression
@@ -168,9 +167,6 @@ InstallGlobalFunction( RatExpToString, function( r, count )
         fi;
     end;
 
-    if not IsRatExpOnnLettersObj(r) then
-        Error("The argument to RatExpToString must be a rational expression");
-    fi;
     if r!.list_exp = "empty_set" then
         return(["empty_set", count]);
     elif r!.op = [] then
@@ -599,11 +595,11 @@ end);
 ##
 #M  AlphabetOfRatExp(r)
 ##
-##  Returns the alphabet of the rational expression r
+##  Returns the number of symbols in the alphabet of the rational expression r
 ##
 ##
 InstallGlobalFunction(AlphabetOfRatExp, function( R )
-    return(ShallowCopy(FamilyObj(R)!.alphabet2));
+    return(ShallowCopy(FamilyObj(R)!.alphabet));
 end);
 
 
@@ -612,7 +608,7 @@ end);
 #F  AlphabetOfRatExpAsList(R)
 ##
 ##  Returns the alphabet of the rational expression as a list.
-##  If the alphabet of the rational expression is an integer
+##  If the alphabet of the rational expression is given by means of an integer
 ##  less than 27 it returns the list "abcd....",
 ##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
 ##
@@ -621,18 +617,8 @@ InstallGlobalFunction(AlphabetOfRatExpAsList, function( R )
     if not IsRatExpOnnLettersObj(R) then
         Error("The argument must be a rational expression");
     fi;
-    a := ShallowCopy(FamilyObj(R)!.alphabet2);
-    if IsInt(a) then
-        if a < 27 then
-            return(List([1..a], i -> jascii[68+i]));
-        else
-            return(List([1..a], i -> Concatenation("a", String(i))));
-        fi;
-    fi;
-    return(a);
-end
-
-        );
+    return(ShallowCopy(FamilyObj(R)!.alphabet2));
+end);
 
 ############################################################################
 ##

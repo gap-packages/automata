@@ -1,4 +1,4 @@
-<!-- $Id: finitelang.xml,v 1.11  Exp $ -->
+<!-- $Id: finitelang.xml,v 1.12  Exp $ -->
 
 <Chapter><Heading>Finite regular languages</Heading>
 This chapter describes some functions to deal with finite regular languages.
@@ -30,10 +30,10 @@ true
 <A>L</A> is an automaton or a rational expression. 
 This function outputs the recognized language as a list of words.
 <Example><![CDATA[
-gap> r:=RationalExpression("aaUb(aUb)");
-aaUb(aUb)
-gap> FiniteRegularLanguageToListOfWords(r);
-[ "aa", "ba", "bb" ]
+gap> r:=RationalExpression("aaUx(aUb)");   
+aaUx(aUb)
+gap>  FiniteRegularLanguageToListOfWords(r);
+[ "aa", "xa", "xb" ]
 ]]></Example>
 </Description> 
 </ManSection> 
