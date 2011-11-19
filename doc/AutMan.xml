@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">
 
@@ -17,13 +17,13 @@
     <Homepage>http://www.fc.up.pt/cmup/mdelgado</Homepage>
   </Author>
     <Author> Steve Linton
-    <Email>sal@dcs.st-and.ac.uk</Email>
-    <Homepage>http://www.dcs.st-and.ac.uk/~sal/</Homepage>
+    <Email>sal@cs.st-andrews.ac.uk</Email>
+    <Homepage>http://www-circa.mcs.st-and.ac.uk/~sal/</Homepage>
   </Author>
-  <Author> José João Morais 
-    <Email>josejoao@fc.up.pt</Email>
+  <Author> JosÃ© JoÃ£o Morais 
+   <!-- <Email>josejoao@fc.up.pt</Email>-->
   </Author>
-  <Copyright> &copyright; 2004 by Manuel Delgado, Steve Linton and José Morais <P/>
+  <Copyright> &copyright; 2004 by Manuel Delgado, Steve Linton and JosÃ© Morais <P/>
               We adopt the copyright regulations of &GAP; as detailed in the 
               copyright notice in the &GAP; manual. </Copyright>
 
@@ -42,11 +42,12 @@ In a second version, prepared by the first and third authors,
 many functions have been added and the performance of many of the existing 
 ones has been improved. Further important improvements, specially concerning performance,
 have been achieved when the second author joined the group.
+<P/>
 
-Bug reports, suggestions and comments are, of course, welcome. Please contact 
-any of the authors to this effect. Our e-mail addresses are     
-<Email>mdelgado@fc.up.pt</Email> or <Email>sal@dcs.st-and.ac.uk</Email> or <Email>josejoao@fc.up.pt</Email>.
+Since Version 1.12, the package is maintained by the first two authors.
 
+Bug reports, suggestions and comments are, of course, welcome. Please use our
+email addresses to this effect.
 
 </Colophon>
 
@@ -55,17 +56,26 @@ any of the authors to this effect. Our e-mail addresses are
 The first author wishes to acknowledge Cyril Nicaud and Paulo Varandas for 
 their help in programming some functions of the very first version of this 
 package. He wishes also to acknowledge useful discussions and comments by 
-Cyril Nicaud, Vítor H. Fernandes, Jean-Eric Pin and Jorge Almeida.
+Cyril Nicaud, VÃ­tor H. Fernandes, Jean-Eric Pin and Jorge Almeida.
 <P/>
 The first author also acknowledges support of FCT through CMUP 
 and the FCT and POCTI Project POCTI/32817/MAT/2000 which is funded in
 cooperation with the European Community Fund FEDER.
 <P/>
 The third author acknowledges financial support of FCT and the POCTI program 
-through a scholarship given by Centro de Matemática da Universidade do Porto.
+through a scholarship given by Centro de MatemÃ¡tica da Universidade do Porto.
 <P/>
 
-The authors would like to thank Mark Kambites (http://www.theory.informatik.uni-kassel.de/~kambites/) for his contribution in finding bugs and making suggestions for the improvement of this package.
+The authors would like to thank Mark Kambites for his contribution in finding bugs and making suggestions for the improvement of this package.
+<P/>
+<P/>
+<P/>
+Concerning the mantainment:
+<P/>
+<P/>
+The first author was/is (partially) supported by the FCT project PTDC/MAT/65481/2006 and also by the
+<E>Centro de MatemÃ¡tica da Universidade do
+Porto</E> (CMUP), funded by the European Regional Development Fund through the program COMPETE and by the Portuguese Government through the FCT - FundaÃ§Ã£o para a CiÃªncia e a Tecnologia under the project PEst-C/MAT/UI0144/2011.
 </Acknowledgements>
 
 </TitlePage>

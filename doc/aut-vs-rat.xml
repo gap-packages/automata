@@ -1,4 +1,5 @@
-<!-- $Id: aut-vs-rat.xml,v 1.12  Exp $ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: aut-vs-rat.xml,v 1.13  Exp $ -->
 
 <Chapter><Heading>Automata <Emph>versus</Emph> rational expressions</Heading>
 
@@ -23,7 +24,7 @@ gap> x:=Automaton("det",4,2,[[ 0, 1, 2, 3 ],[ 0, 1, 2, 3 ]],[ 3 ],[ 1, 3, 4 ]);;
 gap> FAtoRatExp(x);
 (aUb)(aUb)U@
 gap> aut:=Automaton("det",4,"xy",[[ 0, 1, 2, 3 ],[ 0, 1, 2, 3 ]],[ 3 ],[ 1, 3, 4 ]);;
-gap> FAtoRatExp(aut);                                                                
+gap> FAtoRatExp(aut);
 (xUy)(xUy)U@
 </Example>
 </Description> 
@@ -164,7 +165,7 @@ gap> x:=RationalExpression("(1U0)*");
 gap> AreEqualLang(a, x);  
 The given languages are not over the same alphabet
 false
-g</Example>
+</Example>
         </Description>
       </ManSection>
       <ManSection>

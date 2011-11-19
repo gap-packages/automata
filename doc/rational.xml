@@ -1,4 +1,5 @@
-<!-- $Id: rational.xml,v 1.12  Exp $ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: rational.xml,v 1.13  Exp $ -->
 
 <Chapter><Heading>Rational languages</Heading>
 Rational languages are conveniently represented through rational expressions. These are finite expressions involving letters of the alphabet; <C>concatenation</C>, corresponding to the <E>product</E>; the symbol <C>U</C>, corresponding to the <E>union</E>; and  the symbol <C>*</C>, corresponding to the Kleene's star.
@@ -90,9 +91,11 @@ gap> SizeRatExp(a);
 <Description>
 Tests whether an object is a rational expression.
 <Example><![CDATA[
-gap> IsRatExpOnnLettersObj(r3) and IsRationalExpressionRep(r3);
+gap> r := RandomRatExp("01",7);
+1(0U1)U@
+gap> IsRatExpOnnLettersObj(r) and IsRationalExpressionRep(r);
 true
-gap> IsRationalExpression(r1);
+gap> IsRationalExpression(RandomRatExp("01"));
 true
 ]]></Example>
 </Description> 
@@ -117,7 +120,7 @@ gap> b:=RandomTransformation(3);;
 gap> r:=RandomRatExp([a,b]);
 (Transformation( [ 1, 1, 3 ] )UTransformation( [ 1, 1, 2 ] ))*
 gap> AlphabetOfRatExp(r);
-[ Transformation( [ 1, 1, 3 ] ), Transformation( [ 1, 1, 2 ] ) ]
+2
 ]]></Example>
 </Description> </ManSection>
 

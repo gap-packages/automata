@@ -4,7 +4,7 @@
 #W  miscelaneous.gi                       Manuel Delgado <mdelgado@fc.up.pt>
 #W                                        Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: miscelaneous.gi,v 1.12 $
+#H  @(#)$Id: miscelaneous.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 #############################################################################
@@ -36,8 +36,8 @@
 ##  
 ##
 InstallGlobalFunction(PermutationsOfN, function(NN)
-    local i, count, p, pi, dir, permList,
-          Perm, Move, PrintPerm, PrintTrans;
+    local   count,  p,  pi,  dir,  PrintPerm,  PrintTrans,  Move,  Perm,  
+            permList,  i;
     
     count := 0;
     p     := []; pi := []; dir := [];

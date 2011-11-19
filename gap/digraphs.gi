@@ -4,7 +4,7 @@
 #W                                     Steve Linton   <sal@dcs.st-and.ac.uk>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.12 $
+#H  @(#)$Id: digraphs.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -30,7 +30,8 @@
 ##
 ##
 InstallGlobalFunction(RandomDiGraph, function(n)
-    local G, i, k, r;
+    local   G,  i,  r,  k;
+
     if not IsPosInt(n) then
         Error("The number of vertices must be a positive integer");
     fi;
@@ -63,7 +64,7 @@ end);
 ##
 ##
 InstallGlobalFunction(VertexInDegree, function(G,v)
-    local i, l, d, n;
+    local   d,  l,  n,  i;
     
     if not IsList(G) then
         Error("The first argument must be a list of lists of positive integers");
@@ -231,7 +232,7 @@ end);
 ## Produces the strongly connected components of the digraph G 
 ##
 InstallGlobalFunction(GraphStronglyConnectedComponents, function(dg)
-    local now,val,stack,comps,i,visit,V;
+    local   V,  val,  stack,  now,  comps,  visit,  i;
     
     if not IsList(dg) then
         Error("The first argument must be a list of lists of positive integers");
@@ -300,7 +301,7 @@ end);
 ## "A" is an automaton. The output is the underlying directed multi-graph.
 ##
 InstallGlobalFunction(UnderlyingMultiGraphOfAutomaton, function(A)
-    local i, n, T, Tr, G, x;
+    local   n,  T,  G,  Tr,  i;
     
     if not IsAutomatonObj(A) then
         Error("The argument must be an automaton");
@@ -323,7 +324,7 @@ end);
 ## "A" is an automaton. The output is the underlying directed graph.
 ##
 InstallGlobalFunction(UnderlyingGraphOfAutomaton, function(A)
-    local i, n, T, Tr, G, x;
+    local   n,  T,  G,  Tr,  i;
 
     if not IsAutomatonObj(A) then
         Error("The argument must be an automaton");
@@ -346,7 +347,8 @@ end);
 ## returns the relation corresponding to the digraph
 ##
 InstallGlobalFunction(DiGraphToRelation, function(D)
-    local d, i, j, R;
+    local   R,  i,  j;
+    
     if not IsList(D) then
         Error("The first argument must be a list of lists of positive integers");
     fi;
@@ -375,7 +377,7 @@ end);
 ## This construction is useful in Finite Semigroup Theory
 ##
 InstallGlobalFunction(MSccAutomaton, function(A)
-    local alph, a, c, CC, CCs, e, n, na, ns, s, staut, T, TT, t, i;
+    local   a,  CC,  na,  ns,  T,  t,  s,  CCs,  e,  TT,  alph,  i;
     
     if not IsAutomatonObj(A) then
         Error("The argument must be an automaton");
@@ -432,7 +434,7 @@ end);
 ## is an acyclic graph and false otherwise.
 ##
 InstallGlobalFunction(AutoIsAcyclicGraph, function(G)
-    local v, n, DFS, visited, finished, dag;
+    local   DFS,  dag,  n,  visited,  finished,  v;
     
     DFS := function(v)
         local w;

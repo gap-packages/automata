@@ -4,7 +4,7 @@
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: aut-def.gi,v 1.12 $
+#H  @(#)$Id: aut-def.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -67,6 +67,8 @@ DeclareRepresentation( "IsAutomatonRep", IsComponentObjectRep,
 InstallGlobalFunction( Automaton, function(Type, Size, Alphabet, 
         TransitionTable, ListInitial, ListAccepting )
 
+#        local   F,  alph,  j,  i,  TT,  y,  x,  aut,  alphabet,  states,  
+#                       initial,  accepting,  transitions,  A;
         local A, alph, aut, F, i, j, x, y, TT, l;
 
     #some tests...
@@ -241,8 +243,7 @@ InstallMethod( Display,
         true,
         [IsAutomatonObj and IsAutomatonRep], 0,
         function( A )
-    local a, i, j, q, str, letters, sizea, sizeq, lsizeq, len, xout, xs;
-
+    local   letters,  i,  str,  a,  xs,  xout,  q,  lsizeq,  sizeq,  len,  j;
 
     letters := [];
     for i in AlphabetOfAutomatonAsList(A) do

@@ -5,7 +5,7 @@
 ##
 ##  This file contains functions that perform tests on automata
 ##
-#H  @(#)$Id: rat-func.gi,v 1.12 $
+#H  @(#)$Id: rat-func.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -18,7 +18,7 @@
 ##  of the argument.
 ##
 InstallGlobalFunction(CopyRatExp, function(r)
-    local r1, l, r2;
+    local   l,  r2,  r1;
     
     if not IsRatExpOnnLettersObj(r) then
         Error("The argument must be a rational expression");
@@ -220,7 +220,6 @@ end);
 ##  Produces the union of two rational expressions over the same alphabet
 ##
 InstallGlobalFunction(UnionRatExp, function(a, b)
-    local alist, alistrat, blist, blistrat, c, list, n, ss;
     if not (IsRatExpOnnLettersObj(a) and IsRatExpOnnLettersObj(b)) then
         Error("<a> and <b> must be rational expressions");
     elif not AlphabetOfRatExpAsList(a) = AlphabetOfRatExpAsList(b) then

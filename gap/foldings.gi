@@ -3,7 +3,7 @@
 #W  foldings.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: foldings.gi,v 1.12 $
+#H  @(#)$Id: foldings.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -27,7 +27,7 @@
 ##
 ##
 InstallGlobalFunction(IsGenRep, function(L)
-    local abc, ABC, alph, x;
+    local   abc,  ABC,  alph;
     
     if IsPosInt(L[1]) then 
         abc := "abcdefg";
@@ -45,7 +45,6 @@ end);
 ##
 ##
 InstallGlobalFunction(IsListRep, function(L)
-    local x, y;
     return IsPosInt(L[1])  and ForAll(L{[2..Length(L)]}, x-> IsList(x) and ForAll(x, y->IsPosInt(y) and y <= 2 * L[1]));
 end);
 ##
@@ -66,7 +65,7 @@ end);
 ## Warning: Alphabets with more than 7 letters must not be used 
 ##
 InstallGlobalFunction(GeneratorsToListRepresentation, function(L)
-    local a, abc, ABC, alph, g, K, T, x;
+    local   K,  abc,  ABC,  alph,  g,  T;
     
     if not IsPosInt(L[1]) or L[1] > 7 then
         Error("The rank in IsGeneratorsToListRepresentation must be as an integer not greater that 7");
@@ -94,7 +93,7 @@ end);
 ## is the inverse of GeneratorsToListRepresentation
 ##
 InstallGlobalFunction(ListToGeneratorsRepresentation, function(K)
-    local abc, ABC, alph, g, L;
+    local   L,  abc,  ABC,  alph,  g;
     
     if not IsPosInt(K[1]) or K[1] > 7 then
         Error("The rank in IsListToGeneratorsRepresentation must be as an integer not greater that 7");
@@ -124,7 +123,7 @@ end);
 ## means indicated above) the flower automaton is constructed.
 ##
 InstallGlobalFunction(FlowerAutomaton, function(L)
-    local a, abc, ABC, alph, g, i, j, n, p, q, states, T;
+    local   n,  abc,  ABC,  alph,  states,  i,  q,  T,  j,  g,  p,  a;
     
     if IsListRep(L) then
         L := ListToGeneratorsRepresentation(L);
@@ -209,9 +208,9 @@ end);
 ##
 ##
 InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
-   local A, a, b, c1, c2, c, aut, bool, changes1, changes2, n, na, ns, nt, 
-          newnewtable, newtable, noncomp, n1, n2, p, q, r, s, T, TR, ug,
-          deleteAndRename, identify; # local function 
+    local   bool,  A,  ug,  n,  na,  ns,  T,  changes1,  changes2,  identify,  
+            deleteAndRename,  a,  q,  p,  c1,  c2,  c,  newtable,  b,  aut,  
+            s,  r;
     
     bool := false;
     A := arg[1];
@@ -242,7 +241,7 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
     
     ####################################
     identify := function(p1,p2)
-        local a, i, q;
+        local   a,  q;
         
         if p2 = 1 then  # let the initial state never be removed
             p2 := p1;
@@ -280,7 +279,7 @@ InstallGlobalFunction(FoldFlowerAutomaton, function(arg)
     end;
     ######################
     deleteAndRename := function(T,c)# delete a list c of vertices
-        local acc, newtable, newnewtable, n1, n2, nt, r, s, TR;
+        local   TR,  acc,  nt,  newtable,  n1,  n2,  newnewtable,  r,  s;
             
         TR := TransposedMat(T);
         acc := Difference([1..Length(T[1])],c);
@@ -395,7 +394,8 @@ end);
 ## Given an inverse automaton, adds the edges labeled by the inverses
 ##
 InstallGlobalFunction(AddInverseEdgesToInverseAutomaton,function(aut)
-    local a, ai, alph, i, q, L, T;
+    local   T,  q,  L,  i,  a,  ai,  alph;
+
     if not IsInverseAutomaton(aut) then
         Error("The argument must be an inverse automaton");
     fi;
@@ -451,7 +451,8 @@ end);
 ## InverseAutomatonToGenerators and GeodesicTreeOfInverseAutomaton
 ##
 InstallGlobalFunction(GeodesicTreeOfInverseAutomatonWithInformation, function(A)
-    local ai, bool, visited, new, NEW, u, a, T, tree, edges, Ainv, lista;
+    local   Ainv,  T,  visited,  bool,  NEW,  lista,  u,  new,  a,  ai,  
+            tree;
     
     if not IsInverseAutomaton(A) or A!.accepting <> A!.initial 
        or Length(A!.initial) <> 1 then

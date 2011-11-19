@@ -3,7 +3,7 @@
 #W  aut-basics.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-basics.gi,v 1.12 $
+#H  @(#)$Id: aut-basics.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -195,15 +195,15 @@ end);
 ##  automaton completed with a new null state. 
 ##
 InstallGlobalFunction(NullCompletionAutomaton, function(aut)
-    local b, i, j, t, x, y;
-    
+    local   t,  b,  i,  j;
+
     if not IsAutomatonObj(aut) then
         Error("The argument must be an automaton");
     fi;
     if not aut!.type = "det" then
         Error("<aut> must be deterministic");
     fi;
-    
+
     t := [];
     if IsDenseAutomaton(aut) then
         return aut;
@@ -232,8 +232,8 @@ InstallGlobalFunction(ListPermutedAutomata, function(A)
           perm,     # Permutation
           T,        # Transition function of the permuted automaton
           list,     # List of the permuted automata
-          a, q, s;
-    
+          a, q;
+
     if not IsAutomatonObj(A) then
         Print("The argument to PermutedAutomata must be an automaton\n");
         return;
@@ -301,8 +301,8 @@ end);
 ##  outputs the permuted automaton.
 ##
 InstallGlobalFunction(PermutedAutomaton, function(A, perm)
-    local a, q, len, T, list;
-    
+    local   len,  list,  T,  a,  q;
+
     if not IsAutomatonObj(A) then
         Print("The argument to PermutedAutomaton must be an automaton\n");
         return;
@@ -350,7 +350,7 @@ InstallGlobalFunction(PermutedAutomaton, function(A, perm)
         od;
         return(Automaton("epsilon", A!.states, AlphabetOfAutomatonAsList(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
     fi;
-    
+
 end);
 
 #############################################################################
@@ -361,13 +361,13 @@ end);
 ##
 InstallGlobalFunction(IsDenseAutomaton, function(A)
     local n;
-      
+
     if not IsDeterministicAutomaton(A) then
         Error("<A> must be a deterministic automaton");
     fi;
-        
+
     return(ForAll(A!.transitions, n -> IsDenseList(n) and 
-              ForAll(n,IsPosInt)));
+                  ForAll(n,IsPosInt)));
 end);
 #############################################################################
 ##
@@ -377,11 +377,12 @@ end);
 ## the alphabet induces a partial injective function on the vertices.
 ##
 InstallGlobalFunction(IsInverseAutomaton,function(aut)
-    local  i, L, T;
+    local   T,  L,  i;
+    
     if not IsDeterministicAutomaton(aut) then
         Error("<A> must be a deterministic automaton");
     fi;
-    
+
     T := StructuralCopy(aut!.transitions); 
     for L in T do 
         for i in [1..Length(L)] do
@@ -403,11 +404,12 @@ end);
 ## i.e. each letter of the alphabet induces a permutation on the vertices.
 ##
 InstallGlobalFunction(IsPermutationAutomaton,function(aut)
-    local  i, L, T;
+    local   T,  L,  i;
+
     if not IsDeterministicAutomaton(aut) then
         Error("<A> must be a deterministic automaton");
     fi;
-    
+
     T := StructuralCopy(aut!.transitions); 
     for L in T do 
         for i in [1..Length(L)] do
@@ -433,8 +435,8 @@ end);
 ##
 ##
 InstallGlobalFunction(ListSinkStatesAut, function(A)
-    local i, j, list;
-    
+    local   list,  j;
+
     if not IsAutomatonObj(A) then
         Error("The argument to ListSinkStatesAut must be an automaton");
     fi;
@@ -467,8 +469,8 @@ end);
 ##
 InstallGlobalFunction(RemovedSinkStates, function(A)
     local   aut,  ls,  initial_states,  final_states,  new_ini,  new_fin,  
-            transitions,  n_states,  matrix,  p,  a,  q, alph, Al;
-    
+            transitions,  Al,  alph,  n_states,  matrix,  p,  a,  q;
+
     if not IsDeterministicAutomaton(A) then
         Error("The argument must be a deterministic automaton");
     fi;
@@ -502,9 +504,8 @@ end);
 ##  Tests if a given word is recognized by the given automaton
 ##
 InstallGlobalFunction(IsRecognizedByAutomaton, function(arg)
-    local A, w, alph,
-          i, c, a, s, x;
-    
+    local   A,  w,  alph,  a,  s,  c;
+
     if Length(arg) < 2 then
         Error("Please supply an automaton and a string");
     fi;
@@ -517,22 +518,22 @@ InstallGlobalFunction(IsRecognizedByAutomaton, function(arg)
     A := MinimalAutomaton(arg[1]);
     w := arg[2];
     alph := AlphabetOfAutomatonAsList(A);
-#    if IsList(alph) then
-        for a in w do
-            if not a in alph then
-                Error("....");
-                return(false);
-                Error("..");
-            fi;
-        od;
-#    else
-#        if alph < 22 then
-#            alph := "abcdefghijklmnopqrstu";
-#        else
-#            alph := List([1..alph], k -> Concatenation("a", String(k)));
-#        fi;
-#    fi;
-#
+    #    if IsList(alph) then
+    for a in w do
+        if not a in alph then
+            Error("....");
+            return(false);
+            Error("..");
+        fi;
+    od;
+    #    else
+    #        if alph < 22 then
+    #            alph := "abcdefghijklmnopqrstu";
+    #        else
+    #            alph := List([1..alph], k -> Concatenation("a", String(k)));
+    #        fi;
+    #    fi;
+    #
     s := A!.initial[1];
     for c in w do
         a := Position(alph, c);
@@ -556,21 +557,22 @@ end);
 ##  and the final states have the last numbers
 ##
 InstallGlobalFunction(NormalizedAutomaton, function(A)
-    local X, s, r, q, p, i, j, m, n, comp_list;
-    
+    local   comp_list,  q,  p,  r,  X,  n,  s,  j;
+
     if not IsAutomaton(A) then
         Error("The argument must be a deterministic automaton");
     fi;
     if not IsDeterministicAutomaton(A) then
         Error("The argument must be a deterministic automaton");
     fi;
-    
+
     comp_list := function(ls, re)# auxiliar function 
         # ls is a list with holes with length q; 
         # re is a list
         # with as many elements as the holes in ls
         # which may occur at the end of the list
-        local h, i, k, n;
+        local   h,  k,  i;
+
         h := Filtered([1 .. q], n -> not IsBound(ls[n]));
         k := 1;
         for i in h do
@@ -581,7 +583,7 @@ InstallGlobalFunction(NormalizedAutomaton, function(A)
         ls := Concatenation(ls,Compacted(re));
         return ls;
     end;
-    
+
     q := A!.states;
     p := [];
     r := A!.initial[1];
@@ -604,8 +606,8 @@ end);
 ## Produces the disjoint union of the automata A and B
 ##
 InstallGlobalFunction(UnionAutomata, function(A, B)
-    local QA, i, a, T, I, F;
-    
+    local   QA,  T,  a,  i,  I,  F;
+
     if not (IsAutomatonObj(A) and IsAutomatonObj(B)) then
         Error("The arguments must be two automata");
     fi;
@@ -624,7 +626,7 @@ InstallGlobalFunction(UnionAutomata, function(A, B)
     if not AlphabetOfAutomatonAsList(A) = AlphabetOfAutomatonAsList(B) then
         Error("The arguments must be two automata over the same alphabet");
     fi;
-    
+
     QA := A!.states;
     T := StructuralCopy(A!.transitions);
     for a in [1 .. B!.alphabet] do
@@ -653,8 +655,8 @@ end);
 ##  switching the accepting and initial states
 ##
 InstallGlobalFunction(ReversedAutomaton, function(A)
-    local q, s, u, a, T;
-    
+    local   T,  a,  q,  s,  u;
+
     if not IsAutomatonObj(A) then
         Error("The argument must be an automaton");
     fi;
@@ -692,8 +694,8 @@ end);
 ##  automaton
 ##
 InstallGlobalFunction(IsReversibleAutomaton, function(A)
-    local B, q, a;
-    
+    local   B,  a,  q;
+
     if not IsAutomatonObj(A) then
         Error("The argument must be an automaton");
     fi;
@@ -735,8 +737,8 @@ end);
 ## belongs to the second language.
 ##
 InstallGlobalFunction(ProductOfLanguages, function(a1, a2)
-    local a, q, s, T, A;
-    
+    local   T,  a,  q,  s,  A;
+
     if IsAutomaton(a1) then
         a1 := MinimalAutomaton(a1);
     elif IsRationalExpression(a1) then
@@ -751,16 +753,16 @@ InstallGlobalFunction(ProductOfLanguages, function(a1, a2)
     else
         Error("The second argument must be an automaton or a rational expression");
     fi;
-    
+
     if not AlphabetOfAutomaton(a1) = AlphabetOfAutomaton(a2) then
         Error("A1 and A2 must have the same alphabet");
     fi;
-    
+
     a1 := RemovedSinkStates(a1);
     a2 := RemovedSinkStates(a2);
-    
+
     T := List(a1!.transitions, l -> List(l, q -> [q]));
-    
+
     for a in [1..a2!.alphabet] do
         for q in [1..a2!.states] do
             if a2!.transitions[a][q] = 0 then
@@ -770,15 +772,15 @@ InstallGlobalFunction(ProductOfLanguages, function(a1, a2)
             fi;
         od;
     od;
-    
+
     Add(T, List([1..a1!.states+a2!.states], i -> []));
-    
+
     for q in a1!.accepting do
         for s in a2!.initial do
             Add(T[a1!.alphabet + 1][q], a1!.states + s);
         od;
     od;
-    
+
     A := Automaton("epsilon", a1!.states + a2!.states, 
                  a1!.alphabet + 1,
                  T,

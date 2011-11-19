@@ -3,7 +3,7 @@
 #W  aut-rat.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: aut-rat.gi,v 1.12 $
+#H  @(#)$Id: aut-rat.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -38,7 +38,7 @@ InstallGlobalFunction(FAtoRatExp, function(A)
           computeWeight,
           computeBest,   # Returns the state whose removal augments less the wheight of WT
           flag,
-          i, q, r, l,
+          i, r,
           alph; #alphabet of the automaton
     
     if not IsAutomatonObj(A) then
@@ -72,6 +72,7 @@ InstallGlobalFunction(FAtoRatExp, function(A)
     ##  Function that computes the GTG (generalized transition graph)
     ##  associated with the given FA.
     computeGTG := function()
+#        local   p,  q,  list,  c,  a,  list2,  x;
         local list,  # List of alphabet symbols
               list2,
               x,
@@ -371,7 +372,7 @@ InstallGlobalFunction(FAtoRatExp, function(A)
     
     
     computeBest := function()
-        local p, q, i, w;
+        local   i;
         
         if WL = [] then
             for i in [1 .. Q] do

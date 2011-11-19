@@ -38,11 +38,11 @@ Subtitle := "A package on automata",
 ##  See '?Extending: Version Numbers' in GAP help for an explanation
 ##  of valid version numbers. For an automatic package distribution update
 ##  you must provide a new version number even after small changes.
-Version := "1.12",
+Version := "1.13",
 
 ##  Release date of the current version in dd/mm/yyyy format.
 # 
-Date := "14/11/2008",
+Date := "19/11/2011",
 
 ##  URL of the archive(s) of the current package release, but *without*
 ##  the format extension(s), like '.zoo', which are given next.
@@ -53,7 +53,7 @@ Date := "14/11/2008",
 ##  example/init.g, ...    or  example-1.3/init.g, ...  )
 # 
 ArchiveURL := 
-          "http://www.fc.up.pt/cmup/mdelgado/automata/automata-1.12",
+          "http://www.fc.up.pt/cmup/mdelgado/automata/automata-1.13",
 
 ##  All provided formats as list of file extensions, separated by white
 ##  space or commas.
@@ -136,7 +136,7 @@ Persons := [
     WWWHome       := "http://www.fc.up.pt/cmup/mdelgado/",
     PostalAddress := Concatenation( [
                    "Manuel Delgado\n",
-                   "Departamento de Matemática Pura\n",
+                   "Departamento de Matemática\n",
                    "Faculdade de Ciências\n",
                    "Rua do Campo Alegre, 687\n",
                    "Porto\n",
@@ -167,18 +167,20 @@ Persons := [
     LastName      := "Morais",
     FirstNames    := "Jose",
     IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "josejoao@fc.up.pt",
+#    IsMaintainer  := false,
+#    Email         := "josejoao@fc.up.pt",
 #    WWWHome       := "",
-    PostalAddress := Concatenation( [
-                       "Jose Morais\n",
-                       "Departamento de Matemática Pura\n",
-                   "Faculdade de Ciências\n",
-                   "Rua do Campo Alegre, 687\n",
-                   "Porto\n",
-                   "Portugal" ] ),
-    Place         := "Porto",
-    Institution   := "Faculdade de Ciências"
+#    PostalAddress := Concatenation( [
+#                       "Jose Morais\n",
+#                       "Departamento de Matemática Pura\n",
+#                   "Faculdade de Ciências\n",
+#                   "Rua do Campo Alegre, 687\n",
+#                   "Porto\n",
+#                   "Portugal" ] ),           
+    PostalAddress := "No address known"
+#    Place         := "Porto",
+#    Institution   := "Faculdade de Ciências"
+               
   )
 # provide such a record for each author and/or maintainer ...
   
@@ -266,7 +268,7 @@ PackageDoc := rec(
   # format/extension can be one of .zoo, .tar.gz, .tar.bz2, -win.zip
  # Archive := "http://www.fc.up.pt/cmup/mdelgado/automata/doc/doc",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/manual.html",
+  HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",
   # the path to the .six file used by GAP's help system
   SixFile   := "doc/manual.six",

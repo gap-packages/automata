@@ -3,7 +3,7 @@
 #W  finitelang.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                       Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: finitelang.gi,v 1.12 $
+#H  @(#)$Id: finitelang.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -38,12 +38,12 @@ end);
 ## outputs the recognized language as a list of words.
 ##
 InstallGlobalFunction(FiniteRegularLanguageToListOfWords, function(A)
-    local i, j, p, str, alph, B, G, lp, res,
-          path2re;
+    local   path2re,  res,  alph,  str,  P,  lp,  i,  j,  p;
+#    local i, j, p, str, alph, B, G, lp, res, path2re;
     
     
     path2re := function(p)
-        local i, e, l, q, q2, a, expr, expr2, flag;
+        local   expr,  q,  i,  flag,  q2,  expr2,  a,  e;
         
         expr := [""];
         q := p[1];
@@ -114,7 +114,7 @@ end);
 ## that recognizes the given list of words.
 ##
 InstallGlobalFunction(ListOfWordsToAutomaton, function(alph, L)
-    local w, l, l2, oalph;
+    local   oalph,  l,  w;
     
     if not IsList(alph) then
         Error("The first argument must be a list");

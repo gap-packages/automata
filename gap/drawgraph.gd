@@ -1,8 +1,9 @@
 #############################################################################
 ##
 #W  drawgraph.gd      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
+#W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gd,v 1.1 $
+#H  @(#)$Id: drawgraph.gd,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -15,7 +16,10 @@
 ##  If it is different from "none", any drawing will generate also
 ##  an output in this format.
 ##
-BindGlobal( "DrawingsExtraFormat", "none" );
+if not IsBound(DrawingsExtraFormat) then
+    BindGlobal( "DrawingsExtraFormat", "none" );
+fi;
+
 
 ############################################################################
 ##

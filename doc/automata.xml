@@ -1,4 +1,5 @@
-<!-- $Id: automata.xml,v 1.12  Exp $ -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: automata.xml,v 1.13  Exp $ -->
 
 <Chapter><Heading>Finite Automata</Heading>
 
@@ -408,7 +409,7 @@ false
 <ManSection> 
 <Func Name="IsRecognizedByAutomaton" Arg="A,w"/>
 <Description>
-The argments are: an automaton <A>A</A> and a string (i.e. a word) <A>w</A> in the alphabet of the automaton. 
+The arguments are: an automaton <A>A</A> and a string (i.e. a word) <A>w</A> in the alphabet of the automaton. 
 Returns <C>true</C> if the word is recognized by the automaton 
  and <C>false</C> otherwise. 
 
@@ -605,11 +606,11 @@ Given an automaton <A>aut</A>, returns a list of automata with permuted states
 gap> x:=Automaton("det",3,2,[ [ 0, 2, 3 ], [ 1, 2, 3 ] ],[ 1 ],[ 2, 3 ]);;
 gap> ListPermutedAutomata(x);
 [ < deterministic automaton on 2 letters with 3 states >, 
-< deterministic automaton on 2 letters with
-    3 states >, < deterministic automaton on 2 letters with 3 states >,
   < deterministic automaton on 2 letters with 3 states >, 
-< deterministic automaton on 2 letters with
-    3 states >, < deterministic automaton on 2 letters with 3 states > ]
+  < deterministic automaton on 2 letters with 3 states >, 
+  < deterministic automaton on 2 letters with 3 states >, 
+  < deterministic automaton on 2 letters with 3 states >, 
+  < deterministic automaton on 2 letters with 3 states > ]
 ]]></Example>
  </Description> </ManSection> 
  

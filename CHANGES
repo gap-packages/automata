@@ -1,6 +1,17 @@
                      -----------------------------------
                      | CHANGES of the Automata package |
                      -----------------------------------
+1.12 -> 1.13
+
+- Corrected a bug in  FiniteRegularLanguageToListOfWords (Thanks to Andreas Distler for pointing out this bug)
+- Corrected a problem with "DrawingsExtraFormat" (Thanks to Alexander Konovalov for pointing out this problem)
+- Corrected a problem with the "drawing" of automata with large alphabets (Thanks to Cameron Smith for pointing out this problem)
+
+Some other minor changes in the code and in the manual have been also performed. 
+
+1.11 -> 1.12
+
+- Corrected some inconsistencies concerning alphabets of automata and rational languages
 
 1.10 -> 1.11
 
@@ -14,6 +25,3 @@
 
 - Corrected a bug in the function  IsContainedLang;
 
-1.11 -> 1.12
-
-- Corrected some inconsistencies concerning alphabets of automata and rational languages

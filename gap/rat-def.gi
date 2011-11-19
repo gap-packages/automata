@@ -4,7 +4,7 @@
 #W                                    Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
-#H  @(#)$Id: rat-def.gi,v 1.12 $
+#H  @(#)$Id: rat-def.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -57,7 +57,7 @@ end );
 ##
 InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
 
-    local exp, F, R, l, x, k;
+    local   k,  F,  l,  exp,  list_exp,  R;
 
     if not (operation = "product" or operation = "union" or
             operation = "star" or operation = [ ]) then
@@ -135,8 +135,7 @@ end );
 #F RatExpToString(r)
 ##
 InstallGlobalFunction( RatExpToString, function( r, count )
-    local str, e, A, flag, i, ret, xstr, xout,
-          hasUnion;
+    local   A,  i,  hasUnion,  xstr,  xout,  str,  e,  ret,  flag;
 
     if not IsRatExpOnnLettersObj(r) then
         Error("The argument to RatExpToString must be a rational expression");
@@ -571,7 +570,7 @@ InstallMethod(SizeRatExp,
         "size of RatExp",
         [IsRatExpOnnLettersObj],
         function( r )
-    local str, e, flag, count;
+    local   count,  e;
 
     if not IsRatExpOnnLettersObj(r) then
         Error("The argument to RatExpToString must be a rational expression");
@@ -613,7 +612,6 @@ end);
 ##  otherwise returns [ "a1", "a2", "a3", "a4", ... ].
 ##
 InstallGlobalFunction(AlphabetOfRatExpAsList, function( R )
-    local a;
     if not IsRatExpOnnLettersObj(R) then
         Error("The argument must be a rational expression");
     fi;
@@ -638,8 +636,6 @@ InstallMethod( \=,
           IsRatExpOnnLettersObj and IsRationalExpressionRep,  ],
     0,
         function( L1, L2 )
-    local i;
-
     return( AlphabetOfRatExp(L1) = AlphabetOfRatExp(L2) and L1!.op = L2!.op and L1!.list_exp = L2!.list_exp );
 end );
 

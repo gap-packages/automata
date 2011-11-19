@@ -5,7 +5,7 @@ The GAP 4 package `automata'
 Introduction
 ------------
 
-This is release 1.12 of  the package `automata'.
+This is release 1.13 of  the package `automata'.
 
 The features of this package include
 
@@ -28,7 +28,6 @@ bug, we would appreciate it very much if you send us an email.
 
 Manuel Delgado   <mdelgado@fc.up.pt>
 Steve Linton     <sal@dcs.st-and.ac.uk>
-José João Morais <josejoao@fc.up.pt>
 
 Contents
 --------

@@ -3,7 +3,7 @@
 #W  sgpslinks.gi                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                      Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: sgpslinks.gi,v 1.12 $
+#H  @(#)$Id: sgpslinks.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -21,7 +21,7 @@
 ##  Computes the transition semigroup of a deterministic automaton
 ##
 InstallGlobalFunction(TransitionSemigroup, function(aut)
-    local g, i, tr;
+    local   g,  tr,  i;
     
     if not IsAutomaton(aut) then
         Error("the argument must be an automaton");
@@ -44,7 +44,7 @@ end);
 ## (i.e. the transition semigroup of the equivalent minimal automaton) 
 ##
 InstallGlobalFunction(SyntacticSemigroupAut, function(aut)
-    local A, g, i, tr;
+    local   g,  A,  tr,  i;
     
     if not IsAutomaton(aut) then
         Error("the argument must be an automaton");

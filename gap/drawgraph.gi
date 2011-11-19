@@ -3,7 +3,7 @@
 #W  drawgraph.gi      GAP library     Manuel Delgado <mdelgado@fc.up.pt>
 #W                                     Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: drawgraph.gi,v 1.12 $
+#H  @(#)$Id: drawgraph.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
@@ -157,12 +157,26 @@ end);
 # who_called = 2  --->  DrawSCCAutomaton
 #------------------------------------------------------------------------
 InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_colorize, who_called)
-    local   alph, letters,  edge_colors,  node_colors,  tdir,  name,  T,  a,  
-            q,  str,  out_str,  p,  color_of_node,  k, scc, G;
+    local   letters,  edge_colors,  len_alph,  node_colors,  tdir,  name,  
+            alph,  T,  str,  out_str,  scc,  G,  p,  q,  a,  color_of_node,  
+            k;
     
-    letters := ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"];
+    alph := AlphabetOfAutomaton(A);   
+    
+    # When the alphabet has more than 27 letters, they are given in the form
+    if IsList(AlphabetOfAutomatonAsList(A)[1]) then
+        letters := AlphabetOfAutomatonAsList(A);
+    else
+        letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
+    fi;
+    
     edge_colors := ["red", "blue", "green", "purple", "orange", "brown", "darksalmon", "darkseagreen", "darkturquoise",
                     "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick", "forestgreen", "gold"];
+    
+    if alph > 16 then
+        edge_colors := List([1 .. alph], i -> edge_colors[(i mod 16) + 1]);#to reuse colors
+    fi;
+    
     node_colors := [ "white", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
                      "crimson", "cyan", "darkgoldenrod", "darkkhaki", "darkorange", "darkorchid", "darksalmon", 
                      "darkseagreen", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick",
@@ -178,23 +192,6 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
     tdir := CMUP__getTempDir();
     name := Filename(tdir, Concatenation(fich, ".dot"));
 
-    # ---------------------------------------------------------------------------------    
-    # Prepare the letters to be used in edge labels and their colors (if alphabet > 16)
-#    alph := Length(AlphabetOfAutomatonAsList(A));
-#    if alph > 16 then
-#        edge_colors := List([1 .. alph], _ -> "black");
-#        if IsInt(AlphabetOfAutomaton(A)) then
-#            letters := List([1 .. A!.alphabet], i -> Concatenation("a", String(i)));
-#        fi;
-#    fi;
-#    if IsList(AlphabetOfAutomaton(A)) then
-#        letters := List(AlphabetOfAutomaton(A), a -> [a]);
-#    fi;
-#    if A!.type = "epsilon" then
-#        letters[alph] := "@";
-    #    fi;
-    alph := AlphabetOfAutomaton(A);
-    letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
     # ---------------------------------------------------------------------------------
 
     T := StructuralCopy(A!.transitions);
