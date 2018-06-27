@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<script type="text/javascript"
+  src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<title>GAP (Automata) - Appendix B: 
+      Drawing automata
+    </title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="GAPDoc2HTML" />
+<link rel="stylesheet" type="text/css" href="manual.css" />
+<script src="manual.js" type="text/javascript"></script>
+<script type="text/javascript">overwriteStyle();</script>
+</head>
+<body class="chapB"  onload="jscontent()">
+
+
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chap2_mj.html">2</a>  <a href="chap3_mj.html">3</a>  <a href="chap4_mj.html">4</a>  <a href="chap5_mj.html">5</a>  <a href="chap6_mj.html">6</a>  <a href="chapA_mj.html">A</a>  <a href="chapB_mj.html">B</a>  <a href="chapC_mj.html">C</a>  <a href="chapBib_mj.html">Bib</a>  <a href="chapInd_mj.html">Ind</a>  </div>
+
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chapA_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapC_mj.html">[Next Chapter]</a>&nbsp;  </div>
+
+<p id="mathjaxlink" class="pcenter"><a href="chapB.html">[MathJax off]</a></p>
+<p><a id="X82D249F0793E6561" name="X82D249F0793E6561"></a></p>
+<div class="ChapSects"><a href="chapB_mj.html#X82D249F0793E6561">B <span class="Heading">
+      Drawing automata
+    </span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapB_mj.html#X7988DBAB78EA0C06">B.1 <span class="Heading">
+        Installing some external programs
+      </span></a>
+</span>
+</div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapB_mj.html#X84C97CA079719B11">B.2 <span class="Heading">
+        Functions to draw automata
+      </span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7BC2FDA77FD0237B">B.2-1 DrawAutomaton</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7AEE146D8391CA3D">B.2-2 DrawAutomata</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7D17B77F829F9CCB">B.2-3 DrawGraph</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7E478FDD807853CA">B.2-4 DrawSCCAutomaton</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapB_mj.html#X7F5419527FFCD1DF">B.3 <span class="Heading">Drawings output formats</span></a>
+</span>
+</div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapB_mj.html#X795DD98D86A1A441">B.4 <span class="Heading">Drawings extra graph attributes</span></a>
+</span>
+</div>
+</div>
+
+<h3>B <span class="Heading">
+      Drawing automata
+    </span></h3>
+
+<p>The drawing of graphs described here uses <code class="code">graphviz</code> <a href="chapBib_mj.html#biBKoutsofiosNorth:2002">[DEG+02]</a>, a software for drawing graphs developed at AT &amp; T Labs, that can be obtained at <span class="URL"><a href="http://www.graphviz.org/">http://www.graphviz.org/</a></span>.</p>
+
+<p><a id="X7988DBAB78EA0C06" name="X7988DBAB78EA0C06"></a></p>
+
+<h4>B.1 <span class="Heading">
+        Installing some external programs
+      </span></h4>
+
+<p>In order to create the drawings you should install <span class="URL"><a href="http://www.graphviz.org/">graphviz</a></span> and to view them you should install one of <span class="URL"><a href="http://www.gnome.org/projects/evince/">evince</a></span>, <span class="URL"><a href="http://directory.fsf.org/GNU/ggv.html">ggv</a></span>, <span class="URL"><a href="http://pages.cs.wisc.edu/~ghost/gsview/">gsview</a></span> or <span class="URL"><a href="http://www.gnu.org/software/gv/">gv</a></span>.</p>
+
+<p><a id="X84C97CA079719B11" name="X84C97CA079719B11"></a></p>
+
+<h4>B.2 <span class="Heading">
+        Functions to draw automata
+      </span></h4>
+
+<p><a id="X7BC2FDA77FD0237B" name="X7BC2FDA77FD0237B"></a></p>
+
+<h5>B.2-1 DrawAutomaton</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DrawAutomaton</code>( <var class="Arg">A</var>[, <var class="Arg">state_names</var>, <var class="Arg">L</var>, <var class="Arg">file</var>] )</td><td class="tdright">(&nbsp;function&nbsp;)</td></tr></table></div>
+<p>This function draws automaton <var class="Arg">A</var>. The arguments <var class="Arg">state_names</var>, <var class="Arg">L</var> and <var class="Arg">file</var> are optional.</p>
+
+<p>An automaton with <code class="code">n</code> states will be drawn with numbers <code class="code">1</code> to <code class="code">n</code> written inside the corresponding graph node. The argument <var class="Arg">state_names</var> is a list of <code class="code">n</code> strings which will be the new text written inside the corresponding graph node.</p>
+
+<p>The argument <var class="Arg">L</var> is a list of lists of integers, each of which specifies a set of states to be drawn in a different color.</p>
+
+<p>The argument <var class="Arg">file</var> is a string that specifies the name of the file containing the drawing. If it is not give, it defaults to <code class="code">"automaton"</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">x:=Automaton("det",3,2,[ [ 2, 3, 0 ], [ 0, 1, 2 ] ],[ 1 ],[ 1, 2, 3 ]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawAutomaton(x,"file_name");</span>
+Displaying file: /tmp/tmp.Rj0v1s/file_name.dot.ps
+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawAutomaton(x,["st 1", "2", "C"],"file_name");</span>
+Displaying file: /tmp/tmp.BCH3FO/file_name.dot.ps
+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawAutomaton(x,["st 1", "2", "C"],[[2],[1,3]]);</span>
+Displaying file: /tmp/tmp.LPnJMq/automaton.dot.ps
+</pre></div>
+
+<p>The output of the three previous <code class="code">DrawAutomaton</code> commands would be the following diagrams displayed in a <em>ghostview</em> window, respectively.</p>
+
+<p><br><center><img src="aut2.jpg"></center><br></p>
+
+<p><br><center><img src="aut2_1.jpg"></center><br></p>
+
+<p><br><center><img src="aut2_2.jpg"></center><br></p>
+
+<p><a id="X7AEE146D8391CA3D" name="X7AEE146D8391CA3D"></a></p>
+
+<h5>B.2-2 DrawAutomata</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DrawAutomata</code>( <var class="Arg">A</var>, <var class="Arg">B</var>[, <var class="Arg">file</var>] )</td><td class="tdright">(&nbsp;function&nbsp;)</td></tr></table></div>
+<p>This function tests if automaton <code class="code"> A </code> is a subautomaton of <code class="code"> B </code> in which case draws <code class="code"> B </code> highlighting the edges not in <code class="code"> A </code> by drawing them in a dotted style, while the others are drawn in a plain style.</p>
+
+<p><a id="X7D17B77F829F9CCB" name="X7D17B77F829F9CCB"></a></p>
+
+<h5>B.2-3 DrawGraph</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DrawGraph</code>( <var class="Arg">G</var>[, <var class="Arg">file</var>] )</td><td class="tdright">(&nbsp;function&nbsp;)</td></tr></table></div>
+<p>Draws a graph specified as an adjacency list <code class="code">G</code>.</p>
+
+<p><a id="X7E478FDD807853CA" name="X7E478FDD807853CA"></a></p>
+
+<h5>B.2-4 DrawSCCAutomaton</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DrawSCCAutomaton</code>( <var class="Arg">A</var>[, <var class="Arg">state_names</var>, <var class="Arg">L</var>, <var class="Arg">file</var>] )</td><td class="tdright">(&nbsp;function&nbsp;)</td></tr></table></div>
+<p>Draws automaton <code class="code"> A </code> and highlights it's strongly connected components by drawing the other edges in a dotted style.</p>
+
+<p>The optional arguments <var class="Arg">state_names</var>, <var class="Arg">L</var> and <var class="Arg">file</var> are as described in <code class="func">DrawAutomaton</code> (<a href="chapB_mj.html#X7BC2FDA77FD0237B"><span class="RefLink">B.2-1</span></a>).</p>
+
+<p><a id="X7F5419527FFCD1DF" name="X7F5419527FFCD1DF"></a></p>
+
+<h4>B.3 <span class="Heading">Drawings output formats</span></h4>
+
+<p>Since drawings are mostly used in the <strong class="pkg">SgpViz</strong> package, please refer to that package's <span class="URL"><a href="http://www.gap-system.org/Manuals/pkg/sgpviz/doc/manual.html">manual</a></span> section of the same name.</p>
+
+<p><a id="X795DD98D86A1A441" name="X795DD98D86A1A441"></a></p>
+
+<h4>B.4 <span class="Heading">Drawings extra graph attributes</span></h4>
+
+<p>Since drawings are mostly used in the <strong class="pkg">SgpViz</strong> package, please refer to that package's <span class="URL"><a href="http://www.gap-system.org/Manuals/pkg/sgpviz/doc/manual.html">manual</a></span> section of the same name.</p>
+
+
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chapA_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapC_mj.html">[Next Chapter]</a>&nbsp;  </div>
+
+
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chap2_mj.html">2</a>  <a href="chap3_mj.html">3</a>  <a href="chap4_mj.html">4</a>  <a href="chap5_mj.html">5</a>  <a href="chap6_mj.html">6</a>  <a href="chapA_mj.html">A</a>  <a href="chapB_mj.html">B</a>  <a href="chapC_mj.html">C</a>  <a href="chapBib_mj.html">Bib</a>  <a href="chapInd_mj.html">Ind</a>  </div>
+
+<hr />
+<p class="foot">generated by <a href="http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>
+</body>
+</html>

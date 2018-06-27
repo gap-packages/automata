@@ -1,0 +1,62 @@
+  
+  [1X1 [33X[0;0YIntroduction[133X[101X
+  
+  [33X[0;0YIn  many situations an automaton is conveniently described through a diagram
+  like the following[133X
+  
+  [33X[0;0YThis  diagram  describes  a  (deterministic)  automaton  with  [22X3[122X states (the
+  elements  of  the  set [22X{1,2,3}).[122X The arrow pointing to the state [22X1[122X indicates
+  that [22X1[122X is the initial state and the two circles around state [22X3[122X indicate that
+  [22X3[122X  is  a  final  or  accepting  state.  The set [22X{a,b}[122X is the [13Xalphabet[113X of the
+  automaton;  its  elements are called [13Xletters[113X and are the labels of the edges
+  of  the  diagram.  The  words  [22Xa[122X  ,  [22Xab^2[122X  ,  [22Xb^5a^3b[122X  are examples of words
+  recognized  by the automaton since they are labels of paths from the initial
+  to the final state.[133X
+  
+  [33X[0;0YThe  set  of  words recognized by an automaton is called the [13Xlanguage[113X of the
+  automaton.  It  is  a  rational  language  and  may be represented through a
+  rational expression. For instance,[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[28X(aUb)(a(aUb)Ub(aUb))*[128X[104X
+  [4X[32X[104X
+  
+  [33X[0;0Yis a rational expression representing the language of the above automaton.[133X
+  
+  [33X[0;0YKleene's Theorem states that a language is rational if and only if it is the
+  language  of  a finite automaton. Both directions of Kleene's Theorem can be
+  proved  constructively,  and  these algorithms, to go from an automaton to a
+  rational expression and [13Xvice-versa[113X, are implemented in this package.[133X
+  
+  [33X[0;0YOf course, one has to pay attention to the size of the output produced. When
+  producing   a   deterministic  automaton  equivalent  to  a  given  rational
+  expression  one can obtain an optimal solution (the minimal automaton) using
+  standard algorithms [AHU74].[133X
+  
+  [33X[0;0YWhen  producing  a rational expression for the language of an automaton, and
+  taking  into  account  some  reasonable  measure  for the size of a rational
+  expression,  to  determine  a  minimal  one  is  apparently  computationally
+  difficult.  We  use  here some heuristic methods (to be published elsewhere)
+  which in practice lead to very reasonable results.[133X
+  
+  [33X[0;0YThe  development  of  this  work  has  benefited from the existence of AMoRE
+  [MMP+95],  a  package  written  in [10XC[110X to handle Automata, Monoids and Regular
+  Expressions.  In  fact,  its  manual  has  been  very useful and some of the
+  algorithms implemented here are those implemented in AMoRE. In this package,
+  unlike  what  happened  with AMoRE, we do not have to worry about the monoid
+  part  in  order  to make it useful to semigroup theorists, since monoids are
+  already  implemented  in [5XGAP[105X and we may take advantage of this fact. We just
+  need a function to compute the transition semigroup of an automaton.[133X
+  
+  [33X[0;0YThe  parts  of this package that have not so directly to do with automata or
+  rational  expressions  are  put  into  appendices in this manual. Some words
+  about these appendices follow.[133X
+  
+  [33X[0;0YUsing the external program Graphviz [DEG+02] to graph visualization, one can
+  visualize  automata.  This very convenient tool presently works easily under
+  LINUX.[133X
+  
+  [33X[0;0YGiven  a  finitely  generated  subgroup  of the free group it is possible to
+  compute  a  flower automaton and perform Stallings foldings over it in order
+  to obtain an inverse automaton corresponding to the given subgroup.[133X
+  

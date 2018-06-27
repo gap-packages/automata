@@ -1,0 +1,152 @@
+  
+  [1XC [33X[0;0YInverse automata and subgroups of the free group[133X[101X
+  
+  [33X[0;0YInverse  automata  with a single initial/accepting state are in a one to one
+  correspondence  with finitely generated subgroups of the free group over the
+  alphabet  of  the automaton. See [MSW01], [KM02] for details, as well as for
+  concepts such as [13Xflower automaton[113X and [13XStallings foldings[113X.[133X
+  
+  
+  [1XC.1 [33X[0;0YFrom subgroups to inverse automata[133X[101X
+  
+  [33X[0;0YA  finitely  generated  subgroup of a finitely generated free group is given
+  through  a  list whose first element is the number of generators of the free
+  group and the remaining elements are the generators of the subgroup. The set
+  of generators of the free group of rank [22Xn[122X consists on the [22Xn[122X first letters of
+  the  set  [22X{a,b,c,d,e,f,g}[122X. In particular, free groups of rank greater than [22X8[122X
+  must  not  be  considered. A formal inverse of a generator is represented by
+  the corresponding capital letter.[133X
+  
+  [33X[0;0YA  generator  of  the  subgroup  may be given through a string of letters or
+  through a list of positive integers as should be clear from the example that
+  follows.[133X
+  
+  [33X[0;0YFor example, [10X[2,"abA","bbabAB"][110X stands for the subgroup of the free group of
+  rank  2  on the generators [22Xaba^-1[122X and [22Xbbaba^-1b^-1[122X. The same subgroup may be
+  given  as  [10X[2,[1,2,3],[2,2,1,2,3,4]][110X.  The  number [22Xn+j[122X represents the formal
+  inverse   of   the   generator  represented  by  [22Xj[122X.  One  can  go  from  one
+  representation to another, using the following functions.[133X
+  
+  [1XC.1-1 GeneratorsToListRepresentation[101X
+  
+  [33X[1;0Y[29X[2XGeneratorsToListRepresentation[102X( [3XL[103X ) [32X function[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XL:=[2,"abA","bbabAB"];;[127X[104X
+    [4X[25Xgap>[125X [27XGeneratorsToListRepresentation(L);[127X[104X
+    [4X[28X[ 2, [ 1, 2, 3 ], [ 2, 2, 1, 2, 3, 4 ] ][128X[104X
+  [4X[32X[104X
+  
+  [1XC.1-2 ListToGeneratorsRepresentation[101X
+  
+  [33X[1;0Y[29X[2XListToGeneratorsRepresentation[102X( [3XK[103X ) [32X function[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XK:=[2,[1,2,3],[2,2,1,2,3,4]];;[127X[104X
+    [4X[25Xgap>[125X [27XListToGeneratorsRepresentation(K);[127X[104X
+    [4X[28X[ 2, "abA", "bbabAB" ][128X[104X
+  [4X[32X[104X
+  
+  [1XC.1-3 FlowerAutomaton[101X
+  
+  [33X[1;0Y[29X[2XFlowerAutomaton[102X( [3XL[103X ) [32X function[133X
+  
+  [33X[0;0YThe  argument  [10XL[110X  is  a  subgroup of the free group given through any of the
+  representations described above. Returns the flower automaton.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XW:=[2,"bbbAB","abAbA"];;[127X[104X
+    [4X[25Xgap>[125X [27XA:=FlowerAutomaton(W);[127X[104X
+    [4X[28X< non deterministic automaton on 2 letters with 9 states >[128X[104X
+    [4X[25Xgap>[125X [27XDisplay(A);[127X[104X
+    [4X[28X   |  1          2       3       4    5       6       7    8       9[128X[104X
+    [4X[28X---------------------------------------------------------------------[128X[104X
+    [4X[28X a | [ 6, 9 ]                        [ 4 ]                [ 7 ][128X[104X
+    [4X[28X b | [ 2, 5 ]   [ 3 ]   [ 4 ]                [ 7 ]        [ 9 ][128X[104X
+    [4X[28XInitial state:   [ 1 ][128X[104X
+    [4X[28XAccepting state: [ 1 ][128X[104X
+  [4X[32X[104X
+  
+  [1XC.1-4 FoldFlowerAutomaton[101X
+  
+  [33X[1;0Y[29X[2XFoldFlowerAutomaton[102X( [3XA[103X ) [32X function[133X
+  
+  [33X[0;0YMakes  identifications  on  the flower automaton [10XA[110X. In the literature, these
+  identifications are called Stallings foldings.[133X
+  
+  [33X[0;0Y(This  function  may  have  [10Xtrue[110X  as  a second argument. WARNING: the second
+  argument should only be used when facilities to draw automata are available.
+  In that case, one may visualize the identifications that are taking place.)[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XB := FoldFlowerAutomaton(A);[127X[104X
+    [4X[28X< deterministic automaton on 2 letters with 7 states >[128X[104X
+    [4X[25Xgap>[125X [27XDisplay(B);[127X[104X
+    [4X[28X   |  1  2  3  4  5  6  7[128X[104X
+    [4X[28X--------------------------[128X[104X
+    [4X[28X a |  5  4              6[128X[104X
+    [4X[28X b |  2  3  4     6     5[128X[104X
+    [4X[28XInitial state:   [ 1 ][128X[104X
+    [4X[28XAccepting state: [ 1 ][128X[104X
+  [4X[32X[104X
+  
+  [1XC.1-5 SubgroupGenToInvAut[101X
+  
+  [33X[1;0Y[29X[2XSubgroupGenToInvAut[102X( [3XL[103X ) [32X function[133X
+  
+  [33X[0;0YReturns the inverse automaton corresponding to the subgroup given by [3XL[103X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XL:=[2,"bbbAB","AbAbA"];;[127X[104X
+    [4X[25Xgap>[125X [27XSubgroupGenToInvAut(L);[127X[104X
+    [4X[28X< deterministic automaton on 2 letters with 8 states >[128X[104X
+    [4X[25Xgap>[125X [27XDisplay(last);[127X[104X
+    [4X[28X   |  1  2  3  4  5  6  7  8[128X[104X
+    [4X[28X-----------------------------[128X[104X
+    [4X[28X a |  8  4        1     6[128X[104X
+    [4X[28X b |  2  3  4     6     8[128X[104X
+    [4X[28XInitial state:   [ 1 ][128X[104X
+    [4X[28XAccepting state: [ 1 ][128X[104X
+    [4X[28X[128X[104X
+  [4X[32X[104X
+  
+  
+  [1XC.2 [33X[0;0YFrom inverse automata to subgroups[133X[101X
+  
+  [33X[0;0YGiven  an  inverse  automaton with a single initial/accepting state, one can
+  find  a  set  of  generators  for the subgroup represented by the automaton.
+  Moreover,  using  a  geodesic  tree,  one  can find a Nielsen reduced set of
+  generators [KM02].[133X
+  
+  [1XC.2-1 GeodesicTreeOfInverseAutomaton[101X
+  
+  [33X[1;0Y[29X[2XGeodesicTreeOfInverseAutomaton[102X( [3XA[103X ) [32X function[133X
+  
+  [33X[0;0YReturns  a subautomaton of [3XA[103Xwhose underlying graph is a geodesic tree of the
+  underlying graph of the inverse automaton [10XA[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XA:=Automaton("det",4,2,[ [ 3, 4, 0, 0 ], [ 2, 3, 4, 0 ] ],[ 1 ],[ 1 ]);;[127X[104X
+    [4X[25Xgap>[125X [27XG := GeodesicTreeOfInverseAutomaton(A);[127X[104X
+    [4X[28X< deterministic automaton on 2 letters with 4 states >[128X[104X
+    [4X[25Xgap>[125X [27XDisplay(G);[127X[104X
+    [4X[28X   |  1  2  3  4[128X[104X
+    [4X[28X-----------------[128X[104X
+    [4X[28X a |  3[128X[104X
+    [4X[28X b |  2     4[128X[104X
+    [4X[28XInitial state:   [ 1 ][128X[104X
+    [4X[28XAccepting state: [ 1 ][128X[104X
+  [4X[32X[104X
+  
+  [1XC.2-2 InverseAutomatonToGenerators[101X
+  
+  [33X[1;0Y[29X[2XInverseAutomatonToGenerators[102X( [3XA[103X ) [32X function[133X
+  
+  [33X[0;0YReturns  a  set of generators (given trough the representation above) of the
+  subgroup of the free group corresponding to the automaton [10XA[110X given.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XNW := InverseAutomatonToGenerators(A);[127X[104X
+    [4X[28X[ 2, "baBA", "bbA" ][128X[104X
+  [4X[32X[104X
+  

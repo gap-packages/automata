@@ -1,0 +1,93 @@
+  
+  [1XB [33X[0;0YDrawing automata[133X[101X
+  
+  [33X[0;0YThe  drawing of graphs described here uses [10Xgraphviz[110X [DEG+02], a software for
+  drawing  graphs  developed  at  AT  &  T  Labs,  that  can  be  obtained  at
+  [7Xhttp://www.graphviz.org/[107X.[133X
+  
+  
+  [1XB.1 [33X[0;0YInstalling some external programs[133X[101X
+  
+  [33X[0;0YIn   order   to   create   the   drawings   you   should   install  graphviz
+  ([7Xhttp://www.graphviz.org/[107X) and to view them you should install one of evince
+  ([7Xhttp://www.gnome.org/projects/evince/[107X),                                 ggv
+  ([7Xhttp://directory.fsf.org/GNU/ggv.html[107X),                              gsview
+  ([7Xhttp://pages.cs.wisc.edu/~ghost/gsview/[107X)                or               gv
+  ([7Xhttp://www.gnu.org/software/gv/[107X).[133X
+  
+  
+  [1XB.2 [33X[0;0YFunctions to draw automata[133X[101X
+  
+  [1XB.2-1 DrawAutomaton[101X
+  
+  [33X[1;0Y[29X[2XDrawAutomaton[102X( [3XA[103X[, [3Xstate_names[103X, [3XL[103X, [3Xfile[103X] ) [32X function[133X
+  
+  [33X[0;0YThis  function  draws automaton [3XA[103X. The arguments [3Xstate_names[103X, [3XL[103X and [3Xfile[103X are
+  optional.[133X
+  
+  [33X[0;0YAn  automaton with [10Xn[110X states will be drawn with numbers [10X1[110X to [10Xn[110X written inside
+  the  corresponding  graph  node.  The  argument  [3Xstate_names[103X  is a list of [10Xn[110X
+  strings  which  will  be the new text written inside the corresponding graph
+  node.[133X
+  
+  [33X[0;0YThe argument [3XL[103X is a list of lists of integers, each of which specifies a set
+  of states to be drawn in a different color.[133X
+  
+  [33X[0;0YThe argument [3Xfile[103X is a string that specifies the name of the file containing
+  the drawing. If it is not give, it defaults to [10X"automaton"[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xx:=Automaton("det",3,2,[ [ 2, 3, 0 ], [ 0, 1, 2 ] ],[ 1 ],[ 1, 2, 3 ]);;[127X[104X
+    [4X[25Xgap>[125X [27XDrawAutomaton(x,"file_name");[127X[104X
+    [4X[28XDisplaying file: /tmp/tmp.Rj0v1s/file_name.dot.ps[128X[104X
+    [4X[28X[128X[104X
+    [4X[25Xgap>[125X [27XDrawAutomaton(x,["st 1", "2", "C"],"file_name");[127X[104X
+    [4X[28XDisplaying file: /tmp/tmp.BCH3FO/file_name.dot.ps[128X[104X
+    [4X[28X[128X[104X
+    [4X[25Xgap>[125X [27XDrawAutomaton(x,["st 1", "2", "C"],[[2],[1,3]]);[127X[104X
+    [4X[28XDisplaying file: /tmp/tmp.LPnJMq/automaton.dot.ps[128X[104X
+  [4X[32X[104X
+  
+  [33X[0;0YThe  output  of  the  three  previous  [10XDrawAutomaton[110X  commands  would be the
+  following diagrams displayed in a [13Xghostview[113X window, respectively.[133X
+  
+  [1XB.2-2 DrawAutomata[101X
+  
+  [33X[1;0Y[29X[2XDrawAutomata[102X( [3XA[103X, [3XB[103X[, [3Xfile[103X] ) [32X function[133X
+  
+  [33X[0;0YThis  function tests if automaton [10X A [110X is a subautomaton of [10X B [110X in which case
+  draws  [10X  B  [110X  highlighting  the edges not in [10X A [110X by drawing them in a dotted
+  style, while the others are drawn in a plain style.[133X
+  
+  [1XB.2-3 DrawGraph[101X
+  
+  [33X[1;0Y[29X[2XDrawGraph[102X( [3XG[103X[, [3Xfile[103X] ) [32X function[133X
+  
+  [33X[0;0YDraws a graph specified as an adjacency list [10XG[110X.[133X
+  
+  [1XB.2-4 DrawSCCAutomaton[101X
+  
+  [33X[1;0Y[29X[2XDrawSCCAutomaton[102X( [3XA[103X[, [3Xstate_names[103X, [3XL[103X, [3Xfile[103X] ) [32X function[133X
+  
+  [33X[0;0YDraws  automaton  [10X  A  [110X and highlights it's strongly connected components by
+  drawing the other edges in a dotted style.[133X
+  
+  [33X[0;0YThe  optional  arguments  [3Xstate_names[103X,  [3XL[103X  and  [3Xfile[103X  are  as  described  in
+  [2XDrawAutomaton[102X ([14XB.2-1[114X).[133X
+  
+  
+  [1XB.3 [33X[0;0YDrawings output formats[133X[101X
+  
+  [33X[0;0YSince  drawings  are mostly used in the [5XSgpViz[105X package, please refer to that
+  package's                                                             manual
+  ([7Xhttp://www.gap-system.org/Manuals/pkg/sgpviz/doc/manual.html[107X)   section  of
+  the same name.[133X
+  
+  
+  [1XB.4 [33X[0;0YDrawings extra graph attributes[133X[101X
+  
+  [33X[0;0YSince  drawings  are mostly used in the [5XSgpViz[105X package, please refer to that
+  package's                                                             manual
+  ([7Xhttp://www.gap-system.org/Manuals/pkg/sgpviz/doc/manual.html[107X)   section  of
+  the same name.[133X
+  

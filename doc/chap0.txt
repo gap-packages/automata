@@ -1,1 +1,228 @@
-Placeholder
+  
+  
+                                   [1X Automata [101X
+  
+  
+                            [1X A package on automata [101X
+  
+  
+                                    1.13dev
+  
+  
+                                19 November 2011
+  
+  
+                                 Manuel Delgado
+  
+                                  Steve Linton
+  
+                                José João Morais
+  
+  
+  
+  Manuel Delgado
+      Email:    [7Xmailto:mdelgado@fc.up.pt[107X
+      Homepage: [7Xhttp://www.fc.up.pt/cmup/mdelgado/[107X
+      Address:  [33X[0;14YDepartamento de Matemática - Faculdade de Ciências[133X
+                [33X[0;14YPorto[133X
+                [33X[0;14YPortugal[133X
+  
+  
+  Steve Linton
+      Email:    [7Xmailto:steve.linton@st-andrews.ac.uk[107X
+      Homepage: [7Xhttp://www-groups.dcs.st-and.ac.uk/~sal/[107X
+      Address:  [33X[0;14YSchool of Computer Science[133X
+                [33X[0;14YUniversity of St Andrews[133X
+                [33X[0;14YJack Cole Building, North Haugh[133X
+                [33X[0;14YSt Andrews, Fife, KY16 9SX[133X
+                [33X[0;14YUnited Kingdom[133X
+  
+  
+  
+  -------------------------------------------------------
+  [1XCopyright[101X
+  [33X[0;0Y© 2004 by Manuel Delgado, Steve Linton and José Morais[133X
+  
+  [33X[0;0YWe  adopt  the  copyright  regulations  of  [5XGAP[105X as detailed in the copyright
+  notice in the [5XGAP[105X manual.[133X
+  
+  
+  -------------------------------------------------------
+  [1XAcknowledgements[101X
+  [33X[0;0YThe  first  author wishes to acknowledge Cyril Nicaud and Paulo Varandas for
+  their  help  in programming some functions of the very first version of this
+  package.  He  wishes  also to acknowledge useful discussions and comments by
+  Cyril Nicaud, Vítor H. Fernandes, Jean-Eric Pin and Jorge Almeida.[133X
+  
+  [33X[0;0YThe  first  author also acknowledges support of FCT through CMUP and the FCT
+  and  POCTI  Project POCTI/32817/MAT/2000 which is funded in cooperation with
+  the European Community Fund FEDER.[133X
+  
+  [33X[0;0YThe third author acknowledges financial support of FCT and the POCTI program
+  through  a  scholarship  given  by  Centro  de Matemática da Universidade do
+  Porto.[133X
+  
+  [33X[0;0YThe  authors  would  like  to  thank  Mark  Kambites for his contribution in
+  finding bugs and making suggestions for the improvement of this package.[133X
+  
+  [33X[0;0YConcerning the mantainment:[133X
+  
+  [33X[0;0YThe   first   author   was/is  (partially)  supported  by  the  FCT  project
+  PTDC/MAT/65481/2006  and also by the [13XCentro de Matemática da Universidade do
+  Porto[113X  (CMUP),  funded by the European Regional Development Fund through the
+  program  COMPETE and by the Portuguese Government through the FCT - Fundação
+  para a Ciência e a Tecnologia under the project PEst-C/MAT/UI0144/2011.[133X
+  
+  
+  -------------------------------------------------------
+  [1XColophon[101X
+  [33X[0;0YThis  work  started  in  1998, when the first author was in the LIAFA at the
+  University  of Paris 7, in a post-doc. Encouraged by J. E. Pin, he began the
+  implementation in [5XGAP[105X3 of an algorithm obtained some time before to answer a
+  question  from  the realm of Finite Semigroups proposed by J. Almeida. It is
+  now part of a separate package: [10Xfinsemi[110X.[133X
+  
+  [33X[0;0YThe  first  version  of  this  package on automata was prepared by the first
+  author  who  gave  it  the form of a [5XGAP[105X share package. In a second version,
+  prepared  by the first and third authors, many functions have been added and
+  the  performance  of  many  of  the existing ones has been improved. Further
+  important improvements, specially concerning performance, have been achieved
+  when the second author joined the group.[133X
+  
+  [33X[0;0YSince  Version 1.12, the package is maintained by the first two authors. Bug
+  reports,  suggestions  and  comments are, of course, welcome. Please use our
+  email addresses to this effect.[133X
+  
+  
+  -------------------------------------------------------
+  
+  
+  [1XContents (Automata)[101X
+  
+  1 [33X[0;0YIntroduction[133X
+  2 [33X[0;0YFinite Automata[133X
+    2.1 [33X[0;0YAutomata generation[133X
+      2.1-1 Automaton
+      2.1-2 IsAutomaton
+      2.1-3 IsDeterministicAutomaton
+      2.1-4 IsNonDeterministicAutomaton
+      2.1-5 IsEpsilonAutomaton
+      2.1-6 String
+      2.1-7 RandomAutomaton
+    2.2 [33X[0;0YAutomata internals[133X
+      2.2-1 AlphabetOfAutomaton
+      2.2-2 AlphabetOfAutomatonAsList
+      2.2-3 TransitionMatrixOfAutomaton
+      2.2-4 InitialStatesOfAutomaton
+      2.2-5 SetInitialStatesOfAutomaton
+      2.2-6 FinalStatesOfAutomaton
+      2.2-7 SetFinalStatesOfAutomaton
+      2.2-8 NumberStatesOfAutomaton
+    2.3 [33X[0;0YComparison of automata[133X
+    2.4 [33X[0;0YTests involving automata[133X
+      2.4-1 IsDenseAutomaton
+      2.4-2 IsRecognizedByAutomaton
+      2.4-3 IsPermutationAutomaton
+      2.4-4 IsInverseAutomaton
+      2.4-5 AddInverseEdgesToInverseAutomaton
+      2.4-6 IsReversibleAutomaton
+    2.5 [33X[0;0YBasic operations[133X
+      2.5-1 CopyAutomaton
+      2.5-2 NullCompletionAutomaton
+      2.5-3 ListSinkStatesAut
+      2.5-4 RemovedSinkStates
+      2.5-5 ReversedAutomaton
+      2.5-6 PermutedAutomaton
+      2.5-7 ListPermutedAutomata
+      2.5-8 NormalizedAutomaton
+      2.5-9 UnionAutomata
+      2.5-10 ProductAutomaton
+      2.5-11 ProductOfLanguages
+    2.6 [33X[0;0YLinks with Semigroups[133X
+      2.6-1 TransitionSemigroup
+      2.6-2 SyntacticSemigroupAut
+      2.6-3 SyntacticSemigroupLang
+  3 [33X[0;0YRational languages[133X
+    3.1 [33X[0;0YRational Expressions[133X
+      3.1-1 RationalExpression
+      3.1-2 RatExpOnnLetters
+      3.1-3 RandomRatExp
+      3.1-4 SizeRatExp
+      3.1-5 IsRationalExpression
+      3.1-6 AlphabetOfRatExp
+      3.1-7 AlphabetOfRatExpAsList
+      3.1-8 CopyRatExp
+    3.2 [33X[0;0YComparison of rational expressions[133X
+    3.3 [33X[0;0YOperations with rational languages[133X
+      3.3-1 UnionRatExp
+      3.3-2 ProductRatExp
+      3.3-3  StarRatExp
+  4 [33X[0;0YAutomata [13Xversus[113X rational expressions[133X
+    4.1 [33X[0;0YFrom automata to rational expressions[133X
+      4.1-1 AutomatonToRatExp 
+    4.2 [33X[0;0YFrom rational expression to automata[133X
+      4.2-1 RatExpToNDAut
+      4.2-2 RatExpToAutomaton
+    4.3 [33X[0;0YSome tests on automata[133X
+      4.3-1 IsEmptyLang
+      4.3-2 IsFullLang
+      4.3-3 AreEqualLang
+      4.3-4 IsContainedLang
+      4.3-5 AreDisjointLang
+  5 [33X[0;0YSome functions involving automata[133X
+    5.1 [33X[0;0YFrom one type to another[133X
+      5.1-1 EpsilonToNFA
+      5.1-2 EpsilonToNFASet
+      5.1-3 EpsilonCompactedAut
+      5.1-4 ReducedNFA
+      5.1-5 NFAtoDFA
+      5.1-6 FuseSymbolsAut
+    5.2 [33X[0;0YMinimalization of an automaton[133X
+      5.2-1 UsefulAutomaton
+      5.2-2 MinimalizedAut
+      5.2-3  MinimalAutomaton
+      5.2-4 AccessibleStates
+      5.2-5 AccessibleAutomaton
+      5.2-6 IntersectionLanguage
+      5.2-7 AutomatonAllPairsPaths
+  6 [33X[0;0YFinite regular languages[133X
+    6.1 [33X[0;0YDealing with finite regular languages[133X
+      6.1-1 IsFiniteRegularLanguage
+      6.1-2 FiniteRegularLanguageToListOfWords
+      6.1-3 ListOfWordsToAutomaton
+  A [33X[0;0YDirected graphs[133X
+    A.1 [33X[0;0YDirected graphs[133X
+      A.1-1 RandomDiGraph
+      A.1-2 VertexInDegree
+      A.1-3 VertexOutDegree
+      A.1-4 AutoVertexDegree
+      A.1-5 ReversedGraph
+      A.1-6 AutoConnectedComponents
+      A.1-7 GraphStronglyConnectedComponents
+      A.1-8 UnderlyingMultiGraphOfAutomaton
+      A.1-9 UnderlyingGraphOfAutomaton
+      A.1-10 DiGraphToRelation
+      A.1-11 MSccAutomaton
+      A.1-12 AutoIsAcyclicGraph
+  B [33X[0;0YDrawing automata[133X
+    B.1 [33X[0;0YInstalling some external programs[133X
+    B.2 [33X[0;0YFunctions to draw automata[133X
+      B.2-1 DrawAutomaton
+      B.2-2 DrawAutomata
+      B.2-3 DrawGraph
+      B.2-4 DrawSCCAutomaton
+    B.3 [33X[0;0YDrawings output formats[133X
+    B.4 [33X[0;0YDrawings extra graph attributes[133X
+  C [33X[0;0YInverse automata and subgroups of the free group[133X
+    C.1 [33X[0;0YFrom subgroups to inverse automata[133X
+      C.1-1 GeneratorsToListRepresentation
+      C.1-2 ListToGeneratorsRepresentation
+      C.1-3 FlowerAutomaton
+      C.1-4 FoldFlowerAutomaton
+      C.1-5 SubgroupGenToInvAut
+    C.2 [33X[0;0YFrom inverse automata to subgroups[133X
+      C.2-1 GeodesicTreeOfInverseAutomaton
+      C.2-2 InverseAutomatonToGenerators
+  
+  
+  [32X
