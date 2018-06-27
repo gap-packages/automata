@@ -6,7 +6,6 @@
 ##
 ##  This file contains functions that perform operations on automata
 ##
-#H  @(#)$Id: aut-func.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

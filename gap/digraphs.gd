@@ -3,7 +3,6 @@
 #W  digraphs.gd                        Manuel Delgado <mdelgado@fc.up.pt>
 #W                                   Jose Morais    <josejoao@fc.up.pt>
 ##
-#H  @(#)$Id: digraphs.gi,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##

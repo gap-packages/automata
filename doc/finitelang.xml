@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: finitelang.xml,v 1.13  Exp $ -->
 
 <Chapter><Heading>Finite regular languages</Heading>
 This chapter describes some functions to deal with finite regular languages.

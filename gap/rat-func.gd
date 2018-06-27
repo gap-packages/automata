@@ -6,7 +6,6 @@
 ##  This file declares functions that perform tests on the languages
 ##  of automata.
 ##
-#H  @(#)$Id: rat-func.gd,v 1.13 $
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
