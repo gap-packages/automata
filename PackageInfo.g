@@ -75,6 +75,9 @@ ArchiveURL       := Concatenation( ~.SourceRepository.URL,
                                   "/automata-", ~.Version),
 ArchiveFormats   := ".tar.gz .tar.bz2",
 
+AbstractHTML :=
+   "The <span class=\"pkgname\">Automata</span> package, as its name suggests, is package with algorithms to deal with automata.",
+
 PackageDoc := rec(
   BookName  := "Automata",
   ArchiveURLSubset := ["doc"],
