@@ -2,13 +2,9 @@ SetPackageInfo( rec(
 
 PackageName := "Automata",
 Subtitle := "A package on automata",
-Version := "1.13",
+Version := "1.13dev",
 Date := "19/11/2011",
 
-ArchiveURL := 
-          "http://www.fc.up.pt/cmup/mdelgado/automata/automata-1.13",
-
-ArchiveFormats := ".tar.gz",
 Persons := [
   rec( 
     LastName      := "Delgado",
@@ -72,16 +68,19 @@ Status := "accepted",
 CommunicatedBy := "Edmund Robertson (St. Andrews)",
 AcceptDate := "09/2004",
 
-README_URL := 
-  "http://www.fc.up.pt/cmup/mdelgado/automata/README",
-PackageInfoURL := 
-  "http://www.fc.up.pt/cmup/mdelgado/automata/PackageInfo.g",
+PackageWWWHome   := "https://gap-packages.github.io/automata/",
+README_URL       := Concatenation(~.PackageWWWHome, "README"),
+PackageInfoURL   := Concatenation(~.PackageWWWHome, "PackageInfo.g"),
+SourceRepository := rec( 
+  Type := "git", 
+  URL := "https://github.com/gap-packages/automata"
+),
+IssueTrackerURL  := Concatenation( ~.SourceRepository.URL, "/issues" ),
+ArchiveURL       := Concatenation( ~.SourceRepository.URL,
+                                  "releases/download/v", ~.Version,
+                                  "/automata-", ~.Version),
+ArchiveFormats   := ".tar.gz .tar.bz2",
 
-AbstractHTML := 
-   "The <span class=\"pkgname\">Automata</span> package, as its name suggests, is package with algorithms to deal with automata.",
-
-PackageWWWHome := "http://www.fc.up.pt/cmup/mdelgado/automata",
-               
 PackageDoc := rec(
   BookName  := "Automata",
   ArchiveURLSubset := ["doc"],
@@ -94,7 +93,7 @@ PackageDoc := rec(
 
 
 Dependencies := rec(
-  GAP := ">=4.4",
+  GAP := ">=4.8",
   NeededOtherPackages := [],
   SuggestedOtherPackages := [["GAPDoc", ">= 1.2"]],
   ExternalConditions := [["Graphviz","http://www.graphviz.org/"],["Evince","http://www.gnome.org/projects/evince/"]]
@@ -102,18 +101,6 @@ Dependencies := rec(
 ),
 
 AvailabilityTest := ReturnTrue,
-
-BannerString := Concatenation( 
-  "----------------------------------------------------------------\n",
-  "Loading  Automata ", ~.Version, "\n",
-#  "by ", ~.Persons[1].FirstNames, " ", ~.Persons[1].LastName,
-#        " (", ~.Persons[1].WWWHome, ")\n",
-#  "   ", ~.Persons[2].FirstNames, " ", ~.Persons[2].LastName,
-#        " (", ~.Persons[2].WWWHome, ")\n",
-#  "   ", ~.Persons[3].FirstNames, " ", ~.Persons[3].LastName,"\n",
-#        " (", ~.Persons[3].WWWHome, ")\n",                
-  "For help, type: ?Automata: \n",
-  "----------------------------------------------------------------\n" ),
 
 Autoload := false,
 
