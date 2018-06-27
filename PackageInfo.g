@@ -2,7 +2,7 @@
 ##  
 ##  PackageInfo.g for the package `Example'                     Werner Nickel
 ##                                                                Greg Gamble
-##  (created from Frank Lübeck's PackageInfo.g template file)
+##  (created from Frank LÃ¼beck's PackageInfo.g template file)
 ##  
 ##  This is a GAP readable file. Of course you can change and remove all
 ##  comments as you like.
@@ -102,7 +102,7 @@ ArchiveFormats := ".tar.gz",
 ##     rec(
 ##     # these are compulsory, characters are interpreted as latin-1, so
 ##     # German umlauts and other western European special characters are ok:
-##     LastName := "Müller",
+##     LastName := "MÃ¼ller",
 ##     FirstNames := "Fritz Eduard",
 ##  
 ##     # At least one of the following two entries must be given and set 
@@ -118,7 +118,7 @@ ArchiveFormats := ".tar.gz",
 ##     # complete URL, starting with protocol
 ##     WWWHome := "http://www.no.org/~Mueller",
 ##     # separate lines by '\n' (*optional*)
-##     PostalAddress := "Dr. F. Müller\nNo Org Institute\nNo Place 13\n\
+##     PostalAddress := "Dr. F. MÃ¼ller\nNo Org Institute\nNo Place 13\n\
 ##     12345 Notown\nNocountry"
 ##     
 ##     # If you want, add one or both of the following entries (*optional*)
@@ -136,13 +136,13 @@ Persons := [
     WWWHome       := "http://www.fc.up.pt/cmup/mdelgado/",
     PostalAddress := Concatenation( [
                    "Manuel Delgado\n",
-                   "Departamento de Matemática\n",
-                   "Faculdade de Ciências\n",
+                   "Departamento de MatemÃ¡tica\n",
+                   "Faculdade de CiÃªncias\n",
                    "Rua do Campo Alegre, 687\n",
                    "Porto\n",
                    "Portugal" ] ),
     Place         := "Porto",
-    Institution   := "Faculdade de Ciências"
+    Institution   := "Faculdade de CiÃªncias"
   ),
   rec( 
     LastName      := "Linton",
@@ -172,14 +172,14 @@ Persons := [
 #    WWWHome       := "",
 #    PostalAddress := Concatenation( [
 #                       "Jose Morais\n",
-#                       "Departamento de Matemática Pura\n",
-#                   "Faculdade de Ciências\n",
+#                       "Departamento de MatemÃ¡tica Pura\n",
+#                   "Faculdade de CiÃªncias\n",
 #                   "Rua do Campo Alegre, 687\n",
 #                   "Porto\n",
 #                   "Portugal" ] ),           
     PostalAddress := "No address known"
 #    Place         := "Porto",
-#    Institution   := "Faculdade de Ciências"
+#    Institution   := "Faculdade de CiÃªncias"
                
   )
 # provide such a record for each author and/or maintainer ...
