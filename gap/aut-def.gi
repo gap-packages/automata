@@ -90,7 +90,7 @@ InstallGlobalFunction( Automaton, function(Type, Size, Alphabet,
             alph[Length(alph)] := '@';
         fi;
 
-        F!.alphabet := alph;
+        F!.alphabet := MakeImmutable(alph);
     else
         if Type = "epsilon" then
             if not Alphabet[Length(Alphabet)] = '@' then
@@ -192,6 +192,7 @@ InstallGlobalFunction( Automaton, function(Type, Size, Alphabet,
                initial := ListInitial,
                accepting := ListAccepting,
                transitions := TT );
+    MakeImmutable(aut);
 
     A := Objectify( NewType( F, IsAutomatonObj and 
                  IsAutomatonRep and IsAttributeStoringRep ),
