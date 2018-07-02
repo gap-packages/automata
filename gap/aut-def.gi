@@ -192,7 +192,6 @@ InstallGlobalFunction( Automaton, function(Type, Size, Alphabet,
                initial := ListInitial,
                accepting := ListAccepting,
                transitions := TT );
-    MakeImmutable(aut);
 
     A := Objectify( NewType( F, IsAutomatonObj and 
                  IsAutomatonRep and IsAttributeStoringRep ),
