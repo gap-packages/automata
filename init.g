@@ -29,5 +29,8 @@ ReadPackage( "automata", "gap/rat-func.gd" );
 ReadPackage( "automata", "gap/sgpslinks.gd" );
 
 ReadPackage( "automata", "gap/finitelang.gd" );
+#
+ReadPackage( "automata", "gap/aut-utils.gd");
+
 
 #E  init.g  . . . . . . . . . . . . . . . . . . . . . . . . . . .  ends here

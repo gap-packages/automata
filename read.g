@@ -28,5 +28,8 @@ ReadPackage( "automata", "gap/rat-func.gi" );
 ReadPackage( "automata", "gap/sgpslinks.gi" );
 
 ReadPackage( "automata", "gap/finitelang.gi" );
+#
+ReadPackage( "automata", "gap/aut-utils.gi");
+
 
 #E  read.g  . . . . . . . . . . . . . . . . . . . . . . . . . . .  ends here

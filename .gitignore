@@ -22,3 +22,7 @@
 
 /gh-pages/
 /tmp/
+/.project
+
+*~
+*.backup
