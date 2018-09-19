@@ -101,11 +101,11 @@ Accepting states: [ 1, 4 ]
           </Arg>
           is the empty language.
 <Example>
-gap> r:=RandomRatExp(2);
+gap> r := RationalExpression("empty_set");
 empty_set
 gap> IsEmptyLang(r);
 true
-gap> r:=RandomRatExp(2);
+gap> r := RationalExpression("aUb");
 aUb
 gap> IsEmptyLang(r);
 false
@@ -145,9 +145,12 @@ true
  These functions, which are synonyms, test if the automata or rational expressions <A>A1</A> and <A>A2</A> are equivalent, i.e. represent the same language. 
 This is performed by checking that the corresponding minimal automata are isomorphic. Note hat this cannot happen if the alphabets are different.
 <Example>
-gap> y:=RandomAutomaton("det",4,2);;
-gap> x:=RandomAutomaton("det",4,2);;
+gap> x := Automaton("det",4,"ab",[ [ 0, 1, 3, 4 ], [ 0, 1, 2, 0 ] ],[ 2 ],[ 1, 2, 3, 4 ] );;
+gap> y := Automaton("det",4,"ab",[ [ 1, 3, 4, 0 ], [ 0, 3, 4, 0 ] ],[ 3 ],[ 1, 3, 4 ]);;
+gap> z := Automaton("det",4,"ab",[ [ 0, 4, 0, 0 ], [ 1, 3, 4, 0 ] ],[ 2 ],[ 1, 3, 4 ]);;
 gap> AreEquivAut(x, y);
+true
+gap> AreEquivAut(x, z);
 false
 gap> a:=RationalExpression("(aUb)*ab*");
 (aUb)*ab*

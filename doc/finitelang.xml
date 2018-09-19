@@ -11,12 +11,10 @@ This chapter describes some functions to deal with finite regular languages.
 <A>L</A> is an automaton or a rational expression. This function tests
 whether its argument represents a finite language or not.
 <Example><![CDATA[
-gap> RandomRatExp(2);
-b*(aU@)
+gap> r:=RationalExpression("b*(aU@)");;
 gap> IsFiniteRegularLanguage(last);
 false
-gap> RandomRatExp(2);
-aUbU@
+gap> r:=RationalExpression("aUbU@");;
 gap> IsFiniteRegularLanguage(last);
 true
 ]]></Example>

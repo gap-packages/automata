@@ -94,7 +94,6 @@ gap> Display(last);
  b |  2  3  4     6     8
 Initial state:   [ 1 ]
 Accepting state: [ 1 ]
-
 ]]></Example>
 </Description> </ManSection>
 </Section>

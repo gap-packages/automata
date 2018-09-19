@@ -90,7 +90,7 @@ gap> SizeRatExp(a);
 <Description>
 Tests whether an object is a rational expression.
 <Example><![CDATA[
-gap> r := RandomRatExp("01",7);
+gap> r := RationalExpression("1(0U1)U@");
 1(0U1)U@
 gap> IsRatExpOnnLettersObj(r) and IsRationalExpressionRep(r);
 true

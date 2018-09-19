@@ -13,20 +13,21 @@ Next we have functions which have as input automata of one type and as output eq
 <A>A</A> is an automaton with <M>\epsilon</M>-transitions. Returns a NFA
 recognizing the same language.
 <Example><![CDATA[
-gap> x:=RandomAutomaton("epsilon",3,2);;Display(x);
-   |  1          2          3
-------------------------------------
- a | [ 2 ]      [ 3 ]      [ 2 ]
- b | [ 1, 2 ]   [ 1, 2 ]   [ 1, 3 ]
- @ | [ 1, 2 ]   [ 1, 2 ]   [ 1, 2 ]
-Initial states:   [ 2, 3 ]
-Accepting states: [ 1, 2, 3 ]
-gap> Display(EpsilonToNFA(x));
-   |  1          2             3
-------------------------------------------
- a | [ 1, 2 ]   [ 1, 2, 3 ]   [ 1, 2 ]
- b | [ 1, 2 ]   [ 1, 2 ]      [ 1, 2, 3 ]
+gap> x := Automaton("epsilon",3,"ab@",[ [ [ 3 ], [ 1 ], [ 1, 2 ] ], [ [ ], [ ], [ 1, 3 ] ], [ [ 1, 3 ], [ 1 ], [ 3 ] ] ],[ 1, 2, 3 ],[ 1, 3 ]);;
+gap> Display(x);
+   |  1          2       3
+---------------------------------
+ a | [ 3 ]      [ 1 ]   [ 1, 2 ]   
+ b |                    [ 1, 3 ]   
+ @ | [ 1, 3 ]   [ 1 ]   [ 3 ]      
 Initial states:   [ 1, 2, 3 ]
+Accepting states: [ 1, 3 ]
+gap> Display(EpsilonToNFA(x));
+   |  1       2          3
+------------------------------------
+ a | [ 3 ]   [ 1, 3 ]   [ 1 .. 3 ]   
+ b |                    [ 1, 3 .. 3 ]      
+Initial states:   [ 1 .. 3 ]
 Accepting states: [ 1, 2, 3 ]
 ]]></Example>
 </Description> 
@@ -54,22 +55,23 @@ each strongly-connected component of the
 epsilon-transitions digraph of <A>A</A> identified with a single state and
 recognizing the same language.
 <Example><![CDATA[
-gap> x:=RandomAutomaton("epsilon",3,2);;Display(x);
-   |  1          2          3
+gap> x := Automaton("epsilon",3,"ab@",[ [ [ ], [ 1 ], [ 1 ] ], [ [ 2 ], [ ], [ ] ], [ [ 2 ], [ 1, 2, 3 ], [ 1, 3 ] ] ],[ 3 ],[ 2, 3 ]);;
+gap> Display(x);
+   |  1       2             3
 ------------------------------------
- a | [ 1, 2 ]   [ 1, 3 ]   [ 1, 2 ]
- b | [ 1, 2 ]   [ 1, 2 ]   [ 2, 3 ]
- @ |            [ 3 ]      [ 2 ]
+ a |         [ 1 ]         [ 1 ]      
+ b | [ 2 ]                            
+ @ | [ 2 ]   [ 1, 2, 3 ]   [ 1, 3 ]   
 Initial state:    [ 3 ]
-Accepting states: [ 1, 3 ]
+Accepting states: [ 2, 3 ]
 gap> Display(EpsilonCompactedAut(x));
-   |  1          2
--------------------------
- a | [ 1, 2 ]   [ 1, 2 ]
- b | [ 1, 2 ]   [ 1, 2 ]
- @ |
-Initial state:    [ 2 ]
-Accepting states: [ 1, 2 ]
+   |  1
+-----------
+ a | [ 1 ]   
+ b | [ 1 ]   
+ @ |         
+Initial state:   [ 1 ]
+Accepting state: [ 1 ]
 ]]></Example>
 </Description> 
 </ManSection> 
@@ -86,19 +88,20 @@ quotients out
 by the smallest right-invariant partition of the states). A paper describing
 the algorithm is in preparation.
 <Example><![CDATA[
-gap> x:=RandomAutomaton("nondet",5,2);;Display(x);
-   |  1             2                3             4             5
+gap> x := Automaton("nondet",5,"ab",[ [ [ 2, 5 ], [ 2, 5 ], [ 4 ], [ 5 ], [ 3 ] ], [ [ 1 , 2 ], [ 1, 2, 3, 4 ], [ 1, 2, 3, 5 ], [ 2, 5 ], [ 2, 3 ] ] ],[ 1 ],[ 2, 3, 5 ]);;
+gap> Display(x);
+   |  1          2                3                4          5
 ----------------------------------------------------------------------
- a | [ 1, 5 ]      [ 1, 2, 4, 5 ]   [ 1, 3, 5 ]   [ 3, 4, 5 ]   [ 4 ]
- b | [ 2, 3, 4 ]   [ 3 ]            [ 2, 3, 4 ]   [ 2, 4, 5 ]   [ 3 ]
-Initial state:    [ 4 ]
-Accepting states: [ 1, 3, 4, 5 ]
+ a | [ 2, 5 ]   [ 2, 5 ]         [ 4 ]            [ 5 ]      [ 3 ]      
+ b | [ 1, 2 ]   [ 1, 2, 3, 4 ]   [ 1, 2, 3, 5 ]   [ 2, 5 ]   [ 2, 3 ]   
+Initial state:    [ 1 ]
+Accepting states: [ 2, 3, 5 ]
 gap> Display(ReducedNFA(x));
-   |  1             2                3       4
---------------------------------------------------------
- a | [ 1, 3 ]      [ 1, 2, 3, 4 ]   [ 4 ]   [ 1, 3, 4 ]
- b | [ 1, 2, 4 ]   [ 1 ]            [ 1 ]   [ 2, 3, 4 ]
-Initial state:    [ 4 ]
+   |  1          2          3                4                5
+----------------------------------------------------------------------
+ a | [ 3 ]      [ 1 ]      [ 2 ]            [ 1, 4 ]         [ 1, 4 ]   
+ b | [ 3, 4 ]   [ 1, 4 ]   [ 1, 3, 4, 5 ]   [ 2, 3, 4, 5 ]   [ 4, 5 ]   
+Initial state:    [ 5 ]
 Accepting states: [ 1, 3, 4 ]
 ]]></Example>
 </Description> 
