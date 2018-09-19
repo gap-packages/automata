@@ -244,7 +244,8 @@ InstallGlobalFunction(GraphStronglyConnectedComponents, function(dg)
     fi;
 
     
-    SetRecursionTrapInterval(0);
+  #  SetRecursionTrapInterval(0);
+  #  SetRecursionTrapInterval(6);
     V := Length(dg);
     val := [];
     stack := [];
