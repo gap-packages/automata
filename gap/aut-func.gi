@@ -574,7 +574,7 @@ InstallGlobalFunction(MinimalizedAut, function(aut)
                     [partmap[aut!.initial[1]]],
                     Filtered([1..Length(partn)], i->partn[i][1] in aut!.accepting));
     Info(InfoAutomataSL,1,"Minimized ",aut!.states," to ",Length(partn));
-    Assert(2,AreEquivAut(aut, mma));
+    #Assert(2,AreEquivAut(aut, mma));
     #    Assert(2,mma!.states = MinimalAutomaton(aut)!.states);
     return NullCompletionAut(mma);
 end);
