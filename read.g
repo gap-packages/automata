@@ -9,6 +9,10 @@
 ##
 ##  Read the installation files.
 ##
+DeclareInfoClass("InfoViz");
+DeclareInfoClass("InfoAutomataViz");
+#DeclareInfoClass("InfoAutomataSL");
+ReadPackage( "automata", "gap/splash_from_Viz.g" );
 
 ReadPackage( "automata", "gap/aut-def.gi" );
 ReadPackage( "automata", "gap/aut-basics.gi" );
@@ -17,6 +21,7 @@ ReadPackage( "automata", "gap/aut-rat.gi" );
 #
 ReadPackage( "automata", "gap/digraphs.gi" );
 ReadPackage( "automata", "gap/drawgraph.gi" );
+ReadPackage( "automata", "gap/automata-display.gi" );
 ReadPackage( "automata", "gap/foldings.gi" );
 ReadPackage( "automata", "gap/miscelaneous.gi" );
 #

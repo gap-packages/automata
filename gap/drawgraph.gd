@@ -73,10 +73,68 @@ DeclareGlobalFunction( "SetDrawingsExtraGraphAttributes" );
 DeclareGlobalFunction( "ClearDrawingsExtraGraphAttributes" );
 
 
+#========================================================================
+# This function parses the arguments for the functions DrawAutomaton and DrawSCCAutomaton.
+#------------------------------------------------------------------------
+DeclareGlobalFunction( "AUX__parseDrawAutArgs" );
 
-#==========================================================
-# This function returns a temporary directory (used to write .dot files).
-#----------------------------------------------------------
+
+#========================================================================
+# This function writes the .dot file specifying a graph.
+# It is used by DrawAutomaton and DrawSCCAutomaton.
+#------------------------------------------------------------------------
+DeclareGlobalFunction( "WriteDotFileForGraph" );
+
+#############################################################################
+##
+#F  DotStringForDrawingGraph( <G> ) . . . . . . . . . . . 
+## ouputs a string consisting of dot code for a graph
+##
+DeclareGlobalFunction( "DotStringForDrawingGraph" );
+#############################################################################
+##
+#F  DotStringForDrawingAutomaton( <G> ) . . . . . . . . . . . 
+## ouputs a string consisting of dot code for a graph
+##
+DeclareGlobalFunction( "DotStringForDrawingAutomaton" );
+############################################################################
+##
+#F DotStringForDrawingTwoAutomata( [ <A> , <B> ] )  . . . . . . . . Prepares a file in the DOT
+## language to draw the automaton B and showing the automaton A as a 
+## subautomaton.
+##
+DeclareGlobalFunction( "AUX__DotStringForDrawingSubAutomaton" );
+DeclareGlobalFunction( "DotStringForDrawingSubAutomaton" );
+
+#############################################################################
+##
+#F DotStringForDrawingSCCAutomaton( <A> ) . . . . . . . . Prepares a file in the DOT language
+## to draw automaton A using the dot language. The strongly connected components are 
+## emphasized.
+##
+DeclareGlobalFunction( "DotStringForDrawingSCCAutomaton" );
+
+#############################################################################
+##
+#F  DrawAutomata( <A>, fich ) . . . . . . . . . . .  produces a ps file with the
+## automaton A using the dot language and stops after showing it
+##
+#Siegen DeclareGlobalFunction( "DrawAutomata" );
+#############################################################################
+##
+#F DrawSCCAutomaton( <A>, fich ) . . . . . . . .  produces a ps file with the
+## automaton A using the dot language. The strongly connected components are 
+## emphasized.
+##
+#Siegen DeclareGlobalFunction( "DrawSCCAutomaton" );
+
+#E
+
+#Siegen: to be removed
+
+##==========================================================
+##This function returns a temporary directory (used to write .dot files).
+##----------------------------------------------------------
 if not IsBound(CMUP__getTempDir) then
     BindGlobal("CMUP__getTempDir", function()
         local   tdir;
@@ -88,13 +146,13 @@ if not IsBound(CMUP__getTempDir) then
         return tdir;
     end);
 fi;
-## ----  End of CMUP__getTempDir()  ---- 
-#==========================================================
+##----  End of CMUP__getTempDir()  ---- 
+##==========================================================
 
 
-#==========================================================
-# This function finds and returns a postscript viewer.
-#----------------------------------------------------------
+##==========================================================
+##This function finds and returns a postscript viewer.
+##----------------------------------------------------------
 if not IsBound(CMUP__getPsViewer) then
     BindGlobal("CMUP__getPsViewer", function()
         local   path,  gv;
@@ -119,13 +177,13 @@ if not IsBound(CMUP__getPsViewer) then
         return gv;
     end);
 fi;
-## ----  End of CMUP__getPsViewer()  ---- 
-#==========================================================
+##----  End of CMUP__getPsViewer()  ---- 
+##==========================================================
 
 
-#==========================================================
-# This function finds and returns the dot executable
-#----------------------------------------------------------
+##==========================================================
+##This function finds and returns the dot executable
+##----------------------------------------------------------
 if not IsBound(CMUP__getDotExecutable) then
     BindGlobal("CMUP__getDotExecutable", function()
         local   path,  dot,  d__,  name__,  s1__;
@@ -151,13 +209,13 @@ if not IsBound(CMUP__getDotExecutable) then
         return dot;
     end);
 fi;
-## ----  End of CMUP__getDotExecutable()  ---- 
-#==========================================================
+##----  End of CMUP__getDotExecutable()  ---- 
+##==========================================================
 
 
-#==========================================================
-# This function executes dot and displays the postscript file.
-#----------------------------------------------------------
+##==========================================================
+##This function executes dot and displays the postscript file.
+##----------------------------------------------------------
 if not IsBound(CMUP__executeDotAndViewer) then
     BindGlobal("CMUP__executeDotAndViewer", function(tdir, dot, gv, name)
         local params, gatt, att;
@@ -193,63 +251,7 @@ if not IsBound(CMUP__executeDotAndViewer) then
         fi;
     end);
 fi;
-## ----  End of CMUP__executeDotAndViewer()  ---- 
-#==========================================================
+##----  End of CMUP__executeDotAndViewer()  ---- 
+##==========================================================
 
 
-#========================================================================
-# This function parses the arguments for the functions DrawAutomaton and DrawSCCAutomaton.
-#------------------------------------------------------------------------
-DeclareGlobalFunction( "AUX__parseDrawAutArgs" );
-
-
-#========================================================================
-# This function writes the .dot file specifying a graph.
-# It is used by DrawAutomaton and DrawSCCAutomaton.
-#------------------------------------------------------------------------
-DeclareGlobalFunction( "WriteDotFileForGraph" );
-
-#############################################################################
-##
-#F  DrawAutomaton( <A>, fich ) . . . . . . .  produces a ps file with the
-## automaton A using the dot language and stops after showing it
-##
-DeclareGlobalFunction( "DrawAutomaton" );
-
-#############################################################################
-##
-#F  dotGraph( <G>, fich ) . . . . . . . . . . . Prepares a file in the DOT
-## language to draw the graph G using dot
-##
-DeclareGlobalFunction( "dotGraph" );
-
-#############################################################################
-##
-#F  DrawGraph( <G>, fich ) . . . . . . . . . . .  produces a ps file with the
-## Graph A using the dot language and stops after showing it
-##
-DeclareGlobalFunction( "DrawGraph" );
-
-############################################################################
-##
-#F  dotAutomata( [ <A> , <B> ] )  . . . . . . . . Prepares a file in the DOT
-## language to draw the automaton B and showing the automaton A as a 
-## subautomaton.
-##
-DeclareGlobalFunction( "dotAutomata" );
-
-#############################################################################
-##
-#F  DrawAutomata( <A>, fich ) . . . . . . . . . . .  produces a ps file with the
-## automaton A using the dot language and stops after showing it
-##
-DeclareGlobalFunction( "DrawAutomata" );
-#############################################################################
-##
-#F DrawSCCAutomaton( <A>, fich ) . . . . . . . .  produces a ps file with the
-## automaton A using the dot language. The strongly connected components are 
-## emphasized.
-##
-DeclareGlobalFunction( "DrawSCCAutomaton" );
-
-#E

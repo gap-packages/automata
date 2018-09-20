@@ -146,7 +146,18 @@ InstallGlobalFunction(AUX__parseDrawAutArgs, function(LA)
 end);
 
 
+#========================================================================
+###########################################################################
+##
+#F DotStringForDrawingAutomaton
+##
+## ouputs a string consisting of dot code for an automaton
+##
+#### the code is based on the code for the outdated function WriteDotFileForGraph
+## A is an automaton, map a list of states names and states_to_colorize 
 
+  
+    
 #========================================================================
 # This function writes the .dot file specifying a graph.
 # It is used by DrawAutomaton and DrawSCCAutomaton.
@@ -276,9 +287,11 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
     # ---------------------------------------------------------------------------------
 
     CloseStream(out_str);
-    PrintTo(name, str);
-        
-    return tdir;
+    #Siegen    PrintTo(name, str);
+    
+    #Siegen return tdir;
+    return str;
+    
 end);
 ## ----  End of WriteDotFileForGraph()  ---- 
 #========================================================================
@@ -287,10 +300,11 @@ end);
 
 #############################################################################
 ##
-#F  DrawAutomaton( arg ) . . . . . . . . . . .  produces a ps file with the
-##  automaton A using the dot language and stops after showing it
+#F  DotStringForDrawingAutomaton( arg ) 
 ##
-InstallGlobalFunction(DrawAutomaton, function(arg)
+##  ouputs a string consisting of dot code for an automaton
+##
+InstallGlobalFunction(DotStringForDrawingAutomaton, function(arg)
     local   A,  fich,  state_names,  states_to_colorize,  l,  s,  gv,  
             dot,  tdir, res;
 
@@ -307,91 +321,58 @@ InstallGlobalFunction(DrawAutomaton, function(arg)
     state_names := res[3];
     states_to_colorize := res[4];
     
-    gv := CMUP__getPsViewer();
-    dot := CMUP__getDotExecutable();
-    tdir := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 1);
-    CMUP__executeDotAndViewer(tdir, dot, gv, Concatenation(fich, ".dot"));
+    return WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 1);
 end);
 
 #############################################################################
 ##
-#F  dotGraph( <G>, fich ) . . . . . . . . . . . Prepares a file in the DOT
-## language to draw the graph G using dot
-##
-InstallGlobalFunction(dotGraph, function(G, fich)
-    local k, l, name, tdir, nome;
+#F  DotStringForDrawingGraph( <G> ) . . . . . . . . . . . 
+## ouputs a string consisting of dot code for a graph
+## 
+## 
+InstallGlobalFunction(DotStringForDrawingGraph, function(G)
+  local  dotstr, l, k;
 
-    if not IsString(fich) then
-        Error("The second argument must be a string");
-    fi;
-    tdir := CMUP__getTempDir();
-    name := Filename(tdir, Concatenation(fich, ".dot"));
-
-    nome := "Graph__";
-
-    PrintTo(name, "digraph  ", nome, "{", "\n");
+  dotstr := "digraph Graph__{\n";
+  # the string that will hold the code of the .dot file
     for l  in [ 1 .. Length( G ) ]  do
         for k  in G[ l ]  do
-            AppendTo(name, l, " -> ", k," [style=bold, color=black];","\n");
+          Append(dotstr, Concatenation(String(l), " -> "));
+          Append(dotstr, Concatenation(String(k)," [style=bold, color=black];\n"));
         od;
     od;
 
     for k in [1..Length(G)] do
-        AppendTo(name, k, " [shape=circle];","\n");
+        Append(dotstr, Concatenation(String(k), " [shape=circle];\n"));
     od;
-    AppendTo(name,"}","\n");
-    return([tdir, Concatenation(fich, ".dot")]);
-end);
-
-#############################################################################
-##
-#F  DrawGraph( arg ) . . . . . . . . . . .  produces a ps file with the
-## Graph A using the dot language and stops after showing it
-##
-InstallGlobalFunction(DrawGraph, function(arg)
-    local gv, dot, tdir, name, res;
-
-    if Length(arg) = 0 then
-        Error("Please give me a graph to draw");
-    fi;
-
-    gv := CMUP__getPsViewer();
-    dot := CMUP__getDotExecutable();
-
-    if IsBound(arg[2]) then
-        res := dotGraph(arg[1], arg[2]);
-    else
-        res := dotGraph(arg[1], "graph");
-    fi;
-    tdir := res[1];
-    name := res[2];
-    CMUP__executeDotAndViewer(tdir, dot, gv, name);
+    Append(dotstr,"}\n");
+    return(dotstr);
 end);
 
 ############################################################################
 ##
-#F  dotAutomata( [ <A> , <B> ] )  . . . . . . . . Prepares a file in the DOT
+#F  AUX__DotStringForDrawingSubAutomaton( [ <A> , <B> ] )  . . . . . . . . Prepares a file in the DOT
 ## language to draw the automaton B and showing the automaton A as a
 ## subautomaton.
 ##
-InstallGlobalFunction(dotAutomata, function(A)
-    local au, au1, aut1, aut2, l1, l2,  arr, array, colors, i, j, k,
-          letters, max, name, tdir, nome, R, l, s, t, xname;
+InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A)
+  local  name, xname, aut1, aut2, nome, letters, au, au1, i, j, colors, l2, 
+         array, s, arr, max, k, dotstr, l;
 
     if not (IsList(A) and 1 < Length(A) and Length(A) < 4 and
             IsAutomatonObj(A[1]) and IsAutomatonObj(A[2]) ) then
         Error("The argument of dotAutomata is a list of automata");
     fi;
     
-    tdir := CMUP__getTempDir();
+##    tdir := CMUP__getTempDir();
     if Length(A) = 3 then
-        name := Filename(tdir, Concatenation(String(A[3]), ".dot"));
-        xname := Concatenation(String(A[3]), ".dot");
+#        name := Filename(tdir, Concatenation(String(A[3]), ".dot"));
+#        xname := Concatenation(String(A[3]), ".dot");
         aut1 := A[1];
         aut2 := A[2];
     elif Length(A) = 2 then
- 	name := Filename(tdir, "automaton.dot");
-        xname := "automato.dot";
+# 	name := Filename(tdir, "automaton.dot");
+#        xname := "automato.dot";
         aut1 := A[1];
         aut2 := A[2];
     fi;
@@ -470,55 +451,56 @@ InstallGlobalFunction(dotAutomata, function(A)
     od;
 
     arr := List( array, x -> List( x, String ) );
-
-    PrintTo(name, "digraph  ", nome, "{", "\n");
+    
+    dotstr :="digraph  Automaton {\n";
+ ##   PrintTo(name, "digraph  ", nome, "{", "\n");
     for l  in [ 1 .. Length( arr ) ]  do
         for k  in [ 1 .. Length( arr[ l ] ) ]  do
-            AppendTo(name,  String( arr[ l ][ k ]) );
+            Append(dotstr,  String( arr[ l ][ k ]) );
         od;
         if l = Length( arr )  then
-            AppendTo(name,  "\n" );
+            Append(dotstr,  "\n" );
         else
-            AppendTo(name,  "\n" );
+            Append(dotstr,  "\n" );
         fi;
     od;
     for i in aut1!.initial do
-        AppendTo(name, i, " [shape=triangle];","\n");
+        Append(dotstr, Concatenation(String(i), " [shape=triangle];\n"));
     od;
     for i in Difference(aut2!.initial,aut1!.initial) do
-        AppendTo(name, i, " [shape=triangle,color=gray];","\n");
+        Append(dotstr, Concatenation(String(i), " [shape=triangle,color=gray];\n"));
     od;
     for j in aut1!.accepting do
         if j in aut1!.initial then
-            AppendTo(name, j, " [shape=triangle,peripheries=2];","\n");
+            Append(dotstr, Concatenation(String(j), " [shape=triangle,peripheries=2];\n"));
         else
-            AppendTo(name, j, " [shape=doublecircle];","\n");
+            Append(dotstr, Concatenation(String(j), " [shape=doublecircle];\n"));
         fi;
     od;
     for j in Difference(aut2!.accepting,aut1!.accepting) do
         if j in aut2!.initial then
-            AppendTo(name, i, " [shape=triangle,peripheries=2,color=gray];","\n");
+            Append(dotstr, Concatenation(String(i), " [shape=triangle,peripheries=2,color=gray];\n"));
         else
-            AppendTo(name, j, " [shape=doublecircle,color=gray];","\n");
+            Append(dotstr, Concatenation(String(j), " [shape=doublecircle,color=gray];n"));
         fi;
     od;
     for k in Difference(Difference([1..aut1!.states],aut2!.accepting),Concatenation(aut1!.initial, aut2!.initial,aut1!.accepting)) do
-        AppendTo(name, k, " [shape=circle];","\n");
+        Append(dotstr, Concatenation(String(k), " [shape=circle];\n"));
     od;
     for k in Difference(Difference([1..aut2!.states],aut2!.accepting),Concatenation(aut1!.initial, aut2!.initial, [1..aut1!.states])) do
-        AppendTo(name, k, " [shape=circle,color=gray];","\n");
+        Append(dotstr, Concatenation(String(k), " [shape=circle,color=gray];\n"));
     od;
-    AppendTo(name,"}","\n");
-    return([tdir, xname]);
+    Append(dotstr,"}","\n");
+    return(dotstr);
 end);
 
 #############################################################################
 ##
-#F  DrawAutomata( <A>, fich ) . . . . . . . . . . .  produces a ps file with the
-## automaton A using the dot language and stops after showing it
+#F  DotStringForDrawingSubAutomaton( <A> , <B> ) 
+## ouputs a string consisting of dot code for automaton B and showing A as a subautomaton.
 ##
-InstallGlobalFunction(DrawAutomata, function(arg)
-    local fich, A, B, q, a, k, gv, dot, tdir, name, res;
+InstallGlobalFunction(DotStringForDrawingSubAutomaton, function(arg)
+  local  A, B, fich, a, q, k, dotstr;
 
     if not (IsBound(arg[1]) and IsBound(arg[2])) then
         Error("This function takes two automata as arguments");
@@ -546,8 +528,8 @@ InstallGlobalFunction(DrawAutomata, function(arg)
         return;
     fi;
 
-    gv := CMUP__getPsViewer();
-    dot := CMUP__getDotExecutable();
+#    gv := CMUP__getPsViewer();
+#    dot := CMUP__getDotExecutable();
 
     for a in [1 .. A!.alphabet] do
         for q in [1 .. A!.states] do
@@ -565,22 +547,24 @@ InstallGlobalFunction(DrawAutomata, function(arg)
             fi;
         od;
     od;
+    
+    dotstr := DotStringForDrawingSubAutomaton([A,B, fich]);
+    return dotstr;
+    
+    # res := dotAutomata([A,B, fich]);
 
-    res := dotAutomata([A,B, fich]);
-
-    tdir := res[1];
-    name := res[2];
-    CMUP__executeDotAndViewer(tdir, dot, gv, name);
+    # tdir := res[1];
+    # name := res[2];
+    # CMUP__executeDotAndViewer(tdir, dot, gv, name);
 end);
 #############################################################################
 ##
-#F  DrawSCCAutomaton( <A>, fich ) . . . . . . . .  produces a ps file with the
+#F  DotStringForDrawingSCCAutomaton( <A>, fich ) . . . . . . . .  produces a ps file with the
 ## automaton A using the dot language. The strongly connected components are
 ## emphasized.
 ##
-InstallGlobalFunction(DrawSCCAutomaton, function(arg)
-    local   A,  fich,  state_names,  states_to_colorize,  l,  s,  gv,  
-            dot,  tdir, res;
+InstallGlobalFunction(DotStringForDrawingSCCAutomaton, function(arg)
+  local  res, A, fich, state_names, states_to_colorize, dotstr;
 
     if Length(arg) = 0 then
         Error("Please give me an automaton to draw");
@@ -595,10 +579,14 @@ InstallGlobalFunction(DrawSCCAutomaton, function(arg)
     state_names := res[3];
     states_to_colorize := res[4];
     
-    gv := CMUP__getPsViewer();
-    dot := CMUP__getDotExecutable();
-    tdir := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 2);
-    CMUP__executeDotAndViewer(tdir, dot, gv, Concatenation(fich, ".dot"));
+ dotstr := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 2);
+ return dotstr;
+ 
+    
+    # gv := CMUP__getPsViewer();
+    # dot := CMUP__getDotExecutable();
+    # tdir := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 2);
+    # CMUP__executeDotAndViewer(tdir, dot, gv, Concatenation(fich, ".dot"));
 end);
 
 ##

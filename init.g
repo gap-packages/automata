@@ -18,6 +18,7 @@ ReadPackage( "automata", "gap/aut-rat.gd" );
 #
 ReadPackage( "automata", "gap/digraphs.gd" );
 ReadPackage( "automata", "gap/drawgraph.gd" );
+ReadPackage( "automata", "gap/automata-display.gd" );
 ReadPackage( "automata", "gap/foldings.gd" );
 ReadPackage( "automata", "gap/miscelaneous.gd" );
 #
