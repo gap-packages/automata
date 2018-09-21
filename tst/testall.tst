@@ -703,7 +703,135 @@ gap> AutoIsAcyclicGraph(last);
 false
 
 #drawings.xml
+gap> x:=Automaton("det",3,2,[ [ 2, 3, 0 ], [ 0, 1, 2 ] ],[ 1 ],[ 1, 2, 3 ]);;
+gap> DotStringForDrawingAutomaton(x);
+"digraph  Automaton{\n\"1\" -> \"2\" [label=\"a\",color=red];\n\"2\" -> \"3\" \
+[label=\"a\",color=red];\n\"2\" -> \"1\" [label=\"b\",color=blue];\n\"3\" -> \
+\"2\" [label=\"b\",color=blue];\n\"1\" [shape=triangle,peripheries=2, style=fi\
+lled, fillcolor=white];\n\"2\" [shape=doublecircle, style=filled, fillcolor=wh\
+ite];\n\"3\" [shape=doublecircle, style=filled, fillcolor=white];\n}\n"
+gap> Print(last);
+digraph  Automaton{
+"1" -> "2" [label="a",color=red];
+"2" -> "3" [label="a",color=red];
+"2" -> "1" [label="b",color=blue];
+"3" -> "2" [label="b",color=blue];
+"1" [shape=triangle,peripheries=2, style=filled, fillcolor=white];
+"2" [shape=doublecircle, style=filled, fillcolor=white];
+"3" [shape=doublecircle, style=filled, fillcolor=white];
+}
+gap> Print(DotStringForDrawingAutomaton(x,["st 1", "2", "C"]));
+digraph  Automaton{
+"st 1" -> "2" [label="a",color=red];
+"2" -> "C" [label="a",color=red];
+"2" -> "st 1" [label="b",color=blue];
+"C" -> "2" [label="b",color=blue];
+"st 1" [shape=triangle,peripheries=2, style=filled, fillcolor=white];
+"2" [shape=doublecircle, style=filled, fillcolor=white];
+"C" [shape=doublecircle, style=filled, fillcolor=white];
+}
+gap> Print(DotStringForDrawingAutomaton(x,["st 1", "2", "C"],[[2],[1,3]]));
+digraph  Automaton{
+"st 1" -> "2" [label="a",color=red];
+"2" -> "C" [label="a",color=red];
+"2" -> "st 1" [label="b",color=blue];
+"C" -> "2" [label="b",color=blue];
+"st 1" [shape=triangle,peripheries=2, style=filled, fillcolor=burlywood];
+"2" [shape=doublecircle, style=filled, fillcolor=brown];
+"C" [shape=doublecircle, style=filled, fillcolor=burlywood];
+}
 
+gap> A := Automaton("nondet",5,"abc",[ [ [ 2, 3 ], [ 5 ], [ 1, 4, 5 ], [ 1, 5 ], [ 3, 4 ] ], [ [ 1, 4, 5 ], [ ], [ 1 ], [ 1, 3, 5 ], [ 1, 2, 5 ] ], [ [ ], [ 2, 4, 5 ], [ 1, 3, 5 ], [ ], [ 2, 3, 4 ] ] ],[ ],[ 2, 3, 4 ]);;
+gap> B := Automaton("nondet",5,"abc",[ [ [ 2, 3 ], [ 5 ], [ 1, 4, 5 ], [ 1, 5 ], [ 3, 4 ] ], [ [ 1, 4, 5 ], [ ], [ 1 ], [ 1, 3, 5 ], [ 1, 2, 5 ] ], [ [ 1, 4, 5 ], [ 2, 4, 5 ], [ 1, 3, 5 ], [ 2, 3, 4, 5 ], [ 2, 3, 4 ] ] ],[ 3, 4, 5 ],[ 2, 3, 4 ]);;
+gap> Print(DotStringForDrawingSubAutomaton(A,B));
+digraph  Automaton {
+1 -> 2 [label="a",color=red];
+1 -> 3 [label="a",color=red];
+1 -> 1 [label="b",color=blue];
+1 -> 4 [label="b",color=blue];
+1 -> 5 [label="b",color=blue];
+1 -> 1 [label="c",color=green,style = dotted];
+1 -> 4 [label="c",color=green,style = dotted];
+1 -> 5 [label="c",color=green,style = dotted];
+2 -> 5 [label="a",color=red];
+2 -> 2 [label="c",color=green];
+2 -> 4 [label="c",color=green];
+2 -> 5 [label="c",color=green];
+3 -> 1 [label="a",color=red];
+3 -> 4 [label="a",color=red];
+3 -> 5 [label="a",color=red];
+3 -> 1 [label="b",color=blue];
+3 -> 1 [label="c",color=green];
+3 -> 3 [label="c",color=green];
+3 -> 5 [label="c",color=green];
+4 -> 1 [label="a",color=red];
+4 -> 5 [label="a",color=red];
+4 -> 1 [label="b",color=blue];
+4 -> 3 [label="b",color=blue];
+4 -> 5 [label="b",color=blue];
+4 -> 2 [label="c",color=green,style = dotted];
+4 -> 3 [label="c",color=green,style = dotted];
+4 -> 4 [label="c",color=green,style = dotted];
+4 -> 5 [label="c",color=green,style = dotted];
+5 -> 3 [label="a",color=red];
+5 -> 4 [label="a",color=red];
+5 -> 1 [label="b",color=blue];
+5 -> 2 [label="b",color=blue];
+5 -> 5 [label="b",color=blue];
+5 -> 2 [label="c",color=green];
+5 -> 3 [label="c",color=green];
+5 -> 4 [label="c",color=green];
+3 [shape=triangle,color=gray];
+4 [shape=triangle,color=gray];
+5 [shape=triangle,color=gray];
+2 [shape=doublecircle];
+3 [shape=doublecircle];
+4 [shape=doublecircle];
+1 [shape=circle];
+}
+
+gap> G := [[1,2,3],[5],[3,4],[1],[2,5]];
+[ [ 1, 2, 3 ], [ 5 ], [ 3, 4 ], [ 1 ], [ 2, 5 ] ]
+gap> Print(DotStringForDrawingGraph(G));
+digraph Graph__{
+1 -> 1 [style=bold, color=black];
+1 -> 2 [style=bold, color=black];
+1 -> 3 [style=bold, color=black];
+2 -> 5 [style=bold, color=black];
+3 -> 3 [style=bold, color=black];
+3 -> 4 [style=bold, color=black];
+4 -> 1 [style=bold, color=black];
+5 -> 2 [style=bold, color=black];
+5 -> 5 [style=bold, color=black];
+1 [shape=circle];
+2 [shape=circle];
+3 [shape=circle];
+4 [shape=circle];
+5 [shape=circle];
+}
+
+gap> rcg := Automaton("det",6,"ab",[ [ 3, 3, 6, 5, 6, 6 ], [ 4, 6, 2, 6, 4, 6 ] ], [ ],[ ]);;
+gap> Print(DotStringForDrawingSCCAutomaton(rcg));
+digraph  Automaton{
+"1" -> "3" [label="a",color=red,style = dotted];
+"2" -> "3" [label="a",color=red];
+"3" -> "6" [label="a",color=red,style = dotted];
+"4" -> "5" [label="a",color=red];
+"5" -> "6" [label="a",color=red,style = dotted];
+"6" -> "6" [label="a",color=red,style = dotted];
+"1" -> "4" [label="b",color=blue,style = dotted];
+"2" -> "6" [label="b",color=blue,style = dotted];
+"3" -> "2" [label="b",color=blue];
+"4" -> "6" [label="b",color=blue,style = dotted];
+"5" -> "4" [label="b",color=blue];
+"6" -> "6" [label="b",color=blue,style = dotted];
+"1" [shape=circle, style=filled, fillcolor=white];
+"2" [shape=circle, style=filled, fillcolor=white];
+"3" [shape=circle, style=filled, fillcolor=white];
+"4" [shape=circle, style=filled, fillcolor=white];
+"5" [shape=circle, style=filled, fillcolor=white];
+"6" [shape=circle, style=filled, fillcolor=white];
+}
 
 #foldings.xml
 gap> L:=[2,"abA","bbabAB"];;
@@ -759,11 +887,6 @@ Accepting state: [ 1 ]
 
 gap> NW := InverseAutomatonToGenerators(A);
 [ 2, "baBA", "bbA" ]
-
-
-
-
-
 
 
 gap> STOP_TEST( "testall.tst", 10000 );

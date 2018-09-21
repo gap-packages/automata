@@ -1,1 +1,1 @@
-DeclareGlobalFunction("automataTest");
+DeclareGlobalFunction("AutomataTest");
