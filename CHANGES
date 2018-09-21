@@ -1,6 +1,11 @@
                      -----------------------------------
                      | CHANGES of the Automata package |
                      -----------------------------------
+1.13 -> 1.14
+- drawings are now produced in two steps: first the dot code (that is accessible to the user) and then the display
+- added a test file
+
+
 1.12 -> 1.13
 
 - Corrected a bug in  FiniteRegularLanguageToListOfWords (Thanks to Andreas Distler for pointing out this bug)
