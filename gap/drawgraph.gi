@@ -11,52 +11,53 @@
 ##  to display the graphs.
 ############################################################################
 
-############################################################################
-##
-#F  SetDrawingsExtraFormat(f)
-##
-##  This function sets the value of DrawingsExtraFormat to <f>.
-##
-InstallGlobalFunction(SetDrawingsExtraFormat, function(f)
-    if not f in DrawingsListOfExtraFormats then
-        Print("The specified format is not valid.\nThe valid formats are:\n", DrawingsListOfExtraFormats, ".\nPlease check  http://www.graphviz.org/doc/info/output.html\nfor more info.\n");
-        return;
-    fi;
-    MakeReadWriteGlobal("DrawingsExtraFormat");
-    DrawingsExtraFormat := f;
-    MakeReadOnlyGlobal("DrawingsExtraFormat");
-end);
+#Siegen
+# ############################################################################
+# ##
+# #F  SetDrawingsExtraFormat(f)
+# ##
+# ##  This function sets the value of DrawingsExtraFormat to <f>.
+# ##
+# InstallGlobalFunction(SetDrawingsExtraFormat, function(f)
+#     if not f in DrawingsListOfExtraFormats then
+#         Print("The specified format is not valid.\nThe valid formats are:\n", DrawingsListOfExtraFormats, ".\nPlease check  http://www.graphviz.org/doc/info/output.html\nfor more info.\n");
+#         return;
+#     fi;
+#     MakeReadWriteGlobal("DrawingsExtraFormat");
+#     DrawingsExtraFormat := f;
+#     MakeReadOnlyGlobal("DrawingsExtraFormat");
+# end);
 
 
-############################################################################
-##
-#F  SetDrawingsExtraGraphAttributes(L)
-##
-##  This function sets the value of DrawingsExtraGraphAttributes to <L>.
-##  For example if we wanted to define the graph size to be 7x9, we would call
-##  SetDrawingsExtraGraphAttributes(["size=7,9"]);
-##
-InstallGlobalFunction(SetDrawingsExtraGraphAttributes, function(L)
-    if not (IsList(L) and ForAll(L, l -> IsString(l))) then
-        Error("The argument must be a list of strings");
-    fi;
-    MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
-    DrawingsExtraGraphAttributes := L;
-    MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
-end);
+# ############################################################################
+# ##
+# #F  SetDrawingsExtraGraphAttributes(L)
+# ##
+# ##  This function sets the value of DrawingsExtraGraphAttributes to <L>.
+# ##  For example if we wanted to define the graph size to be 7x9, we would call
+# ##  SetDrawingsExtraGraphAttributes(["size=7,9"]);
+# ##
+# InstallGlobalFunction(SetDrawingsExtraGraphAttributes, function(L)
+#     if not (IsList(L) and ForAll(L, l -> IsString(l))) then
+#         Error("The argument must be a list of strings");
+#     fi;
+#     MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
+#     DrawingsExtraGraphAttributes := L;
+#     MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
+# end);
 
-############################################################################
-##
-#F  ClearDrawingsExtraGraphAttributes()
-##
-##  This function sets DrawingsExtraGraphAttributes to "none"
-##  Thus indicating that the graph should be drawn with dot's default parameters.
-##
-InstallGlobalFunction(ClearDrawingsExtraGraphAttributes, function()
-    MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
-    DrawingsExtraGraphAttributes := "none";
-    MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
-end);
+# ############################################################################
+# ##
+# #F  ClearDrawingsExtraGraphAttributes()
+# ##
+# ##  This function sets DrawingsExtraGraphAttributes to "none"
+# ##  Thus indicating that the graph should be drawn with dot's default parameters.
+# ##
+# InstallGlobalFunction(ClearDrawingsExtraGraphAttributes, function()
+#     MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
+#     DrawingsExtraGraphAttributes := "none";
+#     MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
+# end);
 
 
 
@@ -167,9 +168,8 @@ end);
 # who_called = 2  --->  DrawSCCAutomaton
 #------------------------------------------------------------------------
 InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_colorize, who_called)
-    local   letters,  edge_colors,  len_alph,  node_colors,  tdir,  name,  
-            alph,  T,  str,  out_str,  scc,  G,  p,  q,  a,  color_of_node,  
-            k;
+  local  alph, letters, edge_colors, node_colors, T, str, out_str, scc, G, p, 
+         q, a, color_of_node, k;
     
     alph := AlphabetOfAutomaton(A);   
     
@@ -199,8 +199,8 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
                      "saddlebrown", "salmon", "sandybrown", "seagreen", "skyblue", "slateblue", "slategrey", "springgreen", 
                      "steelblue", "tan", "thistle", "tomato", "turquoise", "violet", "violetred", "wheat", "yellow", "yellowgreen" ];
 
-    tdir := CMUP__getTempDir();
-    name := Filename(tdir, Concatenation(fich, ".dot"));
+#    tdir := CMUP__getTempDir();
+#    name := Filename(tdir, Concatenation(fich, ".dot"));
 
     # ---------------------------------------------------------------------------------
 
@@ -351,48 +351,49 @@ end);
 
 ############################################################################
 ##
-#F  AUX__DotStringForDrawingSubAutomaton( [ <A> , <B> ] )  . . . . . . . . Prepares a file in the DOT
+#F  AUX__DotStringForDrawingSubAutomaton(  <A> , <B>  )  . . . . . . . . Prepares a file in the DOT
 ## language to draw the automaton B and showing the automaton A as a
 ## subautomaton.
 ##
-InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A)
-  local  name, xname, aut1, aut2, nome, letters, au, au1, i, j, colors, l2, 
-         array, s, arr, max, k, dotstr, l;
+InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
+  local  nome, letters, au, au1, i, j, colors, l2, array, s, arr, max, k, 
+         dotstr, l;
 
-    if not (IsList(A) and 1 < Length(A) and Length(A) < 4 and
-            IsAutomatonObj(A[1]) and IsAutomatonObj(A[2]) ) then
-        Error("The argument of dotAutomata is a list of automata");
-    fi;
+    # if not (IsList(A) and 1 < Length(A) and Length(A) < 4 and
+    #         IsAutomatonObj(A[1]) and IsAutomatonObj(A[2]) ) then
+    #     Error("The argument of dotAutomata is a list of automata");
+    # fi;
     
 ##    tdir := CMUP__getTempDir();
-    if Length(A) = 3 then
+#    if Length(A) = 3 then
 #        name := Filename(tdir, Concatenation(String(A[3]), ".dot"));
 #        xname := Concatenation(String(A[3]), ".dot");
-        aut1 := A[1];
-        aut2 := A[2];
-    elif Length(A) = 2 then
+#        aut1 := A[1];
+#        aut2 := A[2];
+#    elif Length(A) = 2 then
 # 	name := Filename(tdir, "automaton.dot");
 #        xname := "automato.dot";
-        aut1 := A[1];
-        aut2 := A[2];
-    fi;
+#        aut1 := A[1];
+#        aut2 := A[2];
+  #    fi;
+  
 
     nome := "Automaton";
 #    letters := [];
     letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
     
-    au := StructuralCopy(aut2!.transitions);
-    au1 := StructuralCopy(aut1!.transitions);
-    for i in [1 .. Length(aut1!.transitions)] do
-        for j in [1 .. Length(aut1!.transitions[1])] do
+    au := StructuralCopy(B!.transitions);
+    au1 := StructuralCopy(A!.transitions);
+    for i in [1 .. Length(A!.transitions)] do
+        for j in [1 .. Length(A!.transitions[1])] do
             if not IsBound(au1[i][j]) or au1[i][j] = 0 or au1[i][j] = [0]
                or au1[i][j] = [] then
                 au1[i][j] := " ";
             fi;
         od;
     od;
-    for i in [1 .. Length(aut2!.transitions)] do
-        for j in [1 .. Length(aut2!.transitions[1])] do
+    for i in [1 .. Length(B!.transitions)] do
+        for j in [1 .. Length(B!.transitions[1])] do
             if not IsBound(au[i][j]) or au[i][j] = 0 or au[i][j] = [0]
                or au[i][j] = [] then
                 au[i][j] := " ";
@@ -400,16 +401,16 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A)
         od;
     od;
 
-    if aut2!.alphabet < 7 then     ##  for small alphabets, the letters
+    if B!.alphabet < 7 then     ##  for small alphabets, the letters
                                       ##  a, b, c, d are used
 #        letters := ["a", "b", "c", "d", "e", "f"];
         colors := ["red", "blue", "green", "yellow", "brown", "black"];
     else
-#        for i in [1 .. aut2!.alphabet] do
+#        for i in [1 .. B!.alphabet] do
 #            Add(letters, Concatenation("a", String(i)));
 #        od;
         colors := [];
-        for i in [1 .. aut2!.alphabet] do
+        for i in [1 .. B!.alphabet] do
             colors[i]:= "black";
         od;
     fi;
@@ -420,13 +421,13 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A)
     arr := List( au, x -> List( x, String ) );
     max := Maximum( List( arr, x -> Maximum( List(x,Length) ) ) );
 
-    for i in [1 .. aut2!.states] do
-        for j in [1 .. aut2!.alphabet] do
+    for i in [1 .. B!.states] do
+        for j in [1 .. B!.alphabet] do
             if IsBound(au[j]) and IsBound(au[j][i]) and
                au[j][i] <> " " then
                 if IsList(au[j][i]) then
                     for k in au[j][i] do
-                        if i <= aut1!.states and j <= aut1!.alphabet and
+                        if i <= A!.states and j <= A!.alphabet and
                            IsBound(au1[j]) and IsBound(au1[j][i]) and k in au1[j][i] and
                              au1[j][i] <> " " then
 
@@ -437,7 +438,7 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A)
                         fi;
                     od;
                 else
-                    if i <= aut1!.states and j <= aut1!.alphabet and
+                    if i <= A!.states and j <= A!.alphabet and
                        IsBound(au1[j]) and IsBound(au1[j][i]) and
                           au1[j][i] <> " " then
                         Add(array, [i, " -> ", au[j][i]," [label=", "\"", letters[j],"\"",",color=", colors[j], "];"]);
@@ -464,33 +465,33 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A)
             Append(dotstr,  "\n" );
         fi;
     od;
-    for i in aut1!.initial do
+    for i in A!.initial do
         Append(dotstr, Concatenation(String(i), " [shape=triangle];\n"));
     od;
-    for i in Difference(aut2!.initial,aut1!.initial) do
+    for i in Difference(B!.initial,A!.initial) do
         Append(dotstr, Concatenation(String(i), " [shape=triangle,color=gray];\n"));
     od;
-    for j in aut1!.accepting do
-        if j in aut1!.initial then
+    for j in A!.accepting do
+        if j in A!.initial then
             Append(dotstr, Concatenation(String(j), " [shape=triangle,peripheries=2];\n"));
         else
             Append(dotstr, Concatenation(String(j), " [shape=doublecircle];\n"));
         fi;
     od;
-    for j in Difference(aut2!.accepting,aut1!.accepting) do
-        if j in aut2!.initial then
+    for j in Difference(B!.accepting,A!.accepting) do
+        if j in B!.initial then
             Append(dotstr, Concatenation(String(i), " [shape=triangle,peripheries=2,color=gray];\n"));
         else
             Append(dotstr, Concatenation(String(j), " [shape=doublecircle,color=gray];n"));
         fi;
     od;
-    for k in Difference(Difference([1..aut1!.states],aut2!.accepting),Concatenation(aut1!.initial, aut2!.initial,aut1!.accepting)) do
+    for k in Difference(Difference([1..A!.states],B!.accepting),Concatenation(A!.initial, B!.initial,A!.accepting)) do
         Append(dotstr, Concatenation(String(k), " [shape=circle];\n"));
     od;
-    for k in Difference(Difference([1..aut2!.states],aut2!.accepting),Concatenation(aut1!.initial, aut2!.initial, [1..aut1!.states])) do
+    for k in Difference(Difference([1..B!.states],B!.accepting),Concatenation(A!.initial, B!.initial, [1..A!.states])) do
         Append(dotstr, Concatenation(String(k), " [shape=circle,color=gray];\n"));
     od;
-    Append(dotstr,"}","\n");
+    Append(dotstr,"}\n");
     return(dotstr);
 end);
 
@@ -548,7 +549,7 @@ InstallGlobalFunction(DotStringForDrawingSubAutomaton, function(arg)
         od;
     od;
     
-    dotstr := DotStringForDrawingSubAutomaton([A,B, fich]);
+    dotstr := AUX__DotStringForDrawingSubAutomaton(A,B);
     return dotstr;
     
     # res := dotAutomata([A,B, fich]);
