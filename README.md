@@ -1,222 +1,122 @@
-# GitHubPagesForGAP
 
-This repository can be used to quickly set up a website hosted by
-[GitHub](https://github.com/) for GAP packages using a GitHub repository.
-Specifically, this uses [GitHub pages](https://pages.github.com/)
-by adding a `gh-pages` branch to your package repository which
-contains data generated from the `PackageInfo.g` file of your package.
+The GAP 4 package `automata'
+==================================
 
-## Initial setup
+Introduction
+------------
 
-The following instructions assume you do not already have a `gh-pages`
-branch in your repository. If you do have one, you should delete it before
-following these instructions.
+This is release 1.14 of  the package `automata'.
 
-1. Go into your clone of your package repository.
+The features of this package include
 
-2. Setup a `gh-pages` branch in a `gh-pages` subdirectory.
+         - computing a rational expression for the language recognized by a
+           finite automaton;
+         - compute an automaton for the language given by a rational
+           expression;
+         - minimalize a finite automaton;
+         - has some features (using the external program GraphViz) to
+           visualize automata;
 
-   Users with a recent enough git version (recommended is >= 2.11)
-   can do this using a "worktree", via the following commands:
+There is a manual in the sub-directory 'doc' written using the GAP package
+gapdoc which describes the available functions in detail. The dvi, pdf, html
+versions of the manual are also available there.
 
-   ```sh
-   # Add a new remote pointing to the GitHubPagesForGAP repository
-   git remote add gh-gap https://github.com/gap-system/GitHubPagesForGAP
-   git fetch gh-gap
+The current maintainers of the package are:
 
-   # Create a fresh gh-pages branch from the new remote
-   git branch gh-pages gh-gap/gh-pages --no-track
+    Manuel Delgado   <mdelgado@fc.up.pt>
+    Steve Linton     <steve.linton@st-andrews.ac.uk>
 
-   # Create a new worktree and change into it
-   git worktree add gh-pages gh-pages
-   cd gh-pages
-   ```
+If you  have found important features missing or if there is a bug, we would appreciate it very much if you send us an email.
 
-   Everybody else should instead do the following, with the URL
-   in the initial clone command suitably adjusted:
+Contents
+--------
+With this version you should have obtained the following files and
+directories:
 
-   ```sh
-   # Create a fresh clone of your repository, and change into it
-   git clone https://github.com/USERNAME/REPOSITORY gh-pages
-   cd gh-pages
+| File/directory | Description |
+|:-----|:------|
+|README.md|   this file|
+|EXAMPLES|	some examples|
+|CHANGES|	changelog|
+|LICENSE|	Licensing information|
+|doc  |	the manual|
+|gap  |the GAP code|
+|tst  |	a test file|
+|init.g| the file that initializes this package|
+|read.g |         		the file that reads in the package|
+|PackageInfo.g	| information file for automatic processing|
+|version	|the version number|
 
-   # Add a new remote pointing to the GitHubPagesForGAP repository
-   git remote add gh-gap https://github.com/gap-system/GitHubPagesForGAP
-   git fetch gh-gap
+Usage
+-----
+The package shall be distributed with the main GAP archive. In this case, in
+order to use it you just have to start GAP and type
 
-   # Create a fresh gh-pages branch from the new remote
-   git checkout -b gh-pages gh-gap/gh-pages --no-track
-   ```
+      LoadPackage( "automata" );
 
-5. Add in copies of your `PackageInfo.g`, `README` (or `README.md`) and manual:
+------------------------------
+------------------------------
+For updates between releases of GAP itself or in case it is not distributed
+with the main GAP archive, check the package Web page
 
-   ```
-   cp -f ../PackageInfo.g ../README* .
-   cp -f ../doc/*.{css,html,js,txt} doc/
-   ```
+    https://gap-packages.github.io/automata/
 
-6. Now run the `update.g` GAP script. This extracts data from your
-   `PackageInfo.g` file and puts that data into `_data/package.yml`.
-   From this, the website template can populate the web pages with
-   some sensible default values.
+For the development version, please visit the repository in GitHub (https://github.com/gap-packages/automata/)
 
-   ```
-   gap update.g
-   ```
+You may get `automata' as a compressed tar archive (file name ends with
+.tar.gz). Use the appropriate command on your system to unpack the
+archive.
 
-7. Commit and push everything.
+On UNIX systems the compressed tar archive may be unpacked by
 
-   ```
-   git add PackageInfo.g README* doc/ _data/package.yml
-   git commit -m "Setup gh-pages based on GitHubPagesForGAP"
-   git push --set-upstream origin gh-pages
-   ```
+    tar xzf automata-<version>.tar.gz
 
-That's it. You can now see your new package website under
-https://USERNAME.github.io/REPOSITORY/ (of course after
-adjusting USERNAME and REPOSITORY suitably).
+or, if tar on your system does not understand the option z, by
 
+    gunzip automata-<version>.tar.gz
+    tar xf automata-<version>.tar
 
-## Adjusting the content and layout
+which will in each case unpack the code into a directory 'automata'
+in the current directory. We assume that the current directory is the
+directory /usr/local/lib/gap-4.x.x/pkg/.
 
-GitHubPagesForGAP tries to automatically provide good defaults for
-most packages. However, you can tweak everything about it:
+Installation
+------------
 
-* To adjust the page layout, edit the files `stylesheets/styles.css`
-and `_layouts/default.html`.
+You may have to start GAP with the -l option, for instance,
 
-* To adjust the content of the front page, edit `index.md` (resp.
-  for the content of the sidebar, edit `_layouts/default.html`
+gap -l "/usr/local/lib/gap-4.x.x"
 
-* You can also add additional pages, in various formats (HTML,
-Markdown, Textile, ...).
+Then try the following
 
-For details, please consult the [Jekyll](http://jekyllrb.com/)
-manual.
+gap> LoadPackage( "automata" ); 
+true
+gap>
 
+Good luck!
 
-## Testing the site locally
+If you use a LINUX system, you may have to, in order to save typing, write
+aliases: 
 
-If you would like to test your site on your own machine, without
-uploading it to GitHub (where it is visible to the public), you can do
-so by installing [Jekyll](http://jekyllrb.com/), the static web site
-generator used by GitHub to power GitHub Pages.
+in the file `.bashrc' (or something equivalent, maybe with another syntax): 
 
-Once you have installed Jekyll as described on its homepage, you can
-test the website locally as follows:
+alias gap='gap -l "/usr/local/lib/gap-4.x.x;"'
 
-1. Go to the `gh-pages` directory we created above.
+and in the file `.gap/gaprc'
 
-2. Run jekyll (this launches a tiny web server on your machine):
-
-   ```
-   jekyll serve -w
-   ```
-
-3. Visit the URL http://localhost:4000 in a web browser.
+LoadPackage( "automata" ); 
 
 
-## Updating after you made a release
+In order to have automatic visualisations and not just to produce the dot code to be visualised by any other means, GraphViz (http://www.graphviz.org/) should be installed.
 
-Whenever you make a release of your package (and perhaps more often than
-that), you will want to update your website. The easiest way is to use
-the `release` script from the [ReleaseTools][]. However, you can also do
-it manually. The steps for doing it are quite similar to the above:
+----------
+In other systems, there are equivalent ways to do the same.
 
-1. Go to the `gh-pages` directory we created above.
-
-2. Add in copies of your `PackageInfo.g`, `README` (or `README.md`) and manual:
-
-   ```
-   cp -f ../PackageInfo.g ../README* .
-   cp -f ../doc/*.{css,html,js,txt} doc/
-   ```
-
-3. Now run the `update.g` GAP script.
-
-4. Commit and push the work we have just done.
-
-   ```
-   git add PackageInfo.g README* doc/ _data/package.yml
-   git commit -m "Update web pages"
-   git push
-   ```
-
-A few seconds after you have done this, your changes will be online
-under https://USERNAME.github.io/REPOSITORY/ .
+Automata is free software you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version. For details, see the file 'GPL' in the
+'etc' directory of the GAP distribution or see the FSF's own site.
 
 
-## Updating to a newer version of GitHubPagesForGAP
 
-Normally you should not have to ever do this. However, if you really want to,
-you can attempt to update to the most recent version of GitHubPagesForGAP via
-the following instructions. The difficulty of such an update depends on how
-much you tweaked the site after initially cloning GitHubPagesForGAP.
-
-1. Go to the `gh-pages` directory we created above.
-   Make sure that there are no uncommitted changes, as they will be lost
-   when following these instructions.
-
-2. Make sure the `gh-gap` remote exists and has the correct URL. If in doubt,
-   just re-add it:
-   ```
-   git remote remove gh-gap
-   git remote add gh-gap https://github.com/gap-system/GitHubPagesForGAP
-   ```
-
-3. Attempt to merge the latest GitHubPagesForGAP.
-   ```
-   git pull gh-gap gh-pages
-   ```
-
-4. If this produced no errors and just worked, skip to the next step.
-   But it is quite likely that you will have conflicts in the file
-   `_data/package.yml`, or in your `README` or `PackageInfo.g` files.
-   These can usually be resolved by entering this:
-   ```
-   cp ../PackageInfo.g ../README* .
-   gap update.g
-   git add PackageInfo.g README* _data/package.yml
-   ```
-   If you are lucky, these were the only conflicts (check with `git status`).
-   If no merge conflicts remain, finish with this command:
-   ```
-   git commit -m "Merge gh-gap/gh-pages"
-   ```
-   If you still have merge conflicts, and don't know how to resolve them, or
-   get stuck some other way, you can abort the merge process and revert to the
-   original state by issuing this command:
-   ```
-   git merge --abort
-   ```
-
-5. You should be done now. Don't forget to push your changes if you want them
-   to become public.
-
-
-## Packages using GitHubPagesForGAP
-Packages using GitHubPagesForGAP include the following:
-
-* <https://gap-packages.github.io/anupq>
-* <https://gap-packages.github.io/cvec>
-* <https://gap-packages.github.io/genss>
-* <https://gap-packages.github.io/io>
-* <https://gap-packages.github.io/NormalizInterface>
-* <https://gap-packages.github.io/nq>
-* <https://gap-packages.github.io/orb>
-* <https://gap-packages.github.io/polenta>
-* <https://gap-packages.github.io/recog>
-* <https://gap-packages.github.io/recogbase>
-* <https://gap-packages.github.io/SingularInterface>
-
-
-## Contact
-
-Please submit bug reports, suggestions for improvements and patches via
-the [issue tracker](https://github.com/gap-system/GitHubPagesForGAP/issues).
-
-You can also contact me directly via [email](max@quendi.de).
-
-Copyright (c) 2013-2018 Max Horn
-
-[ReleaseTools]: https://github.com/gap-system/ReleaseTools

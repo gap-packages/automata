@@ -104,7 +104,7 @@
   [33X[0;0YTests whether an object is a rational expression.[133X
   
   [4X[32X  Example  [32X[104X
-    [4X[25Xgap>[125X [27Xr := RandomRatExp("01",7);[127X[104X
+    [4X[25Xgap>[125X [27Xr := RationalExpression("1(0U1)U@");[127X[104X
     [4X[28X1(0U1)U@[128X[104X
     [4X[25Xgap>[125X [27XIsRatExpOnnLettersObj(r) and IsRationalExpressionRep(r);[127X[104X
     [4X[28Xtrue[128X[104X

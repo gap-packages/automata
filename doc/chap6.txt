@@ -14,12 +14,10 @@
   argument represents a finite language or not.[133X
   
   [4X[32X  Example  [32X[104X
-    [4X[25Xgap>[125X [27XRandomRatExp(2);[127X[104X
-    [4X[28Xb*(aU@)[128X[104X
+    [4X[25Xgap>[125X [27Xr:=RationalExpression("b*(aU@)");;[127X[104X
     [4X[25Xgap>[125X [27XIsFiniteRegularLanguage(last);[127X[104X
     [4X[28Xfalse[128X[104X
-    [4X[25Xgap>[125X [27XRandomRatExp(2);[127X[104X
-    [4X[28XaUbU@[128X[104X
+    [4X[25Xgap>[125X [27Xr:=RationalExpression("aUbU@");;[127X[104X
     [4X[25Xgap>[125X [27XIsFiniteRegularLanguage(last);[127X[104X
     [4X[28Xtrue[128X[104X
   [4X[32X[104X

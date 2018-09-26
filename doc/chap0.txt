@@ -1,15 +1,12 @@
   
   
-                                   [1X Automata [101X
+                                   [1X [5XAutomata[105X [101X
   
   
                             [1X A package on automata [101X
   
   
-                                    1.13dev
-  
-  
-                                19 November 2011
+                                  Version 1.14
   
   
                                  Manuel Delgado
@@ -43,8 +40,12 @@
   [1XCopyright[101X
   [33X[0;0Y© 2004 by Manuel Delgado, Steve Linton and José Morais[133X
   
-  [33X[0;0YWe  adopt  the  copyright  regulations  of  [5XGAP[105X as detailed in the copyright
-  notice in the [5XGAP[105X manual.[133X
+  [33X[0;0Y[5XAutomata[105X  package is free software; you can redistribute it and/or modify it
+  under     the     terms     of    the    GNU    General    Public    License
+  ([7Xhttp://www.fsf.org/licenses/gpl.html[107X)  as  published  by  the Free Software
+  Foundation;  either  version 2 of the License, or (at your option) any later
+  version.  For details, see the file 'GPL' included in the package or see the
+  FSF's own site.[133X
   
   
   -------------------------------------------------------
@@ -65,13 +66,23 @@
   [33X[0;0YThe  authors  would  like  to  thank  Mark  Kambites for his contribution in
   finding bugs and making suggestions for the improvement of this package.[133X
   
-  [33X[0;0YConcerning the mantainment:[133X
+  [33X[0;0YConcerning the maintenance:[133X
   
-  [33X[0;0YThe   first   author   was/is  (partially)  supported  by  the  FCT  project
-  PTDC/MAT/65481/2006  and also by the [13XCentro de Matemática da Universidade do
-  Porto[113X  (CMUP),  funded by the European Regional Development Fund through the
-  program  COMPETE and by the Portuguese Government through the FCT - Fundação
-  para a Ciência e a Tecnologia under the project PEst-C/MAT/UI0144/2011.[133X
+  [33X[0;0YThe first author was/is (partially) supported by:[133X
+  
+  [33X[0;0Ythe    Fundação    para   a   Ciência   e   a   Tecnologia   (FCT)   project
+  PTDC/MAT/65481/2006;[133X
+  
+  [33X[0;0Ythe  [13XCentro de Matemática da Universidade do Porto[113X (CMUP), in particular for
+  those periods in which CMUP was funded by[133X
+  
+  [33X[0;0Ythe  European  Regional  Development Fund through the program COMPETE and by
+  the  Portuguese  Government  through  the  FCT - Fundação para a Ciência e a
+  Tecnologia under the project PEst-C/MAT/UI0144/2011;[133X
+  
+  [33X[0;0YFCT (Portugal) with national (MEC) and European structural funds through the
+  programs  FEDER,  under  the partnership agreement PT2020, under the project
+  UID/MAT/00144/2013.[133X
   
   
   -------------------------------------------------------
@@ -79,15 +90,16 @@
   [33X[0;0YThis  work  started  in  1998, when the first author was in the LIAFA at the
   University  of Paris 7, in a post-doc. Encouraged by J. E. Pin, he began the
   implementation in [5XGAP[105X3 of an algorithm obtained some time before to answer a
-  question  from  the realm of Finite Semigroups proposed by J. Almeida. It is
-  now part of a separate package: [10Xfinsemi[110X.[133X
+  question from the realm of Finite Semigroups proposed by J. Almeida.[133X
   
   [33X[0;0YThe  first  version  of  this  package on automata was prepared by the first
   author  who  gave  it  the form of a [5XGAP[105X share package. In a second version,
   prepared  by the first and third authors, many functions have been added and
   the  performance  of  many  of  the existing ones has been improved. Further
   important improvements, specially concerning performance, have been achieved
-  when the second author joined the group.[133X
+  when  the  second  author joined the group. The first author is particularly
+  grateful  to  Max  Horn  whose  help  made the release of Version 1.14 a lot
+  easier.[133X
   
   [33X[0;0YSince  Version 1.12, the package is maintained by the first two authors. Bug
   reports,  suggestions  and  comments are, of course, welcome. Please use our
@@ -208,11 +220,11 @@
     B.1 [33X[0;0YInstalling some external programs[133X
     B.2 [33X[0;0YFunctions to draw automata[133X
       B.2-1 DrawAutomaton
-      B.2-2 DrawAutomata
-      B.2-3 DrawGraph
-      B.2-4 DrawSCCAutomaton
-    B.3 [33X[0;0YDrawings output formats[133X
-    B.4 [33X[0;0YDrawings extra graph attributes[133X
+      B.2-2 DotForDrawingAutomaton
+      B.2-3 DrawSubAutomaton
+      B.2-4 DotStringForDrawingSubAutomaton
+      B.2-5 DotStringForDrawingGraph
+      B.2-6 DrawSCCAutomaton
   C [33X[0;0YInverse automata and subgroups of the free group[133X
     C.1 [33X[0;0YFrom subgroups to inverse automata[133X
       C.1-1 GeneratorsToListRepresentation

@@ -26,17 +26,12 @@
 <p><a id="X7D2C85EC87DD46E5" name="X7D2C85EC87DD46E5"></a></p>
 <div class="pcenter">
 
-<h1>Automata</h1>
+<h1><span class="URL"><a href="https://gap-packages.github.io/automata/">Automata</a></span></h1>
 
 
 <h2>A package on automata</h2>
 
-<p>
-    1.13dev</p>
-
-<p>
-    19 November 2011
-  </p>
+<p> Version 1.14</p>
 
 </div>
 <p><b>
@@ -71,7 +66,7 @@
 <h3>Copyright</h3>
 <p>© 2004 by Manuel Delgado, Steve Linton and José Morais</p>
 
-<p>We adopt the copyright regulations of <strong class="pkg">GAP</strong> as detailed in the copyright notice in the <strong class="pkg">GAP</strong> manual.</p>
+<p><span class="URL"><a href="https://gap-packages.github.io/automata/">Automata</a></span> package is free software; you can redistribute it and/or modify it under the terms of the <span class="URL"><a href="http://www.fsf.org/licenses/gpl.html">GNU General Public License</a></span> as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. For details, see the file 'GPL' included in the package or see the FSF's own site.</p>
 
 <p><a id="X82A988D47DFAFCFA" name="X82A988D47DFAFCFA"></a></p>
 <h3>Acknowledgements</h3>
@@ -83,15 +78,23 @@
 
 <p>The authors would like to thank Mark Kambites for his contribution in finding bugs and making suggestions for the improvement of this package.</p>
 
-<p>Concerning the mantainment:</p>
+<p>Concerning the maintenance:</p>
 
-<p>The first author was/is (partially) supported by the FCT project PTDC/MAT/65481/2006 and also by the <em>Centro de Matemática da Universidade do Porto</em> (CMUP), funded by the European Regional Development Fund through the program COMPETE and by the Portuguese Government through the FCT - Fundação para a Ciência e a Tecnologia under the project PEst-C/MAT/UI0144/2011.</p>
+<p>The first author was/is (partially) supported by:</p>
+
+<p>the Fundação para a Ciência e a Tecnologia (FCT) project PTDC/MAT/65481/2006;</p>
+
+<p>the <em>Centro de Matemática da Universidade do Porto</em> (CMUP), in particular for those periods in which CMUP was funded by</p>
+
+<p>the European Regional Development Fund through the program COMPETE and by the Portuguese Government through the FCT - Fundação para a Ciência e a Tecnologia under the project PEst-C/MAT/UI0144/2011;</p>
+
+<p>FCT (Portugal) with national (MEC) and European structural funds through the programs FEDER, under the partnership agreement PT2020, under the project UID/MAT/00144/2013.</p>
 
 <p><a id="X7982162280BC7A61" name="X7982162280BC7A61"></a></p>
 <h3>Colophon</h3>
-<p>This work started in 1998, when the first author was in the LIAFA at the University of Paris 7, in a post-doc. Encouraged by J. E. Pin, he began the implementation in <strong class="pkg">GAP</strong>3 of an algorithm obtained some time before to answer a question from the realm of Finite Semigroups proposed by J. Almeida. It is now part of a separate package: <code class="code">finsemi</code>.</p>
+<p>This work started in 1998, when the first author was in the LIAFA at the University of Paris 7, in a post-doc. Encouraged by J. E. Pin, he began the implementation in <strong class="pkg">GAP</strong>3 of an algorithm obtained some time before to answer a question from the realm of Finite Semigroups proposed by J. Almeida.</p>
 
-<p>The first version of this package on automata was prepared by the first author who gave it the form of a <strong class="pkg">GAP</strong> share package. In a second version, prepared by the first and third authors, many functions have been added and the performance of many of the existing ones has been improved. Further important improvements, specially concerning performance, have been achieved when the second author joined the group.</p>
+<p>The first version of this package on automata was prepared by the first author who gave it the form of a <strong class="pkg">GAP</strong> share package. In a second version, prepared by the first and third authors, many functions have been added and the performance of many of the existing ones has been improved. Further important improvements, specially concerning performance, have been achieved when the second author joined the group. The first author is particularly grateful to Max Horn whose help made the release of Version 1.14 a lot easier.</p>
 
 <p>Since Version 1.12, the package is maintained by the first two authors. Bug reports, suggestions and comments are, of course, welcome. Please use our email addresses to this effect.</p>
 
@@ -276,16 +279,12 @@
 </span>
 <div class="ContSSBlock">
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7BC2FDA77FD0237B">B.2-1 DrawAutomaton</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7AEE146D8391CA3D">B.2-2 DrawAutomata</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7D17B77F829F9CCB">B.2-3 DrawGraph</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7E478FDD807853CA">B.2-4 DrawSCCAutomaton</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7896CAD4832C7748">B.2-2 DotForDrawingAutomaton</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X84DF99868747DD69">B.2-3 DrawSubAutomaton</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7BB5015378320678">B.2-4 DotStringForDrawingSubAutomaton</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7870774E83892026">B.2-5 DotStringForDrawingGraph</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chapB_mj.html#X7E478FDD807853CA">B.2-6 DrawSCCAutomaton</a></span>
 </div></div>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapB_mj.html#X7F5419527FFCD1DF">B.3 <span class="Heading">Drawings output formats</span></a>
-</span>
-</div>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapB_mj.html#X795DD98D86A1A441">B.4 <span class="Heading">Drawings extra graph attributes</span></a>
-</span>
-</div>
 </div>
 <div class="ContChap"><a href="chapC_mj.html#X7DBBB0537ADC9899">C <span class="Heading">Inverse automata and subgroups of the free group</span></a>
 <div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chapC_mj.html#X7DDDA5127A3D170C">C.1 <span class="Heading">From subgroups to inverse automata</span></a>

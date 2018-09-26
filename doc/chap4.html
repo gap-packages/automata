@@ -155,11 +155,11 @@ Accepting states: [ 1, 4 ]
 
 
 <div class="example"><pre>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r:=RandomRatExp(2);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r := RationalExpression("empty_set");</span>
 empty_set
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IsEmptyLang(r);</span>
 true
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r:=RandomRatExp(2);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">r := RationalExpression("aUb");</span>
 aUb
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IsEmptyLang(r);</span>
 false
@@ -194,9 +194,12 @@ true
 
 
 <div class="example"><pre>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">y:=RandomAutomaton("det",4,2);;</span>
-<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">x:=RandomAutomaton("det",4,2);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">x := Automaton("det",4,"ab",[ [ 0, 1, 3, 4 ], [ 0, 1, 2, 0 ] ],[ 2 ],[ 1, 2, 3, 4 ] );;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">y := Automaton("det",4,"ab",[ [ 1, 3, 4, 0 ], [ 0, 3, 4, 0 ] ],[ 3 ],[ 1, 3, 4 ]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">z := Automaton("det",4,"ab",[ [ 0, 4, 0, 0 ], [ 1, 3, 4, 0 ] ],[ 2 ],[ 1, 3, 4 ]);;</span>
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AreEquivAut(x, y);</span>
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AreEquivAut(x, z);</span>
 false
 <span class="GAPprompt">gap&gt;</span> <span class="GAPinput">a:=RationalExpression("(aUb)*ab*");</span>
 (aUb)*ab*

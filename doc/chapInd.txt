@@ -24,10 +24,13 @@
   [2XCopyAutomaton[102X 2.5-1 
   [2XCopyRatExp[102X 3.1-8 
   [2XDiGraphToRelation[102X A.1-10 
-  [2XDrawAutomata[102X B.2-2 
+  [2XDotForDrawingAutomaton[102X B.2-2 
+  [2XDotStringForDrawingGraph[102X B.2-5 
+  [2XDotStringForDrawingSubAutomaton[102X B.2-4 
   [2XDrawAutomaton[102X B.2-1 
-  [2XDrawGraph[102X B.2-3 
-  [2XDrawSCCAutomaton[102X B.2-4 
+  [2XDrawGraph[102X B.2-5 
+  [2XDrawSCCAutomaton[102X B.2-6 
+  [2XDrawSubAutomaton[102X B.2-3 
   [2XEpsilonCompactedAut[102X 5.1-3 
   [2XEpsilonToNFA[102X 5.1-1 
   [2XEpsilonToNFASet[102X 5.1-2 

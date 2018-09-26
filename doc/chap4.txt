@@ -105,11 +105,11 @@
   an automaton [3X R [103X is the empty language.[133X
   
   [4X[32X  Example  [32X[104X
-    [4X[25Xgap>[125X [27Xr:=RandomRatExp(2);[127X[104X
+    [4X[25Xgap>[125X [27Xr := RationalExpression("empty_set");[127X[104X
     [4X[28Xempty_set[128X[104X
     [4X[25Xgap>[125X [27XIsEmptyLang(r);[127X[104X
     [4X[28Xtrue[128X[104X
-    [4X[25Xgap>[125X [27Xr:=RandomRatExp(2);[127X[104X
+    [4X[25Xgap>[125X [27Xr := RationalExpression("aUb");[127X[104X
     [4X[28XaUb[128X[104X
     [4X[25Xgap>[125X [27XIsEmptyLang(r);[127X[104X
     [4X[28Xfalse[128X[104X
@@ -144,9 +144,12 @@
   isomorphic. Note hat this cannot happen if the alphabets are different.[133X
   
   [4X[32X  Example  [32X[104X
-    [4X[25Xgap>[125X [27Xy:=RandomAutomaton("det",4,2);;[127X[104X
-    [4X[25Xgap>[125X [27Xx:=RandomAutomaton("det",4,2);;[127X[104X
+    [4X[25Xgap>[125X [27Xx := Automaton("det",4,"ab",[ [ 0, 1, 3, 4 ], [ 0, 1, 2, 0 ] ],[ 2 ],[ 1, 2, 3, 4 ] );;[127X[104X
+    [4X[25Xgap>[125X [27Xy := Automaton("det",4,"ab",[ [ 1, 3, 4, 0 ], [ 0, 3, 4, 0 ] ],[ 3 ],[ 1, 3, 4 ]);;[127X[104X
+    [4X[25Xgap>[125X [27Xz := Automaton("det",4,"ab",[ [ 0, 4, 0, 0 ], [ 1, 3, 4, 0 ] ],[ 2 ],[ 1, 3, 4 ]);;[127X[104X
     [4X[25Xgap>[125X [27XAreEquivAut(x, y);[127X[104X
+    [4X[28Xtrue[128X[104X
+    [4X[25Xgap>[125X [27XAreEquivAut(x, z);[127X[104X
     [4X[28Xfalse[128X[104X
     [4X[25Xgap>[125X [27Xa:=RationalExpression("(aUb)*ab*");[127X[104X
     [4X[28X(aUb)*ab*[128X[104X
