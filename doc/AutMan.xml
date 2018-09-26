@@ -1,12 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE Book SYSTEM "gapdoc.dtd">
+<!DOCTYPE Book SYSTEM "gapdoc.dtd"
+[<!ENTITY automata "<Alt Not='Text'><URL
+Text='Automata'>https://gap-packages.github.io/automata/</URL></Alt><Alt Only='Text'><Package>Automata</Package></Alt>">]
+>
 
-  <?LaTeX ExtraPreamble="\usepackage{graphicx}"?>
+<?LaTeX ExtraPreamble="\usepackage{graphicx}"?>
+<!-- Documentation to the Automata package. -->
 
 <Book Name="Automata"> 
 
-<#Include SYSTEM "title.xml">
+<TitlePage>
+  <Title>
+    &automata;
+  </Title>
+  <Subtitle>
+    A package on automata
+  </Subtitle>
+  <Version> Version <#Include SYSTEM "../version">
+  </Version>
+  <Author>
+    Manuel Delgado<Alt Only="LaTeX"><Br/></Alt>
+<Address>
+Departamento de Matemática - Faculdade de Ciências<Br/>
+Porto<Br/>
+Portugal<Br/>
+</Address>
+<Email>mdelgado@fc.up.pt</Email>
+<Homepage>http://www.fc.up.pt/cmup/mdelgado/</Homepage>
+
+  </Author>
+  <Author>
+    Steve Linton<Alt Only="LaTeX"><Br/></Alt>
+<Address>
+School of Computer Science<Br/>
+University of St Andrews<Br/>
+Jack Cole Building, North Haugh<Br/>
+St Andrews, Fife, KY16 9SX<Br/>
+United Kingdom<Br/>
+</Address>
+<Email>steve.linton@st-andrews.ac.uk</Email>
+<Homepage>http://www-groups.dcs.st-and.ac.uk/~sal/</Homepage>
+
+  </Author>
+  <Author>
+    José João Morais<Alt Only="LaTeX"><Br/></Alt>
+<Address>
+No address known<Br/>
+</Address>
+
+  </Author>
+  <Copyright>
+    
+&copyright; 2004 by Manuel Delgado, Steve Linton and José Morais <P/>
+      <Alt Only="LaTeX">\noindent</Alt> &automata; package is free software; 
+      you can redistribute it and/or modify it under the terms of the 
+      <URL Text="GNU General Public License">http://www.fsf.org/licenses/gpl.html</URL> 
+      as published by the Free Software Foundation; either version 2 of the
+      License, or (at your option) any later version. For details, see the file 'GPL' included in the package or see the FSF's own site.
+  </Copyright>
+  <Acknowledgements>
+    
+The first author wishes to acknowledge Cyril Nicaud and Paulo Varandas for
+their help in programming some functions of the very first version of this
+package. He wishes also to acknowledge useful discussions and comments by
+Cyril Nicaud, Vítor H. Fernandes, Jean-Eric Pin and Jorge Almeida.
+<P/>
+The first author also acknowledges support of FCT through CMUP
+and the FCT and POCTI Project POCTI/32817/MAT/2000 which is funded in
+cooperation with the European Community Fund FEDER.
+<P/>
+The third author acknowledges financial support of FCT and the POCTI program
+through a scholarship given by Centro de Matemática da Universidade do Porto.
+<P/>
+
+The authors would like to thank Mark Kambites for his contribution in finding
+bugs and making suggestions for the improvement of this package.
+<P/>
+<P/>
+<P/>
+Concerning the maintenance:
+<P/>
+<P/>
+The first author was/is (partially) supported by:
+<P/> the Fundação para a Ciência e a Tecnologia (FCT) project PTDC/MAT/65481/2006;
+<P/> the <E>Centro de Matemática da Universidade do Porto</E> (CMUP), in particular for those periods in which CMUP was funded by
+<P/> the European Regional Development Fund through the
+program COMPETE and by the Portuguese Government through the FCT - Fundação
+para a Ciência e a Tecnologia under the project PEst-C/MAT/UI0144/2011;
+<P/> FCT (Portugal) with national (MEC) and European structural funds through the programs FEDER, under the partnership agreement PT2020, under the project UID/MAT/00144/2013.
+
+  </Acknowledgements>
+  
+  <Colophon>
+    
+This work started in 1998, when the first author was in the
+LIAFA at the University of Paris 7, in a post-doc.
+Encouraged by J. E. Pin, he began the implementation in &GAP;3 of
+an algorithm obtained some time before to answer a question from the realm
+of Finite Semigroups proposed by J. Almeida.<P/>
+
+The first version of this package on automata was prepared by the first author
+who gave it the form of a &GAP; share package.
+In a second version, prepared by the first and third authors,
+many functions have been added and the performance of many of the existing
+ones has been improved. Further important improvements, specially concerning performance,
+have been achieved when the second author joined the group.
+
+The first author is particularly grateful to Max Horn whose help made the release of Version 1.14 a lot easier. 
+<P/>
+<P/>
+Since Version 1.12, the package is maintained by the first two authors.
+
+Bug reports, suggestions and comments are, of course, welcome. Please use our
+email addresses to this effect.
+
+  </Colophon>
+  
+</TitlePage>
 
 <TableOfContents/>
 

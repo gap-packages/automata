@@ -5,7 +5,7 @@ The GAP 4 package `automata'
 Introduction
 ------------
 
-This is release 1.2.x of  the package `automata'.
+This is release 1.14 of  the package `automata'.
 
 The features of this package include
 
