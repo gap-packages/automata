@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gap-packages/automata.svg?branch=master)](https://travis-ci.org/gap-packages/automata)
+[![Build Status](https://travis-ci.com/gap-packages/automata.svg?branch=master)](https://travis-ci.com/gap-packages/automata)
 [![Code Coverage](https://codecov.io/github/gap-packages/automata/coverage.svg?branch=master&token=)](https://codecov.io/gh/gap-packages/automata)
 
 automata
