@@ -178,12 +178,14 @@ InstallGlobalFunction(FlowerAutomaton, function(L)
                 AddSet(T[p][q], q-1);
             fi;
         od;
-        p := Position(alph, g[Length(g)]);
-        if p <= n then
-            AddSet(T[p][q],1);
-        else
-            p := p - n;
-            AddSet(T[p][1], q);
+        if Length(g) > 1 then
+            p := Position(alph, g[Length(g)]);
+            if p <= n then
+                AddSet(T[p][q],1);
+            else
+                p := p - n;
+                AddSet(T[p][1], q);
+            fi;
         fi;
     od;
     
