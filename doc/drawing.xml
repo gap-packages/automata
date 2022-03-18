@@ -17,14 +17,14 @@
       </Alt>
     </Alt>
     T Labs, that can be obtained at
-    <URL>http://www.graphviz.org/</URL>.
+    <URL>https://www.graphviz.org/</URL>.
 
     
     <Section>
       <Heading>
         Installing some external programs
       </Heading>
-      In order to create the drawings you should have <URL Text="graphviz">http://www.graphviz.org/</URL>
+      In order to create the drawings you should have <URL Text="graphviz">https://www.graphviz.org/</URL>
       installed and to view them you should have installed some <C>pdf</C> viewer.
     </Section>
     

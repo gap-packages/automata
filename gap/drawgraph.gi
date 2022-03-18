@@ -20,7 +20,7 @@
 # ##
 # InstallGlobalFunction(SetDrawingsExtraFormat, function(f)
 #     if not f in DrawingsListOfExtraFormats then
-#         Print("The specified format is not valid.\nThe valid formats are:\n", DrawingsListOfExtraFormats, ".\nPlease check  http://www.graphviz.org/doc/info/output.html\nfor more info.\n");
+#         Print("The specified format is not valid.\nThe valid formats are:\n", DrawingsListOfExtraFormats, ".\nPlease check  https://www.graphviz.org/doc/info/output.html\nfor more info.\n");
 #         return;
 #     fi;
 #     MakeReadWriteGlobal("DrawingsExtraFormat");

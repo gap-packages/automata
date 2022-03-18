@@ -27,7 +27,7 @@ Porto<Br/>
 Portugal<Br/>
 </Address>
 <Email>mdelgado@fc.up.pt</Email>
-<Homepage>http://www.fc.up.pt/cmup/mdelgado/</Homepage>
+<Homepage>https://cmup.fc.up.pt/cmup/mdelgado/</Homepage>
 
   </Author>
   <Author>
@@ -55,7 +55,7 @@ No address known<Br/>
 &copyright; 2004 by Manuel Delgado, Steve Linton and José Morais <P/>
       <Alt Only="LaTeX">\noindent</Alt> &automata; package is free software; 
       you can redistribute it and/or modify it under the terms of the 
-      <URL Text="GNU General Public License">http://www.fsf.org/licenses/gpl.html</URL> 
+      <URL Text="GNU General Public License">https://www.fsf.org/licenses/gpl.html</URL> 
       as published by the Free Software Foundation; either version 2 of the
       License, or (at your option) any later version. For details, see the file 'GPL' included in the package or see the FSF's own site.
   </Copyright>

@@ -111,7 +111,7 @@ and in the file `.gap/gaprc`
     LoadPackage( "automata" ); 
 
 
-In order to have automatic visualisations and not just to produce the dot code to be visualised by any other means, GraphViz (http://www.graphviz.org/) should be installed.
+In order to have automatic visualisations and not just to produce the dot code to be visualised by any other means, GraphViz (https://www.graphviz.org/) should be installed.
 
 ----------
 In other systems, there are equivalent ways to do the same.

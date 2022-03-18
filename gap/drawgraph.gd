@@ -205,7 +205,7 @@ DeclareGlobalFunction( "DotStringForDrawingSCCAutomaton" );
 
 #         fi;
 #         if dot = fail then
-#             Error("Please install GraphViz ( http://www.graphviz.org )");
+#             Error("Please install GraphViz ( https://www.graphviz.org )");
 #         fi;
 #         return dot;
 #     end);

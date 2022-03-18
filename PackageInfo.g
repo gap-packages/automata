@@ -13,7 +13,7 @@ Persons := [
     IsAuthor      := true,
     IsMaintainer  := true,
     Email         := "mdelgado@fc.up.pt",
-    WWWHome       := "http://www.fc.up.pt/cmup/mdelgado/",
+    WWWHome       := "https://cmup.fc.up.pt/cmup/mdelgado/",
     PostalAddress := Concatenation( [
                    "Departamento de Matemática - Faculdade de Ciências\n",
                    "Porto\n",
@@ -94,7 +94,7 @@ Dependencies := rec(
   GAP := ">=4.8",
   NeededOtherPackages := [],
   SuggestedOtherPackages := [["GAPDoc", ">= 1.2"]],
-##  ExternalConditions := [["Graphviz","http://www.graphviz.org/"],["Evince","http://www.gnome.org/projects/evince/"]]
+##  ExternalConditions := [["Graphviz","https://www.graphviz.org/"],["Evince","http://www.gnome.org/projects/evince/"]]
 
 ),
 
