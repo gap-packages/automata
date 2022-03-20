@@ -19,7 +19,7 @@
   
   Manuel Delgado
       Email:    [7Xmailto:mdelgado@fc.up.pt[107X
-      Homepage: [7Xhttp://www.fc.up.pt/cmup/mdelgado/[107X
+      Homepage: [7Xhttps://cmup.fc.up.pt/cmup/mdelgado/[107X
       Address:  [33X[0;14YDepartamento de Matemática - Faculdade de Ciências[133X
                 [33X[0;14YPorto[133X
                 [33X[0;14YPortugal[133X
@@ -42,7 +42,7 @@
   
   [33X[0;0Y[5XAutomata[105X  package is free software; you can redistribute it and/or modify it
   under     the     terms     of    the    GNU    General    Public    License
-  ([7Xhttp://www.fsf.org/licenses/gpl.html[107X)  as  published  by  the Free Software
+  ([7Xhttps://www.fsf.org/licenses/gpl.html[107X)  as  published  by the Free Software
   Foundation;  either  version 2 of the License, or (at your option) any later
   version.  For details, see the file 'GPL' included in the package or see the
   FSF's own site.[133X
@@ -80,9 +80,10 @@
   the  Portuguese  Government  through  the  FCT - Fundação para a Ciência e a
   Tecnologia under the project PEst-C/MAT/UI0144/2011;[133X
   
-  [33X[0;0YFCT (Portugal) with national (MEC) and European structural funds through the
-  programs  FEDER,  under  the partnership agreement PT2020, under the project
-  UID/MAT/00144/2013.[133X
+  [33X[0;0YThe   first   author   wants   to   acknowledge   partial  support  by  CMUP
+  (UID/MAT/00144/2013   and   UID/MAT/00144/2019),  which  is  funded  by  FCT
+  (Portugal)  with  national  (MEC)  and European structural funds through the
+  programs FEDER, under the partnership agreement PT2020.[133X
   
   
   -------------------------------------------------------
@@ -98,8 +99,8 @@
   the  performance  of  many  of  the existing ones has been improved. Further
   important improvements, specially concerning performance, have been achieved
   when  the  second  author joined the group. The first author is particularly
-  grateful  to  Max  Horn  whose  help  made the release of Version 1.14 a lot
-  easier.[133X
+  grateful to Max Horn whose help made the release of Versions 1.14 and 1.15 a
+  lot easier.[133X
   
   [33X[0;0YSince  Version 1.12, the package is maintained by the first two authors. Bug
   reports,  suggestions  and  comments are, of course, welcome. Please use our

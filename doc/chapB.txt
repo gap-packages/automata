@@ -3,13 +3,13 @@
   
   [33X[0;0YThe  drawing of graphs described here uses [10Xgraphviz[110X [DEG+02], a software for
   drawing  graphs  developed  at  AT  &  T  Labs,  that  can  be  obtained  at
-  [7Xhttp://www.graphviz.org/[107X.[133X
+  [7Xhttps://www.graphviz.org/[107X.[133X
   
   
   [1XB.1 [33X[0;0YInstalling some external programs[133X[101X
   
   [33X[0;0YIn    order    to   create   the   drawings   you   should   have   graphviz
-  ([7Xhttp://www.graphviz.org/[107X)  installed  and  to  view  them  you  should have
+  ([7Xhttps://www.graphviz.org/[107X)  installed  and  to  view  them  you should have
   installed some [10Xpdf[110X viewer.[133X
   
   

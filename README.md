@@ -1,11 +1,15 @@
+[![Build Status](https://github.com/gap-packages/automata/workflows/CI/badge.svg?branch=master)](https://github.com/gap-packages/automata/actions?query=workflow%3ACI+branch%3Amaster)
+[![Code Coverage](https://codecov.io/github/gap-packages/automata/coverage.svg?branch=master&token=)](https://codecov.io/gh/gap-packages/automata)
 
-The GAP 4 package `automata'
-==================================
+automata
+========
+
+`Automata` is a GAP package with algorithms to deal with automata.
 
 Introduction
 ------------
 
-This is release 1.14 of  the package `automata'.
+This is release 1.15 of  the package `automata`.
 
 The features of this package include
 
@@ -17,7 +21,7 @@ The features of this package include
          - has some features (using the external program GraphViz) to
            visualize automata;
 
-There is a manual in the sub-directory 'doc' written using the GAP package
+There is a manual in the sub-directory `doc` written using the GAP package
 gapdoc which describes the available functions in detail. The dvi, pdf, html
 versions of the manual are also available there.
 
@@ -63,7 +67,7 @@ with the main GAP archive, check the package Web page
 
 For the development version, please visit the repository in GitHub (https://github.com/gap-packages/automata/)
 
-You may get `automata' as a compressed tar archive (file name ends with
+You may get `automata` as a compressed tar archive (file name ends with
 .tar.gz). Use the appropriate command on your system to unpack the
 archive.
 
@@ -76,7 +80,7 @@ or, if tar on your system does not understand the option z, by
     gunzip automata-<version>.tar.gz
     tar xf automata-<version>.tar
 
-which will in each case unpack the code into a directory 'automata'
+which will in each case unpack the code into a directory `automata`
 in the current directory. We assume that the current directory is the
 directory /usr/local/lib/gap-4.x.x/pkg/.
 
@@ -85,29 +89,29 @@ Installation
 
 You may have to start GAP with the -l option, for instance,
 
-gap -l "/usr/local/lib/gap-4.x.x"
+    gap -l "/usr/local/lib/gap-4.x.x"
 
 Then try the following
 
-gap> LoadPackage( "automata" ); 
-true
-gap>
+    gap> LoadPackage( "automata" ); 
+    true
+    gap>
 
 Good luck!
 
 If you use a LINUX system, you may have to, in order to save typing, write
 aliases: 
 
-in the file `.bashrc' (or something equivalent, maybe with another syntax): 
+in the file `.bashrc` (or something equivalent, maybe with another syntax): 
 
-alias gap='gap -l "/usr/local/lib/gap-4.x.x;"'
+    alias gap='gap -l "/usr/local/lib/gap-4.x.x;"'
 
-and in the file `.gap/gaprc'
+and in the file `.gap/gaprc`
 
-LoadPackage( "automata" ); 
+    LoadPackage( "automata" ); 
 
 
-In order to have automatic visualisations and not just to produce the dot code to be visualised by any other means, GraphViz (http://www.graphviz.org/) should be installed.
+In order to have automatic visualisations and not just to produce the dot code to be visualised by any other means, GraphViz (https://www.graphviz.org/) should be installed.
 
 ----------
 In other systems, there are equivalent ways to do the same.
@@ -115,8 +119,8 @@ In other systems, there are equivalent ways to do the same.
 Automata is free software you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
 Free Software Foundation; either version 2 of the License, or (at your
-option) any later version. For details, see the file 'GPL' in the
-'etc' directory of the GAP distribution or see the FSF's own site.
+option) any later version. For details, see the file `GPL` distributed
+as part of this package or see the FSF's own site.
 
 
 
