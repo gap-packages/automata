@@ -88,7 +88,7 @@ The first author was/is (partially) supported by:
 <P/> the European Regional Development Fund through the
 program COMPETE and by the Portuguese Government through the FCT - Fundação
 para a Ciência e a Tecnologia under the project PEst-C/MAT/UI0144/2011;
-<P/> FCT (Portugal) with national (MEC) and European structural funds through the programs FEDER, under the partnership agreement PT2020, under the project UID/MAT/00144/2013.
+<P/> The first author wants to acknowledge partial support by CMUP (UID/MAT/00144/2013 and UID/MAT/00144/2019), which is funded by FCT (Portugal) with national (MEC) and European structural funds through the programs FEDER, under the partnership agreement PT2020.
 
   </Acknowledgements>
   
@@ -107,7 +107,7 @@ many functions have been added and the performance of many of the existing
 ones has been improved. Further important improvements, specially concerning performance,
 have been achieved when the second author joined the group.
 
-The first author is particularly grateful to Max Horn whose help made the release of Version 1.14 a lot easier. 
+The first author is particularly grateful to Max Horn whose help made the release of Versions 1.14 and 1.15 a lot easier. 
 <P/>
 <P/>
 Since Version 1.12, the package is maintained by the first two authors.

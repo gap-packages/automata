@@ -2,8 +2,8 @@ SetPackageInfo( rec(
 
 PackageName := "Automata",
 Subtitle := "A package on automata",
-Version := "1.14",
-Date := "26/09/2018", # dd/mm/yyyy format
+Version := "1.15",
+Date := "20/03/2022", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
 
 Persons := [

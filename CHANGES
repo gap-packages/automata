@@ -1,6 +1,12 @@
                      -----------------------------------
                      | CHANGES of the Automata package |
                      -----------------------------------
+1.14 -> 1.15
+- Switch CI to use GitHub Actions (Thanks Max)
+- Add Travis & Codecov support (Thanks Max)
+- Fixed bug in ProductOfLanguages (pointed out by Christian Sievers)
+- Fixed bug in FlowerAutomaton (pointed out by Lars Louder)
+
 1.13 -> 1.14
 - drawings are now produced in two steps: first the dot code (that is accessible to the user) and then the display
 - added a test file
