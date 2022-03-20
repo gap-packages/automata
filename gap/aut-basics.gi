@@ -269,7 +269,7 @@ InstallGlobalFunction(ListPermutedAutomata, function(A)
                     fi;
                 od;
             od;
-            Add(list, Automaton("nondet", A!.states, AlphabetOfAutomaton(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
+            Add(list, Automaton("nondet", A!.states, AlphabetOfAutomatonAsList(A), T, List(A!.initial, q -> perm[q]), List(A!.accepting, q -> perm[q])));
         od;
     else
         list := [];                           # List of the permuted automata
@@ -753,7 +753,7 @@ InstallGlobalFunction(ProductOfLanguages, function(a1, a2)
         Error("The second argument must be an automaton or a rational expression");
     fi;
 
-    if not AlphabetOfAutomaton(a1) = AlphabetOfAutomaton(a2) then
+    if not AlphabetOfAutomatonAsList(a1) = AlphabetOfAutomatonAsList(a2) then
         Error("A1 and A2 must have the same alphabet");
     fi;
 
@@ -788,7 +788,7 @@ InstallGlobalFunction(ProductOfLanguages, function(a1, a2)
 
     A := MinimalAutomaton(A);
     A := RemovedSinkStates(A);
-    FamilyObj(A)!.alphabet := AlphabetOfAutomaton(a1);
+    FamilyObj(A)!.alphabet := AlphabetOfAutomatonAsList(a1);
     return(A);
 end);
 
