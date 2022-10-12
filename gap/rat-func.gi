@@ -144,7 +144,7 @@ InstallGlobalFunction(IsContainedLang, function(L1,L2)
         elif RemInt(s,n2) = 0 then
             p := QuoInt(s,n2);
             q := n2;
-        fi;  ## s corrensponds to (p,q) via a certain bijection (used in ProductAutomaton)
+        fi;  ## s corresponds to (p,q) via a certain bijection (used in ProductAutomaton)
         if p in A1!.accepting and not q in A2!.accepting then
             return false;
         fi;

@@ -28,7 +28,7 @@ DeclareGlobalFunction( "PermutationsOfN" );
 ##  different output for RandomAutomaton. In fact, the probability
 ##  of RandomAutomaton("det",3,2) output the same result between
 ##  two different GAP sessions is 1/factor. We defined factor = 521,
-##  but it can be raised, only at the expence of delay in the start
+##  but it can be raised, only at the expense of delay in the start
 ##  of the GAP session.
 ##
 DeclareGlobalFunction( "RandomizeRandomState" );

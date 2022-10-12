@@ -89,13 +89,13 @@ DeclareGlobalFunction( "WriteDotFileForGraph" );
 #############################################################################
 ##
 #F  DotStringForDrawingGraph( <G> ) . . . . . . . . . . . 
-## ouputs a string consisting of dot code for a graph
+## outputs a string consisting of dot code for a graph
 ##
 DeclareGlobalFunction( "DotStringForDrawingGraph" );
 #############################################################################
 ##
 #F  DotStringForDrawingAutomaton( <G> ) . . . . . . . . . . . 
-## ouputs a string consisting of dot code for a graph
+## outputs a string consisting of dot code for a graph
 ##
 DeclareGlobalFunction( "DotStringForDrawingAutomaton" );
 ############################################################################

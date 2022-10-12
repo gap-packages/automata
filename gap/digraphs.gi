@@ -19,7 +19,7 @@
 ## Example: G := [[2,4],[3],[1,4],[]];
 ##
 ## Length(G) is the number of vertices of G. G[i] is the list of endpoints
-## of the edges begining in vertex i.
+## of the edges beginning in vertex i.
 ##
 #############################################################################
 ##

@@ -2,7 +2,7 @@
 ##
 #A  testall.tst        automata package                   
 ##                                                    
-##  (based on the cooresponding file of the 'example' package, 
+##  (based on the corresponding file of the 'example' package, 
 ##   by Alexander Konovalov) 
 ##
 ##  To create a test file, place GAP prompts, input and output exactly as
@@ -50,7 +50,7 @@ n*
 #############################################################################
 #############################################################################
 # Examples from the manual
-# (These examples use at least a funtion from each file)
+# (These examples use at least a function from each file)
 
 #automata.xml
 #
