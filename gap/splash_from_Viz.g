@@ -101,13 +101,7 @@ if not IsBound(Splash) then
     if IsBound(opt.filetype) then
       filetype := opt.filetype;
     else
-       if ARCH_IS_UNIX( ) then
-        filetype := "pdf";
-      elif ARCH_IS_WINDOWS( ) then
-       filetype := "pdf";
-      elif ARCH_IS_MAC_OS_X( ) then
-        filetype := "svg";
-      fi;
+      filetype := "pdf";
     fi;  
     ######################
     if tikz or dotstring{[1..5]}="%tikz" then
