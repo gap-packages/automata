@@ -1,7 +1,7 @@
 #############################################################################
 ##
 ##
-#W  miscelaneous.gi                       Manuel Delgado <mdelgado@fc.up.pt>
+#W  miscellaneous.gi                      Manuel Delgado <mdelgado@fc.up.pt>
 #W                                        Jose Morais    <josejoao@fc.up.pt>
 ##
 ##
