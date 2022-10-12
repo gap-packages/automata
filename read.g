@@ -23,7 +23,7 @@ ReadPackage( "automata", "gap/digraphs.gi" );
 ReadPackage( "automata", "gap/drawgraph.gi" );
 ReadPackage( "automata", "gap/automata-display.gi" );
 ReadPackage( "automata", "gap/foldings.gi" );
-ReadPackage( "automata", "gap/miscelaneous.gi" );
+ReadPackage( "automata", "gap/miscellaneous.gi" );
 #
 ReadPackage( "automata", "gap/rat-def.gi" );
 ReadPackage( "automata", "gap/rat-func.gi" );
