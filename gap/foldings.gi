@@ -202,7 +202,7 @@ end);
 ##
 ## The second argument, when present, only has effect when it is <true>. 
 ## WARNING: It should only be used when facilities to draw automata are 
-## avaiable. In that case, one may visualize the identifications that 
+## available. In that case, one may visualize the identifications that 
 ## are taking place.
 ## 
 ## Makes Stallings foldings on the flower automaton <A>
@@ -448,7 +448,7 @@ end);
 ##
 #F GeodesicTreeOfInverseAutomatonWithInformation
 ##
-## Is an auxiliar function to the following functions
+## Is an auxiliary function to the following functions
 ## InverseAutomatonToGenerators and GeodesicTreeOfInverseAutomaton
 ##
 InstallGlobalFunction(GeodesicTreeOfInverseAutomatonWithInformation, function(A)
@@ -517,7 +517,7 @@ end);
 ##
 #F InverseAutomatonToGenerators
 ##
-## returns a set of generators (given trough the representation above) of the 
+## returns a set of generators (given through the representation above) of the 
 ## subgroup of the free group corresponding to the automaton given. 
 ##
 InstallGlobalFunction(InverseAutomatonToGenerators, function(A)

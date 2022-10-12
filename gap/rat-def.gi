@@ -52,7 +52,7 @@ end );
 ##
 #GF RatExpOnnLetters
 ##
-## Contructs a rational expression on n letters. See example above.
+## Constructs a rational expression on n letters. See example above.
 ##
 InstallGlobalFunction( RatExpOnnLetters, function( n, operation, list )
 

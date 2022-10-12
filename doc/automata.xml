@@ -172,7 +172,7 @@ true
 
 The way  &GAP; displays an automaton is quite natural, but when one wants to 
 do small changes, for example using <E>copy/paste</E>, the use of the function 
-<C>String</C> (possibly followed by <C>Print</C>) may be usefull.
+<C>String</C> (possibly followed by <C>Print</C>) may be useful.
 <Example><![CDATA[
 gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
 gap> String(x);
@@ -377,7 +377,7 @@ gap> NumberStatesOfAutomaton(aut);
 
 
 <Section><Heading>Comparison of automata</Heading>
-Although there is no standard way to compare automata it is usefull to be able to do some kind of comparison. Doing so, one can consider sets of automata.
+Although there is no standard way to compare automata it is useful to be able to do some kind of comparison. Doing so, one can consider sets of automata.
  We just compare the strings of the automata.
 <Log>
 gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;

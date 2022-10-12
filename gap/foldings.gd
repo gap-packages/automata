@@ -82,7 +82,7 @@ DeclareGlobalFunction( "AddInverseEdgesToInverseAutomaton" );
 ##
 #F GeodesicTreeOfInverseAutomatonWithInformation
 ##
-## Is an auxiliar function to the following functions
+## Is an auxiliary function to the following functions
 ## InverseAutomatonToGenerators and GeodesicTreeOfInverseAutomaton
 ##
 DeclareGlobalFunction( "GeodesicTreeOfInverseAutomatonWithInformation" );
@@ -99,7 +99,7 @@ DeclareGlobalFunction( "GeodesicTreeOfInverseAutomaton" );
 ##
 #F InverseAutomatonToGenerators
 ##
-## returns a set of generators (given trough the representation above) of the 
+## returns a set of generators (given through the representation above) of the 
 ## subgroup of the free group corresponding to the automaton given. 
 ##
 DeclareGlobalFunction( "InverseAutomatonToGenerators" );
