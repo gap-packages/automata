@@ -152,7 +152,7 @@ end);
 ##
 #F DotStringForDrawingAutomaton
 ##
-## ouputs a string consisting of dot code for an automaton
+## outputs a string consisting of dot code for an automaton
 ##
 #### the code is based on the code for the outdated function WriteDotFileForGraph
 ## A is an automaton, map a list of states names and states_to_colorize 
@@ -302,7 +302,7 @@ end);
 ##
 #F  DotStringForDrawingAutomaton( arg ) 
 ##
-##  ouputs a string consisting of dot code for an automaton
+##  outputs a string consisting of dot code for an automaton
 ##
 InstallGlobalFunction(DotStringForDrawingAutomaton, function(arg)
     local   A,  fich,  state_names,  states_to_colorize,  l,  s,  gv,  
@@ -327,7 +327,7 @@ end);
 #############################################################################
 ##
 #F  DotStringForDrawingGraph( <G> ) . . . . . . . . . . . 
-## ouputs a string consisting of dot code for a graph
+## outputs a string consisting of dot code for a graph
 ## 
 ## 
 InstallGlobalFunction(DotStringForDrawingGraph, function(G)
@@ -498,7 +498,7 @@ end);
 #############################################################################
 ##
 #F  DotStringForDrawingSubAutomaton( <A> , <B> ) 
-## ouputs a string consisting of dot code for automaton B and showing A as a subautomaton.
+## outputs a string consisting of dot code for automaton B and showing A as a subautomaton.
 ##
 InstallGlobalFunction(DotStringForDrawingSubAutomaton, function(arg)
   local  A, B, fich, a, q, k, dotstr;

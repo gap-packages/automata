@@ -122,7 +122,7 @@ Accepting state: [ 1 ]
 <ManSection> 
 <Func Name="InverseAutomatonToGenerators" Arg="A"/>
 <Description>
-Returns a set of generators (given trough the representation above) of the 
+Returns a set of generators (given through the representation above) of the 
 subgroup of the free group corresponding to the automaton <C>A</C> given.
 <Example><![CDATA[
 gap> NW := InverseAutomatonToGenerators(A);

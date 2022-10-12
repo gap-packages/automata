@@ -565,7 +565,7 @@ InstallGlobalFunction(NormalizedAutomaton, function(A)
         Error("The argument must be a deterministic automaton");
     fi;
 
-    comp_list := function(ls, re)# auxiliar function 
+    comp_list := function(ls, re)# auxiliary function 
         # ls is a list with holes with length q; 
         # re is a list
         # with as many elements as the holes in ls
