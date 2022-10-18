@@ -117,7 +117,7 @@ InstallGlobalFunction( Automaton, function(Type, Size, Alphabet,
     elif not IsList(ListAccepting) then
         Error("The accepting states must be provided as a list");
     elif (Length(TransitionTable) <> Alphabet) then
-        Error("The number of rows of the transition table matrix must equal the size of the alphabet");
+        Error("The number of rows of the transition table must equal the size of the alphabet");
     fi;
 
     #The type of the automaton: deterministic or not must be given
