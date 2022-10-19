@@ -926,6 +926,16 @@ gap> y:=Automaton("nondet",3,2,[[,[1,3],],[,[2,3],[1,3]]],[1,2],[1,3]);;
 gap> UnionAutomata(x,y);
 < non deterministic automaton on 2 letters with 6 states >
 
+gap> x:=Automaton("epsilon",3,"01@",[[,[2],[3]],[[1,3],,[1]],[[1],[2],[2]]],[2],[2,3]);;
+gap> y:=Automaton("nondet",3,2,[[,[1,3],],[,[2,3],[1,3]]],[1,2],[1,3]);;
+gap> UnionAutomata(x,y);
+< epsilon automaton on 3 letters with 6 states >
+
+gap> x:=Automaton("epsilon",3,"01@",[[,[2],[3]],[[1,3],,[1]],[[1],[2],[2]]],[2],[2,3]);;
+gap> y:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+gap> UnionAutomata(x,y);
+< epsilon automaton on 3 letters with 6 states >
+
 
 gap> STOP_TEST( "testall.tst", 10000 );
 ## The first argument of STOP_TEST should be the name of the test file.
