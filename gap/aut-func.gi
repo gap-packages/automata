@@ -944,7 +944,7 @@ InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
     i := 1;
     t1 := a1!.transitions;
     t2 := a2!.transitions;
-    t := List( [ 1 .. m ], function ( x ) return [  ]; end );
+    t := List( [ 1 .. m ], x -> [  ] );
 
     while i <= Length( states ) do
     	st := states[i];
