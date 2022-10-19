@@ -917,6 +917,47 @@ gap> UnionAutomata(a1,a2);
 Error, The arguments must be two automata over the same alphabet
 
 
+gap> A := Automaton("nondet",5,"abc",[ [ [ 2, 3 ], [ 5 ], [ 1, 4, 5 ], [ 1, 5 ], [ 3, 4 ] ], [ [ 1, 4, 5 ], [ ], [ 1 ], [ 1, 3, 5 ], [ 1, 2, 5 ] ], [ [ ], [ 2, 4, 5 ], [ 1, 3, 5 ], [ ], [ 2, 3, 4 ] ] ],[ ],[ 2, 3, 4 ]);;
+gap> B := Automaton("nondet",5,"abc",[ [ [ 2, 3 ], [ 5 ], [ 1, 4, 5 ], [ 1, 5 ], [ 3, 4 ] ], [ [ 1, 4, 5 ], [ ], [ 1 ], [ 1, 3, 5 ], [ 1, 2, 5 ] ], [ [ 1, 4, 5 ], [ 2, 4, 5 ], [ 1, 3, 5 ], [ 2, 3, 4, 5 ], [ 2, 3, 4 ] ] ],[ 3, 4, 5 ],[ 2, 3, 4 ]);;
+gap> C:=IntersectionAutomaton(A,B);;
+gap> Display(C);
+   |  1  2  3  4  5
+--------------------
+ a |  2  4  4  4  4
+ b |  3  4  5  4  4
+ c |  4  4  4  4  4
+Initial state:   [ 1 ]
+Accepting state: [  ]
+
+gap> a1:=RationalExpression("(bUcUd)*ab*");
+(bUcUd)*ab*
+gap> a2:=RationalExpression("(acUd)*(aU@)");
+(acUd)*(aU@)
+gap> IntersectionAutomaton(a1,a2);
+Error, The arguments must be two automata over the same alphabet
+
+gap> a2:=RationalExpression("(acUd)*(aUb)");
+(acUd)*(aUb)
+gap> IntersectionAutomaton(a1,a2);
+< epsilon automaton on 5 letters with 9 states >
+
+gap> UnionAutomata(a1,a2);
+Error, The arguments must be two automata
+gap> a1:=RatExpToAut(RationalExpression("(bUcU@)*ab*"));
+< deterministic automaton on 3 letters with 3 states >
+gap> a2:=RatExpToAut(RationalExpression("(acUd)*(@Ub)"));
+< deterministic automaton on 4 letters with 4 states >
+gap> UnionAutomata(a1,a2);
+Error, The arguments must be two automata over the same alphabet
+
+gap> a1:=RatExpToAut(RationalExpression("(bUcU@)*ab*"));
+< deterministic automaton on 3 letters with 3 states >
+gap> a2:=RatExpToAut(RationalExpression("(acUd)*(@Ub)"));
+< deterministic automaton on 4 letters with 4 states >
+gap> UnionAutomata(a1,a2);
+Error, The arguments must be two automata over the same alphabet
+
+
 gap> STOP_TEST( "testall.tst", 10000 );
 ## The first argument of STOP_TEST should be the name of the test file.
 ## The number is a proportionality factor that is used to output a 
