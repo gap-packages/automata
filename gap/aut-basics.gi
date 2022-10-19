@@ -605,46 +605,58 @@ end);
 ## Produces the disjoint union of the automata A and B
 ##
 InstallGlobalFunction(UnionAutomata, function(A, B)
-    local   QA,  T,  a,  i,  I,  F;
-
-    if not (IsAutomatonObj(A) and IsAutomatonObj(B)) then
-        Error("The arguments must be two automata");
+    local  QA, T, a, i, I, F, mA,mB;
+    
+    if not (IsAutomatonObj( A ) and IsAutomatonObj( B ))  then
+    	Error( "The arguments must be two automata" );
     fi;
-    if A!.type = "nondet" then
-        A := NFAtoDFA(A);
-    fi;
+    
     if A!.type = "epsilon" then
-        A := NFAtoDFA(EpsilonToNFA(A));
-    fi;
-    if B!.type = "nondet" then
-        B := NFAtoDFA(B);
+    	mA := AlphabetOfAutomaton(A)-1;
+    else	
+    	mA := AlphabetOfAutomaton(A);
     fi;
     if B!.type = "epsilon" then
-        B := NFAtoDFA(EpsilonToNFA(B));
+    	mB := AlphabetOfAutomaton(B)-1;
+    else	
+    	mB := AlphabetOfAutomaton(B);
     fi;
-    if not AlphabetOfAutomatonAsList(A) = AlphabetOfAutomatonAsList(B) then
-        Error("The arguments must be two automata over the same alphabet");
+    if mA <> mB then
+    	Error( "The arguments must be two automata over the same alphabet" );
     fi;
-
+    
     QA := A!.states;
-    T := StructuralCopy(A!.transitions);
-    for a in [1 .. B!.alphabet] do
-        for i in [1 .. B!.states] do
-            if B!.transitions[a][i] = 0 then
-                T[a][QA + i] := 0;
-            else
-                T[a][QA + i] := QA + B!.transitions[a][i];
-            fi;
-        od;
-    od;    
-    I := ShallowCopy(A!.initial);
-    Add(I, QA + B!.initial[1]);
-    F := ShallowCopy(A!.accepting);
-    for i in B!.accepting do
-        Add(F, QA + i);
+    T := List( A!.transitions, ShallowCopy );
+    if A!.type <> "epsilon" and B!.type = "epsilon" then
+    	Add(T,[]);
+    fi;	
+    
+    for a  in [ 1 .. B!.alphabet ]  do
+    	for i  in [ 1 .. B!.states ]  do
+    		if B!.transitions[a][i] = 0  then
+    			T[a][QA + i] := 0;
+    		else
+    			T[a][QA + i] := QA + B!.transitions[a][i];
+    		fi;
+    	od;
     od;
-    return(Automaton("nondet", QA + B!.states, AlphabetOfAutomatonAsList(A), T, I, F));
-end);
+    if A!.type = "epsilon" and B!.type <> "epsilon" then
+    	for i in [1..B!.states] do
+    		Add(T[mA+1],0);
+    	od;
+    fi;	
+    I := ShallowCopy( A!.initial );
+    Append( I, QA + B!.initial );
+    
+    F := ShallowCopy( A!.accepting );
+    Append( F, QA + B!.accepting );
+    
+    if A!.type = "epsilon" or B!.type = "epsilon" then
+    	return Automaton( "epsilon", QA + B!.states, mA+1, T, I, F );
+    else
+    	return Automaton( "nondet", QA + B!.states, AlphabetOfAutomatonAsList( A ), T, I, F );
+    fi;
+end ); 
 
 #############################################################################
 ##
