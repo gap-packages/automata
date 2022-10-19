@@ -888,19 +888,6 @@ Accepting state: [ 1 ]
 gap> NW := InverseAutomatonToGenerators(A);
 [ 2, "baBA", "bbA" ]
 
-
-gap> A := Automaton("nondet",5,"abc",[ [ [ 2, 3 ], [ 5 ], [ 1, 4, 5 ], [ 1, 5 ], [ 3, 4 ] ], [ [ 1, 4, 5 ], [ ], [ 1 ], [ 1, 3, 5 ], [ 1, 2, 5 ] ], [ [ ], [ 2, 4, 5 ], [ 1, 3, 5 ], [ ], [ 2, 3, 4 ] ] ],[ ],[ 2, 3, 4 ]);;
-gap> B := Automaton("nondet",5,"abc",[ [ [ 2, 3 ], [ 5 ], [ 1, 4, 5 ], [ 1, 5 ], [ 3, 4 ] ], [ [ 1, 4, 5 ], [ ], [ 1 ], [ 1, 3, 5 ], [ 1, 2, 5 ] ], [ [ 1, 4, 5 ], [ 2, 4, 5 ], [ 1, 3, 5 ], [ 2, 3, 4, 5 ], [ 2, 3, 4 ] ] ],[ 3, 4, 5 ],[ 2, 3, 4 ]);;
-gap> C:=IntersectionAutomaton(A,B);;
-gap> Display(C);
-   |  1  2  3  4  5
---------------------
- a |  2  4  4  4  4
- b |  3  4  5  4  4
- c |  4  4  4  4  4
-Initial state:   [ 1 ]
-Accepting state: [  ]
-
 gap> a1:=RationalExpression("(bUcUd)*ab*");
 (bUcUd)*ab*
 gap> a2:=RationalExpression("(acUd)*(aU@)");
