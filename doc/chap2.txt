@@ -174,7 +174,7 @@
   
   [33X[0;0YThe way [5XGAP[105X displays an automaton is quite natural, but when one wants to do
   small  changes, for example using [13Xcopy/paste[113X, the use of the function [10XString[110X
-  (possibly followed by [10XPrint[110X) may be usefull.[133X
+  (possibly followed by [10XPrint[110X) may be useful.[133X
   
   [4X[32X  Example  [32X[104X
     [4X[25Xgap>[125X [27Xx:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;[127X[104X
@@ -368,7 +368,7 @@
   
   [1X2.3 [33X[0;0YComparison of automata[133X[101X
   
-  [33X[0;0YAlthough  there  is  no standard way to compare automata it is usefull to be
+  [33X[0;0YAlthough  there  is  no standard way to compare automata it is useful to be
   able  to  do  some  kind  of  comparison. Doing so, one can consider sets of
   automata. We just compare the strings of the automata.[133X
   

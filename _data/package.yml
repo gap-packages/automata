@@ -1,5 +1,6 @@
 name: Automata
-version: 1.15
+version: "1.15"
+license: "GPL-2.0-or-later"
 date: 2022-03-20
 description: |
     A package on automata
