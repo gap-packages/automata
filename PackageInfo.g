@@ -22,6 +22,22 @@ Persons := [
     Institution   := "Faculdade de Ciências"
   ),
   rec(
+    LastName      := "Hoffmann",
+    FirstNames    := "Ruth",
+    IsAuthor      := false,
+    IsMaintainer  := true,
+    Email         := "rh347@st-andrews.ac.uk",
+    WWWHome       := "https://research-portal.st-andrews.ac.uk/en/persons/ruth-hoffmann",
+    PostalAddress := Concatenation(
+                       "School of Computer Science\n",
+                       "University of St Andrews\n",
+                       "Jack Cole Building, North Haugh\n",
+                       "St Andrews, Fife, KY16 9SX\n",
+                       "United Kingdom" ),
+    Place         := "St. Andrews",
+    Institution   := "School of Computer Science, University of St. Andrews"
+  ),
+  rec(
     LastName      := "Linton",
     FirstNames    := "Steve",
     IsAuthor      := true,
