@@ -888,6 +888,74 @@ Accepting state: [ 1 ]
 gap> NW := InverseAutomatonToGenerators(A);
 [ 2, "baBA", "bbA" ]
 
+gap> a1:=RationalExpression("(bUcUd)*ab*");
+(bUcUd)*ab*
+gap> a2:=RationalExpression("(acUd)*(aU@)");
+(acUd)*(aU@)
+gap> IntersectionAutomaton(a1,a2);
+Error, The arguments must be two automata over the same alphabet
+
+gap> a2:=RationalExpression("(acUd)*(aUb)");
+(acUd)*(aUb)
+gap> IntersectionAutomaton(a1,a2);
+< epsilon automaton on 5 letters with 9 states >
+
+gap> UnionAutomata(a1,a2);
+Error, The arguments must be two automata
+gap> a1:=RatExpToAut(RationalExpression("(bUcU@)*ab*"));
+< deterministic automaton on 3 letters with 3 states >
+gap> a2:=RatExpToAut(RationalExpression("(acUd)*(@Ub)"));
+< deterministic automaton on 4 letters with 4 states >
+gap> UnionAutomata(a1,a2);
+Error, The arguments must be two automata over the same alphabet
+
+gap> a1:=RatExpToAut(RationalExpression("(bUcU@)*ab*"));
+< deterministic automaton on 3 letters with 3 states >
+gap> a2:=RatExpToAut(RationalExpression("(acUd)*(@Ub)"));
+< deterministic automaton on 4 letters with 4 states >
+gap> UnionAutomata(a1,a2);
+Error, The arguments must be two automata over the same alphabet
+
+gap> x:=Automaton("epsilon",3,"01@",[[,[2],[3]],[[1,3],,[1]],[[1],[2],[2]]],[2],[2,3]);;
+gap> y:=Automaton("epsilon",3,"01@",[ [ [ 3 ], [ 1 ], [ 1, 2 ] ], [ [ ], [ ], [ 1, 3 ] ], [ [ 1, 3 ], [ 1 ], [ 3 ] ] ],[ 1, 2, 3 ],[ 1, 3 ]);;
+gap> UnionAutomata(x,y);
+< epsilon automaton on 3 letters with 6 states >
+gap> IntersectionAutomaton(x,y);
+< epsilon automaton on 3 letters with 3 states >
+
+gap> x:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+gap> y:=Automaton("nondet",3,2,[[,[1,3],],[,[2,3],[1,3]]],[1,2],[1,3]);;
+gap> UnionAutomata(x,y);
+< non deterministic automaton on 2 letters with 6 states >
+gap> UnionAutomata(y,x);
+< non deterministic automaton on 2 letters with 6 states >
+gap> IntersectionAutomaton(x,y);
+< epsilon automaton on 3 letters with 2 states >
+gap> IntersectionAutomaton(y,x);
+< epsilon automaton on 3 letters with 2 states >
+
+gap> x:=Automaton("epsilon",3,"01@",[[,[2],[3]],[[1,3],,[1]],[[1],[2],[2]]],[2],[2,3]);;
+gap> y:=Automaton("nondet",3,2,[[,[1,3],],[,[2,3],[1,3]]],[1,2],[1,3]);;
+gap> UnionAutomata(x,y);
+< epsilon automaton on 3 letters with 6 states >
+gap> UnionAutomata(y,x);
+< epsilon automaton on 3 letters with 6 states >
+gap> IntersectionAutomaton(x,y);
+< epsilon automaton on 3 letters with 3 states >
+gap> IntersectionAutomaton(y,x);
+< epsilon automaton on 3 letters with 3 states >
+
+gap> x:=Automaton("epsilon",3,"01@",[[,[2],[3]],[[1,3],,[1]],[[1],[2],[2]]],[2],[2,3]);;
+gap> y:=Automaton("det",3,2,[ [ 0, 2, 0 ], [ 0, 1, 0 ] ],[ 3 ],[ 2 ]);;
+gap> UnionAutomata(x,y);
+< epsilon automaton on 3 letters with 6 states >
+gap> UnionAutomata(y,x);
+< epsilon automaton on 3 letters with 6 states >
+gap> IntersectionAutomaton(x,y);
+< epsilon automaton on 3 letters with 1 states >
+gap> IntersectionAutomaton(y,x);
+< epsilon automaton on 3 letters with 1 states >
+
 
 gap> STOP_TEST( "testall.tst", 10000 );
 ## The first argument of STOP_TEST should be the name of the test file.

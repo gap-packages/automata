@@ -887,79 +887,133 @@ end);
 ##  expressions as arguments
 ##
 InstallGlobalFunction(IntersectionLanguage, function(a1,a2)
-    local   HashPair,  ht,  init,  states,  m,  i,  t1,  t2,  t,  st,  a,  
-            nst,  he,  finals,  p,  q;
+    local  HashPair, ht, init, states, m, s1, s2, t1, t2, t, i, st, a, x, y, nst, he,   finals, p, q, numofinitst,m1,m2;
 
-    if IsAutomaton(a1) then
-    elif IsRationalExpression(a1) then
-        a1 := RatExpToAut(a1);
+    if IsAutomaton( a1 )  then
+    	;
+    elif IsRationalExpression( a1 )  then
+    	a1 := RatExpToAut( a1 );
     else
-        Error("The first argument must be an automaton or a rational expression");
+    	Error( "The first argument must be an automaton or a rational expression" );
     fi;
-    if IsAutomaton(a2) then
-    elif IsRationalExpression(a2) then
-        a2 := RatExpToAut(a2);
+    if IsAutomaton( a2 )  then
+    	;
+    elif IsRationalExpression( a2 )  then
+    	a2 := RatExpToAut( a2 );
     else
-        Error("The second argument must be an automaton or a rational expression");
+    	Error( "The second argument must be an automaton or a rational expression" );
     fi;
 
-    if not AlphabetOfAutomatonAsList(a1) = AlphabetOfAutomatonAsList(a2) then
-        Error("A1 and A2 must have the same alphabet");
-    fi;
-
-    if a1!.type = "nondet" then
-        a1 := NFAtoDFA(a1);
-    fi;
-    if a2!.type = "nondet" then
-        a2 := NFAtoDFA(a2);
-    fi;
     if a1!.type = "epsilon" then
-        a1 := NFAtoDFA(EpsilonToNFA(a1));
+    	m1 := AlphabetOfAutomaton(a1)-1;
+    else    
+    	m1 := AlphabetOfAutomaton(a1);
     fi;
     if a2!.type = "epsilon" then
-        a2 := NFAtoDFA(EpsilonToNFA(a2));
+    	m2 := AlphabetOfAutomaton(a2)-1;
+    else    
+    	m2 := AlphabetOfAutomaton(a2);
     fi;
-    a1 := NullCompletionAut(a1);
-    a2 := NullCompletionAut(a2);
+    if m1 <> m2 then
+    	Error( "The arguments must be two automata over the same alphabet" );
+    fi;
 
-    HashPair := s->HashKeyBag(s,57,0,12);
+    if a1!.type <> "epsilon" then
+    	a1 := Automaton("epsilon", a1!.states, a1!.alphabet+1, Concatenation(a1!.transitions,   [ListWithIdenticalEntries(a1!.states,[])]), a1!.initial, a1!.accepting);
+    fi;
+    if a2!.type <> "epsilon" then
+    	a2 := Automaton("epsilon", a2!.states, a2!.alphabet+1, Concatenation(a2!.transitions,   [ListWithIdenticalEntries(a2!.states,[])]), a2!.initial, a2!.accepting);
+    fi;
 
-    ht := SparseHashTable(HashPair);
-    init := [a1!.initial[1],a2!.initial[1]];
-    AddHashEntry(ht,init,1);
-    states := [init];
+    HashPair := function ( s )
+    	return HashKeyBag( s, 57, 0, 3*GAPInfo.BytesPerVariable );
+    end;
+    ht := SparseHashTable( HashPair );
+    init := [ ];
+    for s1 in a1!.initial do
+    	for s2 in a2!.initial do
+    		Add(init, [ s1, s2 ]);
+    		AddHashEntry( ht, [ s1, s2 ], Length( init ) );
+    	od;
+    od;
+
+    numofinitst:=Length(init);
+
+    states := init;
     m := a1!.alphabet;
     i := 1;
     t1 := a1!.transitions;
     t2 := a2!.transitions;
-    t := List([1..m],x->[]);
-    while i <= Length(states) do
-        st := states[i];
-        for a in [1..m] do
-            nst := [t1[a][st[1]],t2[a][st[2]]];
-            MakeImmutable(nst);
-            he := GetHashEntry(ht,nst);
-            if he = fail then
-                Add(states,nst);
-                he := Length(states);
-                AddHashEntry(ht,nst,he);
-            fi;
-            t[a][i] := he;
-        od;
-        i := i+1;
-    od;
-    finals := [];
-    for p in a1!.accepting do
-        for q in a2!.accepting do
-            he := GetHashEntry(ht,[p,q]);
-            if he <> fail then
-                AddSet(finals,he);
-            fi;
-        od;
-    od;
-    return Automaton("det",Length(states),AlphabetOfAutomatonAsList(a1),t,[1],finals);
-end);
+    t := List( [ 1 .. m ], x -> [  ] );
 
+    while i <= Length( states ) do
+    	st := states[i];
+    	for a in [ 1 .. m ]  do
+            t[a][i] := [ ];
+    		if a = m then
+    			for x in t1[a][st[1]] do
+    				nst := [ x, st[2] ];
+    				MakeImmutable( nst );
+    				he := GetHashEntry( ht, nst );
+    				if he = fail  then
+    					Add( states, nst );
+    					he := Length( states );
+    					AddHashEntry( ht, nst, he );
+    				fi;
+    				Add(t[a][i], he);
+    			od;
+    			for x in t2[a][st[2]] do
+    				nst := [ st[1], x ];
+    				MakeImmutable( nst );
+    				he := GetHashEntry( ht, nst );
+    				if he = fail  then
+    					Add( states, nst );
+    					he := Length( states );
+    					AddHashEntry( ht, nst, he );
+    				fi;
+    				Add(t[a][i], he);
+    			od;
+    		else
+    	        for x in t1[a][st[1]] do
+        	        for y in t2[a][st[2]] do
+            	        nst := [ x, y ];
+                	    MakeImmutable( nst );
+    					he := GetHashEntry( ht, nst );
+                       	if he = fail  then
+    	                    Add( states, nst );
+        	                he := Length( states );
+            	            AddHashEntry( ht, nst, he );
+                        fi;
+                    	Add(t[a][i], he);
+    	            od;
+       	        od;
+    		fi;
+    	od;
+    	i := i + 1;
+    od;
+    finals := [  ];
+    for p in a1!.accepting  do
+    	for q in a2!.accepting  do
+            he := GetHashEntry( ht, [ p, q ] );
+            if he <> fail then
+                AddSet( finals, he );
+            fi;
+    	od;
+    od;
+
+    init := [ ];
+    for s1 in a1!.initial do
+    	for s2 in a2!.initial do
+    		he := GetHashEntry( ht, [ s1, s2 ] );
+    		if he <> fail then
+    			Add( init, he );
+    		fi;
+    	od;
+    od;
+
+    return Automaton( "epsilon", Length( states ), AlphabetOfAutomatonAsList( a1 ), t, [ 1 .. numofinitst ], finals );
+
+end );
 
 
 
