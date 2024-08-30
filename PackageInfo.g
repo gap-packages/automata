@@ -2,8 +2,8 @@ SetPackageInfo( rec(
 
 PackageName := "Automata",
 Subtitle := "A package on automata",
-Version := "1.15",
-Date := "20/03/2022", # dd/mm/yyyy format
+Version := "1.16",
+Date := "30/08/2024", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
 
 Persons := [
@@ -15,8 +15,10 @@ Persons := [
     Email         := "mdelgado@fc.up.pt",
     WWWHome       := "https://cmup.fc.up.pt/cmup/mdelgado/",
     PostalAddress := Concatenation( [
-                   "Departamento de Matemática - Faculdade de Ciências\n",
-                   "Porto\n",
+                   "CMUP, Departamento de Matemática\n",
+                   "Faculdade de Ciências, Universidade do Porto\n",
+                   "Rua do Campo Alegre s/n\n",
+                   "4169-007 Porto\n",
                    "Portugal" ] ),
     Place         := "Porto",
     Institution   := "Faculdade de Ciências"
