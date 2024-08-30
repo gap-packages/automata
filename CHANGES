@@ -1,6 +1,10 @@
                      -----------------------------------
                      | CHANGES of the Automata package |
                      -----------------------------------
+1.16 -> 1.16
+- Updates related to CI and Codecov (Thanks, Max)
+- Streamlined UnionAutomata and IntersectionAutomaton (Thanks, Ruth)
+
 1.14 -> 1.15
 - Switch CI to use GitHub Actions (Thanks Max)
 - Add Travis & Codecov support (Thanks Max)
