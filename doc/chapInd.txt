@@ -82,7 +82,7 @@
   [2XRatExpToAut[102X 4.2-2 
   [2XRatExpToAutomaton[102X 4.2-2 
   [2XRatExpToNDAut[102X 4.2-1 
-  rational expressions 3. 
+  rational expressions 3.0 
   [2XRationalExpression[102X 3.1-1 
   [2XReducedNFA[102X 5.1-4 
   [2XRemovedSinkStates[102X 2.5-4 

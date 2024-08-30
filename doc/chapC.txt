@@ -141,7 +141,7 @@
   
   [33X[1;0Y[29X[2XInverseAutomatonToGenerators[102X( [3XA[103X ) [32X function[133X
   
-  [33X[0;0YReturns  a  set of generators (given trough the representation above) of the
+  [33X[0;0YReturns  a set of generators (given through the representation above) of the
   subgroup of the free group corresponding to the automaton [10XA[110X given.[133X
   
   [4X[32X  Example  [32X[104X

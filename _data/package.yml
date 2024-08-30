@@ -1,7 +1,7 @@
 name: Automata
-version: "1.15"
+version: "1.16"
 license: "GPL-2.0-or-later"
-date: 2022-03-20
+date: 2024-08-30
 description: |
     A package on automata
 
@@ -15,6 +15,8 @@ authors:
 maintainers:
     - name: Manuel Delgado
       url: https://cmup.fc.up.pt/cmup/mdelgado/
+    - name: Ruth Hoffmann
+      url: https://research-portal.st-andrews.ac.uk/en/persons/ruth-hoffmann
     - name: Steve Linton
       url: http://www-groups.dcs.st-and.ac.uk/~sal/
 
@@ -23,7 +25,7 @@ GAP: ">=4.8"
 suggested-pkgs:
     - name: "GAPDoc"
       version: ">= 1.2"
-      url: "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc"
+      url: "https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc"
 
 www: https://gap-packages.github.io/automata/
 readme: README.md
@@ -31,40 +33,41 @@ packageinfo: https://gap-packages.github.io/automata/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/gap-packages/automata/releases/download/v1.15/automata-1.15.tar.gz
+      url: https://github.com/gap-packages/automata/releases/download/v1.16/automata-1.16.tar.gz
     - name: .tar.bz2
-      url: https://github.com/gap-packages/automata/releases/download/v1.15/automata-1.15.tar.bz2
+      url: https://github.com/gap-packages/automata/releases/download/v1.16/automata-1.16.tar.bz2
 
 abstract: |
     The <span class="pkgname">Automata</span> package, as its name suggests, is package with algorithms to deal with automata.
 
 status: accepted
-doc-html: doc/chap0.html
+doc-html: doc/chap0_mj.html
 doc-pdf: doc/manual.pdf
 keywords: |
     Automata, Rational Expressions.
 citeas: |
     <p class='BibEntry'>
-    [<span class='BibKey'>DLM22</span>]   <b class='BibAuthor'>Delgado, M., Linton, S. and Morais, J. J.</b>,
+    [<span class='BibKey'>DHLM24</span>]   <b class='BibAuthor'>Delgado, M., Hoffmann, R., Linton, S. and Morais, J. J.</b>,
      <i class='BibTitle'>Automata, A package on automata,
-             Version 1.15</i>
-     (<span class='BibYear'>2022</span>)<br />
-    (<span class='BibNote'>Refereed GAP package</span>),
+             Version 1.16</i>
+     (<span class='BibYear'>2024</span>)<br />
+    (<span class='BibNote'>GAP package</span>),
     <span class='BibHowpublished'><a href="https://gap-packages.github.io/automata/">https://gap-packages.github.io/automata/</a></span>.
     </p>
     
 
 bibtex: |
-    @misc{ Automata1.15,
-      author =           {Delgado, M. and Linton, S. and Morais, J. J.},
-      title =            {{Automata}, A package on automata, {V}ersion 1.15},
-      month =            {Mar},
-      year =             {2022},
-      note =             {Refereed GAP package},
+    @misc{ Automata,
+      author =           {Delgado,  M.  and  Hoffmann,  R.  and  Linton,  S. and
+                          Morais, J. J.},
+      title =            {{Automata}, A package on automata, {V}ersion 1.16},
+      month =            {Aug},
+      year =             {2024},
+      note =             {GAP package},
       howpublished =     {\href       {https://gap-packages.github.io/automata/}
-                          {\texttt{https://gap-packages.github.io/}\discretionary
+                          {\texttt{https://gap\texttt{\symbol{45}}packages.github.io/}\discretionary
                           {}{}{}\texttt{automata/}}},
       keywords =         {Automata; Rational Expressions},
-      printedkey =       {DLM22}
+      printedkey =       {DHLM24}
     }
 

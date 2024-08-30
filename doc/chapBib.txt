@@ -7,7 +7,7 @@
   
   [[20XDEG+02[120X]  [16XDobkin, D., Ellson, J., Gansner, E., Koutsofios, E., North, S. and
   Woodhull,  G.[116X,  [17XGraphviz - Graph Drawing Programs[117X, AT\&T Research and Lucent
-  Bell Labs (2002), (((https://www.graphviz.org))).
+  Bell Labs (2002), ((https://www.graphviz.org)).
   
   [[20XHU69[120X]  [16XHopcroft,  J.  E.  and  Ullman,  J.  D.[116X,  [17XFormal Languages and their
   Relation to Automata[117X, Addison-Wesley, Reading, Mass. (1969).

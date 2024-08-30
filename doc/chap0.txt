@@ -6,7 +6,7 @@
                             [1X A package on automata [101X
   
   
-                                  Version 1.14
+                                  Version 1.16
   
   
                                  Manuel Delgado
@@ -102,9 +102,10 @@
   grateful to Max Horn whose help made the release of Versions 1.14 and 1.15 a
   lot easier.[133X
   
-  [33X[0;0YSince  Version 1.12, the package is maintained by the first two authors. Bug
-  reports,  suggestions  and  comments are, of course, welcome. Please use our
-  email addresses to this effect.[133X
+  [33X[0;0YFrom  Version  1.12, the package is maintained by the first two authors, and
+  Ruth  Hoffmann  joined  the maintenance team from Version 1.16. Bug reports,
+  suggestions and comments are welcome. Please use our email addresses to this
+  effect.[133X
   
   
   -------------------------------------------------------

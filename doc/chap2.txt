@@ -368,7 +368,7 @@
   
   [1X2.3 [33X[0;0YComparison of automata[133X[101X
   
-  [33X[0;0YAlthough  there  is  no standard way to compare automata it is useful to be
+  [33X[0;0YAlthough  there  is  no  standard way to compare automata it is useful to be
   able  to  do  some  kind  of  comparison. Doing so, one can consider sets of
   automata. We just compare the strings of the automata.[133X
   

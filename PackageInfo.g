@@ -2,8 +2,8 @@ SetPackageInfo( rec(
 
 PackageName := "Automata",
 Subtitle := "A package on automata",
-Version := "1.15",
-Date := "20/03/2022", # dd/mm/yyyy format
+Version := "1.16",
+Date := "30/08/2024", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
 
 Persons := [
@@ -15,11 +15,29 @@ Persons := [
     Email         := "mdelgado@fc.up.pt",
     WWWHome       := "https://cmup.fc.up.pt/cmup/mdelgado/",
     PostalAddress := Concatenation( [
-                   "Departamento de Matemática - Faculdade de Ciências\n",
-                   "Porto\n",
+                   "CMUP, Departamento de Matemática\n",
+                   "Faculdade de Ciências, Universidade do Porto\n",
+                   "Rua do Campo Alegre s/n\n",
+                   "4169-007 Porto\n",
                    "Portugal" ] ),
     Place         := "Porto",
     Institution   := "Faculdade de Ciências"
+  ),
+  rec(
+    LastName      := "Hoffmann",
+    FirstNames    := "Ruth",
+    IsAuthor      := false,
+    IsMaintainer  := true,
+    Email         := "rh347@st-andrews.ac.uk",
+    WWWHome       := "https://research-portal.st-andrews.ac.uk/en/persons/ruth-hoffmann",
+    PostalAddress := Concatenation(
+                       "School of Computer Science\n",
+                       "University of St Andrews\n",
+                       "Jack Cole Building, North Haugh\n",
+                       "St Andrews, Fife, KY16 9SX\n",
+                       "United Kingdom" ),
+    Place         := "St. Andrews",
+    Institution   := "School of Computer Science, University of St. Andrews"
   ),
   rec(
     LastName      := "Linton",
@@ -82,7 +100,7 @@ AbstractHTML :=
 PackageDoc := rec(
   BookName  := "Automata",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/chap0.html",
+  HTMLStart := "doc/chap0_mj.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Automata, a GAP package for finite state automata",
