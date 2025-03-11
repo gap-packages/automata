@@ -104,7 +104,6 @@ PackageDoc := rec(
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Automata, a GAP package for finite state automata",
-#  Autoload  := true
 ),
 
 
@@ -118,7 +117,6 @@ Dependencies := rec(
 
 AvailabilityTest := ReturnTrue,
 
-Autoload := false,
 
 TestFile := "tst/testall.g",
 
