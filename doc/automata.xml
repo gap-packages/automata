@@ -51,8 +51,7 @@ In the case of non deterministic automata, lists of non-negative integers not
 greater than the size of the automaton are also allowed. <C>Initial</C>
 and <C>Accepting</C> are, respectively, the lists of initial and accepting
 states.  
-<Example>
-<![CDATA[
+<Example><![CDATA[
 gap> aut:=Automaton("det",4,2,[[3,,3,4],[3,4,0,4]],[1],[4]);
 < deterministic automaton on 2 letters with 4 states >
 gap> Display(aut);
@@ -62,8 +61,7 @@ gap> Display(aut);
  b |  3  4     4
 Initial state:   [ 1 ]
 Accepting state: [ 4 ]
-]]>
-</Example>
+]]></Example>
 The alphabet of the automaton may be specified:
 <Example><![CDATA[
 gap> aut:=Automaton("det",4,"01",[[3,,3,4],[3,4,0,4]],[1],[4]);
