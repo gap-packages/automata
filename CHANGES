@@ -1,7 +1,10 @@
                      -----------------------------------
                      | CHANGES of the Automata package |
                      -----------------------------------
-1.16 -> 1.16
+1.16 -> 1.17
+- some minor janitorial changes
+
+1.15 -> 1.16
 - Updates related to CI and Codecov (Thanks, Max)
 - Streamlined UnionAutomata and IntersectionAutomaton (Thanks, Ruth)
 
