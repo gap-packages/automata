@@ -108,15 +108,12 @@ PackageDoc := rec(
 
 
 Dependencies := rec(
-  GAP := ">=4.8",
+  GAP := ">=4.9",
   NeededOtherPackages := [],
   SuggestedOtherPackages := [],
-##  ExternalConditions := [["Graphviz","https://www.graphviz.org/"],["Evince","http://www.gnome.org/projects/evince/"]]
-
 ),
 
 AvailabilityTest := ReturnTrue,
-
 
 TestFile := "tst/testall.g",
 
