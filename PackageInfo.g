@@ -110,7 +110,7 @@ PackageDoc := rec(
 Dependencies := rec(
   GAP := ">=4.8",
   NeededOtherPackages := [],
-  SuggestedOtherPackages := [["GAPDoc", ">= 1.2"]],
+  SuggestedOtherPackages := [],
 ##  ExternalConditions := [["Graphviz","https://www.graphviz.org/"],["Evince","http://www.gnome.org/projects/evince/"]]
 
 ),
