@@ -1,128 +1,103 @@
+#############################################################################
+##  
+##  Demo PackageInfo.g for the GitHubPagesForGAP
+##
+
 SetPackageInfo( rec(
 
-PackageName := "Automata",
-Subtitle := "A package on automata",
-Version := "1.16",
-Date := "30/08/2024", # dd/mm/yyyy format
-License := "GPL-2.0-or-later",
+PackageName := "GitHubPagesForGAP",
+
+Subtitle := "A GitHub Pages generator for GAP packages",
+Version := "0.4",
+Date := "10/04/2025", # dd/mm/yyyy format
+License := "0BSD",
 
 Persons := [
   rec(
-    LastName      := "Delgado",
-    FirstNames    := "Manuel",
+    LastName      := "Horn",
+    FirstNames    := "Max",
     IsAuthor      := true,
     IsMaintainer  := true,
-    Email         := "mdelgado@fc.up.pt",
-    WWWHome       := "https://cmup.fc.up.pt/cmup/mdelgado/",
-    PostalAddress := Concatenation( [
-                   "CMUP, Departamento de Matemática\n",
-                   "Faculdade de Ciências, Universidade do Porto\n",
-                   "Rua do Campo Alegre s/n\n",
-                   "4169-007 Porto\n",
-                   "Portugal" ] ),
-    Place         := "Porto",
-    Institution   := "Faculdade de Ciências"
-  ),
-  rec(
-    LastName      := "Hoffmann",
-    FirstNames    := "Ruth",
-    IsAuthor      := false,
-    IsMaintainer  := true,
-    Email         := "rh347@st-andrews.ac.uk",
-    WWWHome       := "https://research-portal.st-andrews.ac.uk/en/persons/ruth-hoffmann",
+    Email         := "mhorn@rptu.de",
+    WWWHome       := "https://www.quendi.de/math",
+    GitHubUsername:= "fingolfin",
     PostalAddress := Concatenation(
-                       "School of Computer Science\n",
-                       "University of St Andrews\n",
-                       "Jack Cole Building, North Haugh\n",
-                       "St Andrews, Fife, KY16 9SX\n",
-                       "United Kingdom" ),
-    Place         := "St. Andrews",
-    Institution   := "School of Computer Science, University of St. Andrews"
+                       "Fachbereich Mathematik\n",
+                       "RPTU Kaiserslautern-Landau\n",
+                       "Gottlieb-Daimler-Straße 48\n",
+                       "67663 Kaiserslautern\n",
+                       "Germany" ),
+    Place         := "Kaiserslautern, Germany",
+    Institution   := "RPTU Kaiserslautern-Landau"
   ),
+
   rec(
-    LastName      := "Linton",
-    FirstNames    := "Steve",
-    IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "steve.linton@st-andrews.ac.uk",
-    WWWHome       := "http://www-groups.dcs.st-and.ac.uk/~sal/",
-    PostalAddress := Concatenation(
-                       "School of Computer Science\n",
-                       "University of St Andrews\n",
-                       "Jack Cole Building, North Haugh\n",
-                       "St Andrews, Fife, KY16 9SX\n",
-                       "United Kingdom" ),
-    Place         := "St. Andrews",
-    Institution   := "School of Computer Science, University of St. Andrews"
-  ),
-  rec(
-    LastName      := "Morais",
-    FirstNames    := "José João",
+    LastName      := "Thor",
+    FirstNames    := "A. U.",
     IsAuthor      := true,
     IsMaintainer  := false,
-#    Email         := "josejoao@fc.up.pt",
-#    WWWHome       := "",
-#    PostalAddress := Concatenation( [
-#                       "Jose Morais\n",
-#                       "Departamento de Matemática Pura\n",
-#                   "Faculdade de Ciências\n",
-#                   "Rua do Campo Alegre, 687\n",
-#                   "Porto\n",
-#                   "Portugal" ] ),
-    PostalAddress := "No address known"
-#    Place         := "Porto",
-#    Institution   := "Faculdade de Ciências"
-
+    #Email         := "author@example.com",
   ),
 
+  rec(
+    LastName      := "Itor",
+    FirstNames    := "Jan",
+    IsAuthor      := false,
+    IsMaintainer  := true,
+    #Email         := "janitor@example.com",
+  ),
 ],
 
-Status := "accepted",
-CommunicatedBy := "Edmund Robertson (St. Andrews)",
-AcceptDate := "09/2004",
+Status := "other",
 
-PackageWWWHome   := "https://gap-packages.github.io/automata/",
-README_URL       := Concatenation(~.PackageWWWHome, "README.md"),
-PackageInfoURL   := Concatenation(~.PackageWWWHome, "PackageInfo.g"),
-SourceRepository := rec(
-  Type := "git",
-  URL := "https://github.com/gap-packages/automata"
-),
-IssueTrackerURL  := Concatenation( ~.SourceRepository.URL, "/issues" ),
-ArchiveURL       := Concatenation( ~.SourceRepository.URL,
-                                  "/releases/download/v", ~.Version,
-                                  "/automata-", ~.Version),
-ArchiveFormats   := ".tar.gz .tar.bz2",
+# The following are not strictly necessary in your own PackageInfo.g
+# (in the sense that update.g only looks at the usual fields
+# like PackageWWWHome, ArchiveURL etc.). But they are convenient
+# if you use exactly the scheme for your package website that we propose.
+GithubUser := "gap-system",
+GithubRepository := ~.PackageName,
+GithubWWW := Concatenation("https://github.com/", ~.GithubUser, "/", ~.GithubRepository),
 
-AbstractHTML :=
-   "The <span class=\"pkgname\">Automata</span> package, as its name suggests, is package with algorithms to deal with automata.",
+PackageWWWHome := Concatenation("https://", ~.GithubUser, ".github.io/", ~.GithubRepository, "/"),
+README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
+PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
+# The following assumes you are using the Github releases system. If not, adjust
+# it accordingly.
+ArchiveURL     := Concatenation(~.GithubWWW,
+                    "/releases/download/v", ~.Version, "/",
+                    ~.GithubRepository, "-", ~.Version),
+
+ArchiveFormats := ".tar.gz .tar.bz2",
+
+AbstractHTML := 
+  "This is a pseudo package that contains no actual\
+  <span class=\"pkgname\">GAP</span> code. Instead, it is a template for other\
+  GAP packages that allows to quickly setup GitHub Pages.",
 
 PackageDoc := rec(
-  BookName  := "Automata",
+  BookName  := "GitHubPagesForGAP",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/chap0_mj.html",
+  HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
-  LongTitle := "Automata, a GAP package for finite state automata",
-#  Autoload  := true
+  LongTitle := "A GitHub Pages generator for GAP packages",
 ),
 
-
+# The following dependencies are fake and for testing / demo purposes
 Dependencies := rec(
-  GAP := ">=4.8",
-  NeededOtherPackages := [],
-  SuggestedOtherPackages := [["GAPDoc", ">= 1.2"]],
-##  ExternalConditions := [["Graphviz","https://www.graphviz.org/"],["Evince","http://www.gnome.org/projects/evince/"]]
-
+  GAP := ">=4.8.1",
+  NeededOtherPackages := [
+    ["GAPDoc", ">= 1.2"],
+    ["IO", ">= 4.1"],
+  ],
+  SuggestedOtherPackages := [["orb", ">= 4.2"]],
+  ExternalConditions := []
 ),
 
 AvailabilityTest := ReturnTrue,
 
-Autoload := false,
-
-TestFile := "tst/testall.g",
-
-Keywords := ["Automata", "Rational Expressions"]
-
+Keywords := ["GitHub Pages", "GAP"]
 
 ));
+
+
