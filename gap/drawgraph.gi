@@ -11,56 +11,6 @@
 ##  to display the graphs.
 ############################################################################
 
-#Siegen
-# ############################################################################
-# ##
-# #F  SetDrawingsExtraFormat(f)
-# ##
-# ##  This function sets the value of DrawingsExtraFormat to <f>.
-# ##
-# InstallGlobalFunction(SetDrawingsExtraFormat, function(f)
-#     if not f in DrawingsListOfExtraFormats then
-#         Print("The specified format is not valid.\nThe valid formats are:\n", DrawingsListOfExtraFormats, ".\nPlease check  https://www.graphviz.org/doc/info/output.html\nfor more info.\n");
-#         return;
-#     fi;
-#     MakeReadWriteGlobal("DrawingsExtraFormat");
-#     DrawingsExtraFormat := f;
-#     MakeReadOnlyGlobal("DrawingsExtraFormat");
-# end);
-
-
-# ############################################################################
-# ##
-# #F  SetDrawingsExtraGraphAttributes(L)
-# ##
-# ##  This function sets the value of DrawingsExtraGraphAttributes to <L>.
-# ##  For example if we wanted to define the graph size to be 7x9, we would call
-# ##  SetDrawingsExtraGraphAttributes(["size=7,9"]);
-# ##
-# InstallGlobalFunction(SetDrawingsExtraGraphAttributes, function(L)
-#     if not (IsList(L) and ForAll(L, l -> IsString(l))) then
-#         Error("The argument must be a list of strings");
-#     fi;
-#     MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
-#     DrawingsExtraGraphAttributes := L;
-#     MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
-# end);
-
-# ############################################################################
-# ##
-# #F  ClearDrawingsExtraGraphAttributes()
-# ##
-# ##  This function sets DrawingsExtraGraphAttributes to "none"
-# ##  Thus indicating that the graph should be drawn with dot's default parameters.
-# ##
-# InstallGlobalFunction(ClearDrawingsExtraGraphAttributes, function()
-#     MakeReadWriteGlobal("DrawingsExtraGraphAttributes");
-#     DrawingsExtraGraphAttributes := "none";
-#     MakeReadOnlyGlobal("DrawingsExtraGraphAttributes");
-# end);
-
-
-
 
 #========================================================================
 # This function parses the arguments for the functions DrawAutomaton and DrawSCCAutomaton.
@@ -154,10 +104,7 @@ end);
 ##
 ## outputs a string consisting of dot code for an automaton
 ##
-#### the code is based on the code for the outdated function WriteDotFileForGraph
 ## A is an automaton, map a list of states names and states_to_colorize 
-
-  
     
 #========================================================================
 # This function writes the .dot file specifying a graph.
@@ -168,46 +115,52 @@ end);
 # who_called = 2  --->  DrawSCCAutomaton
 #------------------------------------------------------------------------
 InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_colorize, who_called)
-  local  alph, letters, edge_colors, node_colors, T, str, out_str, scc, G, p, 
+  local  alph, letters, colors, T, str, out_str, scc, G, p, 
          q, a, color_of_node, k;
-    
-    alph := AlphabetOfAutomaton(A);   
-    
-    # When the alphabet has more than 27 letters, they are given in the form
-    if IsList(AlphabetOfAutomatonAsList(A)[1]) then
-        letters := AlphabetOfAutomatonAsList(A);
-    else
-        letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
-    fi;
-    
-    edge_colors := ["red", "blue", "green", "purple", "orange", "brown", "darksalmon", "darkseagreen", "darkturquoise",
-                    "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick", "forestgreen", "gold"];
-    
-    if alph > 16 then
-        edge_colors := List([1 .. alph], i -> edge_colors[(i mod 16) + 1]);#to reuse colors
-    fi;
-    
-    node_colors := [ "white", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
-                     "crimson", "cyan", "darkgoldenrod", "darkkhaki", "darkorange", "darkorchid", "darksalmon", 
-                     "darkseagreen", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick",
-                     "forestgreen", "gold", "goldenrod", "green", "greenyellow", "grey", "hotpink", "indianred", "khaki", 
-                     "lawngreen", "lightblue", "lightcoral", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", 
-                     "lightslateblue", "lightslategrey", "limegreen", "magenta", "maroon", "mediumaquamarine", "mediumorchid", 
-                     "mediumpurple", "mediumseagreen", "mediumspringgreen", "mediumturquoise", "mediumvioletred",
-                     "moccasin", "navajowhite", "olivedrab2", "orange", "orangered", "orchid", "palegreen", "paleturquoise", 
-                     "palevioletred", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue1", 
-                     "saddlebrown", "salmon", "sandybrown", "seagreen", "skyblue", "slateblue", "slategrey", "springgreen", 
-                     "steelblue", "tan", "thistle", "tomato", "turquoise", "violet", "violetred", "wheat", "yellow", "yellowgreen" ];
-
-#    tdir := CMUP__getTempDir();
-#    name := Filename(tdir, Concatenation(fich, ".dot"));
 
     # ---------------------------------------------------------------------------------
+    # List of Colors
+    colors := [ "red", "blue", "green", "purple", "orange", "brown", "darksalmon", "darkseagreen", "darkturquoise",
+                "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick", "forestgreen", "gold",
+                "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
+                "crimson", "cyan", "darkgoldenrod", "darkkhaki", "darkorange", "darkorchid", "darksalmon", 
+                "darkseagreen", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick",
+                "forestgreen", "gold", "goldenrod", "green", "greenyellow", "grey", "hotpink", "indianred", "khaki", 
+                "lawngreen", "lightblue", "lightcoral", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", 
+                "lightslateblue", "lightslategrey", "limegreen", "magenta", "maroon", "mediumaquamarine", "mediumorchid", 
+                "mediumpurple", "mediumseagreen", "mediumspringgreen", "mediumturquoise", "mediumvioletred",
+                "moccasin", "navajowhite", "olivedrab2", "orange", "orangered", "orchid", "palegreen", "paleturquoise", 
+                "palevioletred", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue1", 
+                "saddlebrown", "salmon", "sandybrown", "seagreen", "skyblue", "slateblue", "slategrey", "springgreen", 
+                "steelblue", "tan", "thistle", "tomato", "turquoise", "violet", "violetred", "wheat", "yellow", "yellowgreen" ];
 
-    T := StructuralCopy(A!.transitions);
-    str := "digraph  Automaton{\n";  # the string that will hold the code of the .dot file
-    out_str := OutputTextString(str, true);
-    
+
+    # Setting up Graphviz Environment
+    f := GraphvizDigraph("Automaton");
+    GraphvizSetAttrs(f, rec(rankdir:="LR", size:="\"8,5\"", layout:="dot"));
+
+    # Extracting all info from automaton
+    accepting := FinalStatesOfAutomaton(A);
+    initial := InitialStatesOfAutomaton(A);
+    T := TransitionMatrixOfAutomaton(A);
+    alph := AlphabetOfAutomatonAsList(A);
+
+    # Draw the initial states
+    for i in initial do
+        GraphvizSetAttrs(GraphvizAddNode(f, Concatenation("in",String(i)) ), rec(shape:="none", label:="\"\""));
+        GraphvizAddNode(f, String(i));
+        GraphvizAddEdge(f, Concatenation("in",String(i)), String(i));
+        for j in [1 .. aut!.states] do  
+            GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(j)), "style","invis");
+        od;
+    od;
+
+    # Draw the accepting/final states.
+    accepting := FinalStatesOfAutomaton(aut);
+    for i in accepting do
+        GraphvizSetAttr(GraphvizAddNode(f, String(i)),"shape","doublecircle");
+    od;
+
     # ---------------------------------------------------------------------------------
     # If we were called by DrawSCCAutomaton, determine the edges to be drawn with dotted lines
     if who_called = 2 then
@@ -219,78 +172,59 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
             od;
         od;
     fi;
-    # ---------------------------------------------------------------------------------
-    
-    # ---------------------------------------------------------------------------------
-    # Write the edges
-    for a in [1 .. alph] do
-        for p in [1 .. A!.states] do
-            if IsList(T[a][p]) then  # this is a nondet or epsilon automaton
-                if who_called = 1 then
-                    for q in T[a][p] do  # write edge  p --a--> q
-                        AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
-                    od;
-                elif who_called = 2 then
-                    for q in T[a][p] do  # write edge  p --a--> q
-                        if p in G[p] and q in G[p] and IsBound(G[p][2]) then
-                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
-                        else
-                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], ",style = dotted];\n");
-                        fi;
-                    od;
+
+    # Draw the edges
+    if IsDeterministicAutomaton(A) then
+        for i in [1..Size(T)] do
+            letter := [alphabet[i]];
+            for j in [1.. Size(T[i])] do
+                if T[i][j] <> 0 then
+                    GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(T[i][j])), "label", Concatenation("\"", letter, "\""));
                 fi;
-            else
-                q := T[a][p];
-                if q > 0 then
-                    if who_called = 1 then
-                        AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
-                    elif who_called = 2 then
-                        if p in G[p] and q in G[p] and IsBound(G[p][2]) then
-                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], "];\n");
-                        else
-                            AppendTo(out_str, "\"", map[p], "\" -> \"", map[q], "\" [label=\"", letters[a], "\",color=", edge_colors[a], ",style = dotted];\n");
-                        fi;
-                    fi;
-                    
-                fi;
-            fi;
+            od;
         od;
-    od;
-    # ---------------------------------------------------------------------------------
-        
-    # ---------------------------------------------------------------------------------
-    # Prepare the list color_of_node, such that state p will be in color node_colors[k] <==> color_of_node[p] = k
-    color_of_node := List([1 .. A!.states], _ -> 1);
+    else 
+        for i in [1..Size(T)] do
+            letter := [alphabet[i]];
+            for j in [1.. Size(T[i])] do
+                for n in T[i][j] do
+                    if n <> 0 then
+                        GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(n)), "label", Concatenation("\"", letter, "\""));
+                    fi;
+                od;
+            od;
+        od;
+    fi;
+
+   # ---------------------------------------------------------------------------------
+    # Prepare the list color_of_node, such that state p will be in color colors[k] <==> color_of_node[p] = k
+    #color_of_node := List([1 .. A!.states], _ -> 1);
     for k in [1 .. Length(states_to_colorize)] do
         for p in states_to_colorize[k] do
-            color_of_node[p] := k+1;
+            GraphvizSetAttr(String(p), "style", "filled");
+            GraphvizSetAttr(String(p), "fillcolor", String(color[k]));
         od;
     od;
-    # ---------------------------------------------------------------------------------
-    
+
     # ---------------------------------------------------------------------------------
     # Write the nodes
-    for p in Difference(A!.initial, A!.accepting) do
-        AppendTo(out_str, "\"", map[p], "\" [shape=triangle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-    od;
-    for p in A!.accepting do
-        if p in A!.initial then
-            AppendTo(out_str, "\"", map[p], "\" [shape=triangle,peripheries=2, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-        else
-            AppendTo(out_str, "\"", map[p], "\" [shape=doublecircle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-        fi;
-    od;
-    for p in Difference([1 .. A!.states], Concatenation(A!.initial, A!.accepting)) do
-        AppendTo(out_str, "\"", map[p], "\" [shape=circle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-    od;
-    AppendTo(out_str,"}","\n");
+    # for p in Difference(A!.initial, A!.accepting) do
+    #     AppendTo(out_str, "\"", map[p], "\" [shape=triangle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+    # od;
+    # for p in A!.accepting do
+    #     if p in A!.initial then
+    #         AppendTo(out_str, "\"", map[p], "\" [shape=triangle,peripheries=2, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+    #     else
+    #         AppendTo(out_str, "\"", map[p], "\" [shape=doublecircle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+    #     fi;
+    # od;
+    # for p in Difference([1 .. A!.states], Concatenation(A!.initial, A!.accepting)) do
+    #     AppendTo(out_str, "\"", map[p], "\" [shape=circle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
+    # od;
+    # AppendTo(out_str,"}","\n");
     # ---------------------------------------------------------------------------------
 
-    CloseStream(out_str);
-    #Siegen    PrintTo(name, str);
-    
-    #Siegen return tdir;
-    return str;
+    Splash(f,rec(filename:=fich,path:="./",filetype:="dot"));
     
 end);
 ## ----  End of WriteDotFileForGraph()  ---- 
@@ -331,22 +265,19 @@ end);
 ## 
 ## 
 InstallGlobalFunction(DotStringForDrawingGraph, function(G)
-  local  dotstr, l, k;
+  local  f, l, k;
 
-  dotstr := "digraph Graph__{\n";
-  # the string that will hold the code of the .dot file
+    f := GraphvizDigraph(name);
+    GraphvizSetAttrs(f, rec(rankdir:="LR", size:="\"8,5\"", layout:="dot"));
+    GraphvizSetAttr(f, "node [shape = circle]");
+
     for l  in [ 1 .. Length( G ) ]  do
         for k  in G[ l ]  do
-          Append(dotstr, Concatenation(String(l), " -> "));
-          Append(dotstr, Concatenation(String(k)," [style=bold, color=black];\n"));
+            GraphvizAddEdge(f,String(l), String(k));
         od;
     od;
 
-    for k in [1..Length(G)] do
-        Append(dotstr, Concatenation(String(k), " [shape=circle];\n"));
-    od;
-    Append(dotstr,"}\n");
-    return(dotstr);
+    return AsString(f)
 end);
 
 ############################################################################
@@ -359,27 +290,9 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
   local  nome, letters, au, au1, i, j, colors, l2, array, s, arr, max, k, 
          dotstr, l;
 
-    # if not (IsList(A) and 1 < Length(A) and Length(A) < 4 and
-    #         IsAutomatonObj(A[1]) and IsAutomatonObj(A[2]) ) then
-    #     Error("The argument of dotAutomata is a list of automata");
-    # fi;
-    
-##    tdir := CMUP__getTempDir();
-#    if Length(A) = 3 then
-#        name := Filename(tdir, Concatenation(String(A[3]), ".dot"));
-#        xname := Concatenation(String(A[3]), ".dot");
-#        aut1 := A[1];
-#        aut2 := A[2];
-#    elif Length(A) = 2 then
-# 	name := Filename(tdir, "automaton.dot");
-#        xname := "automato.dot";
-#        aut1 := A[1];
-#        aut2 := A[2];
-  #    fi;
-  
 
     nome := "Automaton";
-#    letters := [];
+
     letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
     
     au := StructuralCopy(B!.transitions);
@@ -403,12 +316,8 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
 
     if B!.alphabet < 7 then     ##  for small alphabets, the letters
                                       ##  a, b, c, d are used
-#        letters := ["a", "b", "c", "d", "e", "f"];
         colors := ["red", "blue", "green", "yellow", "brown", "black"];
     else
-#        for i in [1 .. B!.alphabet] do
-#            Add(letters, Concatenation("a", String(i)));
-#        od;
         colors := [];
         for i in [1 .. B!.alphabet] do
             colors[i]:= "black";
@@ -454,7 +363,6 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
     arr := List( array, x -> List( x, String ) );
     
     dotstr :="digraph  Automaton {\n";
- ##   PrintTo(name, "digraph  ", nome, "{", "\n");
     for l  in [ 1 .. Length( arr ) ]  do
         for k  in [ 1 .. Length( arr[ l ] ) ]  do
             Append(dotstr,  String( arr[ l ][ k ]) );
@@ -529,8 +437,6 @@ InstallGlobalFunction(DotStringForDrawingSubAutomaton, function(arg)
         return;
     fi;
 
-#    gv := CMUP__getPsViewer();
-#    dot := CMUP__getDotExecutable();
 
     for a in [1 .. A!.alphabet] do
         for q in [1 .. A!.states] do
@@ -552,11 +458,6 @@ InstallGlobalFunction(DotStringForDrawingSubAutomaton, function(arg)
     dotstr := AUX__DotStringForDrawingSubAutomaton(A,B);
     return dotstr;
     
-    # res := dotAutomata([A,B, fich]);
-
-    # tdir := res[1];
-    # name := res[2];
-    # CMUP__executeDotAndViewer(tdir, dot, gv, name);
 end);
 #############################################################################
 ##
@@ -580,14 +481,9 @@ InstallGlobalFunction(DotStringForDrawingSCCAutomaton, function(arg)
     state_names := res[3];
     states_to_colorize := res[4];
     
- dotstr := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 2);
- return dotstr;
- 
-    
-    # gv := CMUP__getPsViewer();
-    # dot := CMUP__getDotExecutable();
-    # tdir := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 2);
-    # CMUP__executeDotAndViewer(tdir, dot, gv, Concatenation(fich, ".dot"));
+    dotstr := WriteDotFileForGraph(A, fich, state_names, states_to_colorize, 2);
+    return dotstr;
+
 end);
 
 ##
