@@ -11,6 +11,23 @@
 ##  to display the graphs.
 ############################################################################
 
+# ---------------------------------------------------------------------------------
+# List of Colors
+InstallValue(colors, 
+[ "red", "blue", "green", "purple", "orange", "brown", "darksalmon", "darkseagreen", "darkturquoise",
+    "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick", "forestgreen", "gold",
+    "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
+    "crimson", "cyan", "darkgoldenrod", "darkkhaki", "darkorange", "darkorchid", "darksalmon", 
+    "darkseagreen", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick",
+    "forestgreen", "gold", "goldenrod", "green", "greenyellow", "grey", "hotpink", "indianred", "khaki", 
+    "lawngreen", "lightblue", "lightcoral", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", 
+    "lightslateblue", "lightslategrey", "limegreen", "magenta", "maroon", "mediumaquamarine", "mediumorchid", 
+    "mediumpurple", "mediumseagreen", "mediumspringgreen", "mediumturquoise", "mediumvioletred",
+    "moccasin", "navajowhite", "olivedrab2", "orange", "orangered", "orchid", "palegreen", "paleturquoise", 
+    "palevioletred", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue1", 
+    "saddlebrown", "salmon", "sandybrown", "seagreen", "skyblue", "slateblue", "slategrey", "springgreen", 
+    "steelblue", "tan", "thistle", "tomato", "turquoise", "violet", "violetred", "wheat", "yellow", "yellowgreen" ]);
+
 
 #========================================================================
 # This function parses the arguments for the functions DrawAutomaton and DrawSCCAutomaton.
@@ -105,6 +122,18 @@ end);
 ## outputs a string consisting of dot code for an automaton
 ##
 ## A is an automaton, map a list of states names and states_to_colorize 
+
+AUX_DrawInitialState := function(f, node) 
+
+    GraphvizSetAttrs(GraphvizAddNode(f, Concatenation("in",String(node)) ), rec(shape:="none", label:="\"\""));
+    GraphvizAddNode(f, String(node));
+    GraphvizAddEdge(f, Concatenation("in",String(node)), String(node));
+    
+end;
+
+AUX_DrawAcceptState := function(f, node)
+    GraphvizSetAttr(GraphvizAddNode(f, String(node)),"shape","doublecircle");
+end;
     
 #========================================================================
 # This function writes the .dot file specifying a graph.
@@ -115,50 +144,35 @@ end);
 # who_called = 2  --->  DrawSCCAutomaton
 #------------------------------------------------------------------------
 InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_colorize, who_called)
-  local  alph, letters, colors, T, str, out_str, scc, G, p, 
-         q, a, color_of_node, k;
-
-    # ---------------------------------------------------------------------------------
-    # List of Colors
-    colors := [ "red", "blue", "green", "purple", "orange", "brown", "darksalmon", "darkseagreen", "darkturquoise",
-                "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick", "forestgreen", "gold",
-                "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue",
-                "crimson", "cyan", "darkgoldenrod", "darkkhaki", "darkorange", "darkorchid", "darksalmon", 
-                "darkseagreen", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick",
-                "forestgreen", "gold", "goldenrod", "green", "greenyellow", "grey", "hotpink", "indianred", "khaki", 
-                "lawngreen", "lightblue", "lightcoral", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", 
-                "lightslateblue", "lightslategrey", "limegreen", "magenta", "maroon", "mediumaquamarine", "mediumorchid", 
-                "mediumpurple", "mediumseagreen", "mediumspringgreen", "mediumturquoise", "mediumvioletred",
-                "moccasin", "navajowhite", "olivedrab2", "orange", "orangered", "orchid", "palegreen", "paleturquoise", 
-                "palevioletred", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue1", 
-                "saddlebrown", "salmon", "sandybrown", "seagreen", "skyblue", "slateblue", "slategrey", "springgreen", 
-                "steelblue", "tan", "thistle", "tomato", "turquoise", "violet", "violetred", "wheat", "yellow", "yellowgreen" ];
-
+    local f, alphabet, initial, T, accepting, i, j, scc, G, p, q, letter, n, k;
 
     # Setting up Graphviz Environment
     f := GraphvizDigraph("Automaton");
-    GraphvizSetAttrs(f, rec(rankdir:="LR", size:="\"8,5\"", layout:="dot"));
+    GraphvizSetAttrs(f, rec(rankdir:="LR", layout:="dot"));
+    GraphvizSetAttr(f, "node [shape=circle]");
+
 
     # Extracting all info from automaton
     accepting := FinalStatesOfAutomaton(A);
     initial := InitialStatesOfAutomaton(A);
     T := TransitionMatrixOfAutomaton(A);
-    alph := AlphabetOfAutomatonAsList(A);
+    alphabet := AlphabetOfAutomatonAsList(A);
+
+    for i in [1 .. A!.states] do 
+        GraphvizAddNode(f, String(i));
+    od;
 
     # Draw the initial states
     for i in initial do
-        GraphvizSetAttrs(GraphvizAddNode(f, Concatenation("in",String(i)) ), rec(shape:="none", label:="\"\""));
-        GraphvizAddNode(f, String(i));
-        GraphvizAddEdge(f, Concatenation("in",String(i)), String(i));
-        for j in [1 .. aut!.states] do  
-            GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(j)), "style","invis");
-        od;
+        AUX_DrawInitialState(f, i);
+        # for j in [1 .. A!.states] do  
+        #     GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(j)), "style","invis");
+        # od;
     od;
 
     # Draw the accepting/final states.
-    accepting := FinalStatesOfAutomaton(aut);
     for i in accepting do
-        GraphvizSetAttr(GraphvizAddNode(f, String(i)),"shape","doublecircle");
+        AUX_DrawAcceptState(f, i);
     od;
 
     # ---------------------------------------------------------------------------------
@@ -179,7 +193,15 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
             letter := [alphabet[i]];
             for j in [1.. Size(T[i])] do
                 if T[i][j] <> 0 then
-                    GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(T[i][j])), "label", Concatenation("\"", letter, "\""));
+                    if who_called = 1 then
+                        GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(T[i][j])), "label", Concatenation("\"", letter, "\""));
+                    elif who_called = 2 then 
+                        if p in G[p] and q in G[p] and IsBound(G[p][2]) then    
+                            GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(T[i][j])), "label", Concatenation("\"", letter, "\""));
+                        else
+                            GraphvizSetAttrs(GraphvizAddEdge(f, String(j), String(T[i][j])), rec(label:=Concatenation("\"", letter, "\""), style:="dotted"));
+                        fi;
+                    fi;
                 fi;
             od;
         od;
@@ -187,45 +209,39 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
         for i in [1..Size(T)] do
             letter := [alphabet[i]];
             for j in [1.. Size(T[i])] do
-                for n in T[i][j] do
-                    if n <> 0 then
-                        GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(n)), "label", Concatenation("\"", letter, "\""));
-                    fi;
-                od;
+                if who_called = 1 then
+                    for n in T[i][j] do
+                        if n <> 0 then
+                            GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(n)), "label", Concatenation("\"", letter, "\""));
+                        fi;
+                    od;
+                elif who_called = 2 then 
+                    for n in T[i][j] do
+                        if n <> 0 then
+                            if p in G[p] and q in G[p] and IsBound(G[p][2]) then
+                                GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(n)), "label", Concatenation("\"", letter, "\""));
+                            else
+                                GraphvizSetAttrs(GraphvizAddEdge(f, String(j), String(T[i][j])), rec(label:=Concatenation("\"", letter, "\""), style:="dotted"));
+                            fi;
+                        fi;
+                    od;
+                fi;
             od;
         od;
     fi;
 
-   # ---------------------------------------------------------------------------------
-    # Prepare the list color_of_node, such that state p will be in color colors[k] <==> color_of_node[p] = k
-    #color_of_node := List([1 .. A!.states], _ -> 1);
+    # ---------------------------------------------------------------------------------
+    # Colour the nodes that want to be coloured
     for k in [1 .. Length(states_to_colorize)] do
         for p in states_to_colorize[k] do
             GraphvizSetAttr(String(p), "style", "filled");
-            GraphvizSetAttr(String(p), "fillcolor", String(color[k]));
+            GraphvizSetAttr(String(p), "fillcolor", String(colors[k]));
         od;
     od;
 
-    # ---------------------------------------------------------------------------------
-    # Write the nodes
-    # for p in Difference(A!.initial, A!.accepting) do
-    #     AppendTo(out_str, "\"", map[p], "\" [shape=triangle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-    # od;
-    # for p in A!.accepting do
-    #     if p in A!.initial then
-    #         AppendTo(out_str, "\"", map[p], "\" [shape=triangle,peripheries=2, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-    #     else
-    #         AppendTo(out_str, "\"", map[p], "\" [shape=doublecircle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-    #     fi;
-    # od;
-    # for p in Difference([1 .. A!.states], Concatenation(A!.initial, A!.accepting)) do
-    #     AppendTo(out_str, "\"", map[p], "\" [shape=circle, style=filled, fillcolor=", node_colors[color_of_node[p]], "];\n");
-    # od;
-    # AppendTo(out_str,"}","\n");
-    # ---------------------------------------------------------------------------------
+    #Splash(f,rec(filename:=fich,path:="./",filetype:="dot"));
+    return AsString(f);
 
-    Splash(f,rec(filename:=fich,path:="./",filetype:="dot"));
-    
 end);
 ## ----  End of WriteDotFileForGraph()  ---- 
 #========================================================================
@@ -267,7 +283,7 @@ end);
 InstallGlobalFunction(DotStringForDrawingGraph, function(G)
   local  f, l, k;
 
-    f := GraphvizDigraph(name);
+    f := GraphvizDigraph("Graph_");
     GraphvizSetAttrs(f, rec(rankdir:="LR", size:="\"8,5\"", layout:="dot"));
     GraphvizSetAttr(f, "node [shape = circle]");
 
@@ -277,7 +293,7 @@ InstallGlobalFunction(DotStringForDrawingGraph, function(G)
         od;
     od;
 
-    return AsString(f)
+    return AsString(f);
 end);
 
 ############################################################################
@@ -287,120 +303,72 @@ end);
 ## subautomaton.
 ##
 InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
-  local  nome, letters, au, au1, i, j, colors, l2, array, s, arr, max, k, 
-         dotstr, l;
-
+    local nome, f, Aaccepting, Ainitial, AT, Aalph, Baccepting, Binitial, BT, Balph, i, j, k;
 
     nome := "Automaton";
 
-    letters := List(AlphabetOfAutomatonAsList(A), a -> [a]);
-    
-    au := StructuralCopy(B!.transitions);
-    au1 := StructuralCopy(A!.transitions);
-    for i in [1 .. Length(A!.transitions)] do
-        for j in [1 .. Length(A!.transitions[1])] do
-            if not IsBound(au1[i][j]) or au1[i][j] = 0 or au1[i][j] = [0]
-               or au1[i][j] = [] then
-                au1[i][j] := " ";
-            fi;
-        od;
-    od;
-    for i in [1 .. Length(B!.transitions)] do
-        for j in [1 .. Length(B!.transitions[1])] do
-            if not IsBound(au[i][j]) or au[i][j] = 0 or au[i][j] = [0]
-               or au[i][j] = [] then
-                au[i][j] := " ";
-            fi;
-        od;
-    od;
+    # Setting up Graphviz Environment
+    f := GraphvizDigraph(nome);
+    GraphvizSetAttrs(f, rec(rankdir:="LR", size:="\"8,5\"", layout:="dot"));
 
-    if B!.alphabet < 7 then     ##  for small alphabets, the letters
-                                      ##  a, b, c, d are used
-        colors := ["red", "blue", "green", "yellow", "brown", "black"];
-    else
-        colors := [];
-        for i in [1 .. B!.alphabet] do
-            colors[i]:= "black";
-        od;
-    fi;
+    # Extracting all info from automaton
+    Aaccepting := FinalStatesOfAutomaton(A);
+    Ainitial := InitialStatesOfAutomaton(A);
+    AT := TransitionMatrixOfAutomaton(A);
+    Aalph := AlphabetOfAutomatonAsList(A);
 
-    l2 := [];
-    array := [];
-    s := [];
-    arr := List( au, x -> List( x, String ) );
-    max := Maximum( List( arr, x -> Maximum( List(x,Length) ) ) );
+    Baccepting := FinalStatesOfAutomaton(B);
+    Binitial := InitialStatesOfAutomaton(B);
+    BT := TransitionMatrixOfAutomaton(B);
+    Balph := AlphabetOfAutomatonAsList(B);
+
+   for i in Ainitial do
+        AUX_DrawInitialState(f, i);
+    od;
+    for i in Difference(Binitial,Ainitial) do
+        AUX_DrawInitialState(f, i);
+        GraphvizSetAttr(f, i, "color", "gray");
+    od;
+    for j in Aaccepting do
+        AUX_DrawAcceptState(f, j);
+    od;
+    for j in Difference(Baccepting,Aaccepting) do
+        AUX_DrawAcceptState(f, j);
+        GraphvizSetAttr(f,j,"color", "gray");
+    od;
+   
+    for k in Difference(Difference([1..A!.states],Baccepting),Concatenation(Ainitial, Binitial,Aaccepting)) do
+        GraphvizAddNode(f, String(k));
+    od;
+    for k in Difference(Difference([1..B!.states],Baccepting),Concatenation(Ainitial, Binitial, [1..A!.states])) do
+        GraphvizSetAttr(GraphvizAddNode(f, String(k)), "color", "gray");
+    od;
 
     for i in [1 .. B!.states] do
-        for j in [1 .. B!.alphabet] do
-            if IsBound(au[j]) and IsBound(au[j][i]) and
-               au[j][i] <> " " then
-                if IsList(au[j][i]) then
-                    for k in au[j][i] do
-                        if i <= A!.states and j <= A!.alphabet and
-                           IsBound(au1[j]) and IsBound(au1[j][i]) and k in au1[j][i] and
-                             au1[j][i] <> " " then
-
-                            Add(array, [i, " -> ", k," [label=", "\"", letters[j],"\"",",color=", colors[j],"];"]);
+        for j in [1 .. Balph] do
+            if IsBound(BT[j]) and IsBound(BT[j][i]) and BT[j][i] <> " " then
+                if IsList(BT[j][i]) then
+                    for k in BT[j][i] do
+                        if i <= A!.states and j <= Aalph and IsBound(AT[j]) and IsBound(AT[j][i]) and k in AT[j][i] and AT[j][i] <> " " then
+                            GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(k)), "label", Concatenation("\"", Aalph[j], "\""));
                         else
-                            Add(array, [i, " -> ", k," [label=", "\"", letters[j],"\"",",color=", colors[j], ",style = dotted];"]);
+                            GraphvizSetAttrs(GraphvizAddEdge(f, String(i), String(k)), rec(label:=Concatenation("\"", Aalph[j], "\""), style:="dotted"));
 
                         fi;
                     od;
                 else
-                    if i <= A!.states and j <= A!.alphabet and
-                       IsBound(au1[j]) and IsBound(au1[j][i]) and
-                          au1[j][i] <> " " then
-                        Add(array, [i, " -> ", au[j][i]," [label=", "\"", letters[j],"\"",",color=", colors[j], "];"]);
+                    if i <= A!.states and j <= Aalph and IsBound(AT[j]) and IsBound(AT[j][i]) and AT[j][i] <> " " then
+                        GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(BT[j][i])), "label", Concatenation("\"", Aalph[j], "\""));
                     else
-                            Add(array, [i, " -> ", au[j][i]," [label=", "\"", letters[j],"\"",",color=", colors[j], ",style = dotted];"]);
+                        GraphvizSetAttrs(GraphvizAddEdge(f, String(i), String(BT[j][i])), rec(label:=Concatenation("\"", Aalph[j], "\""), style:="dotted"));
                     fi;
                 fi;
             fi;
 
         od;
     od;
-
-    arr := List( array, x -> List( x, String ) );
-    
-    dotstr :="digraph  Automaton {\n";
-    for l  in [ 1 .. Length( arr ) ]  do
-        for k  in [ 1 .. Length( arr[ l ] ) ]  do
-            Append(dotstr,  String( arr[ l ][ k ]) );
-        od;
-        if l = Length( arr )  then
-            Append(dotstr,  "\n" );
-        else
-            Append(dotstr,  "\n" );
-        fi;
-    od;
-    for i in A!.initial do
-        Append(dotstr, Concatenation(String(i), " [shape=triangle];\n"));
-    od;
-    for i in Difference(B!.initial,A!.initial) do
-        Append(dotstr, Concatenation(String(i), " [shape=triangle,color=gray];\n"));
-    od;
-    for j in A!.accepting do
-        if j in A!.initial then
-            Append(dotstr, Concatenation(String(j), " [shape=triangle,peripheries=2];\n"));
-        else
-            Append(dotstr, Concatenation(String(j), " [shape=doublecircle];\n"));
-        fi;
-    od;
-    for j in Difference(B!.accepting,A!.accepting) do
-        if j in B!.initial then
-            Append(dotstr, Concatenation(String(i), " [shape=triangle,peripheries=2,color=gray];\n"));
-        else
-            Append(dotstr, Concatenation(String(j), " [shape=doublecircle,color=gray];n"));
-        fi;
-    od;
-    for k in Difference(Difference([1..A!.states],B!.accepting),Concatenation(A!.initial, B!.initial,A!.accepting)) do
-        Append(dotstr, Concatenation(String(k), " [shape=circle];\n"));
-    od;
-    for k in Difference(Difference([1..B!.states],B!.accepting),Concatenation(A!.initial, B!.initial, [1..A!.states])) do
-        Append(dotstr, Concatenation(String(k), " [shape=circle,color=gray];\n"));
-    od;
-    Append(dotstr,"}\n");
-    return(dotstr);
+ 
+    return AsString(f);
 end);
 
 #############################################################################

@@ -21,6 +21,7 @@
 # fi;
 
 
+
 # ############################################################################
 # ##
 # #V  DrawingsListOfExtraFormats
@@ -73,6 +74,7 @@
 # ##
 # DeclareGlobalFunction( "ClearDrawingsExtraGraphAttributes" );
 
+DeclareGlobalVariable( "colors" );
 
 #========================================================================
 # This function parses the arguments for the functions DrawAutomaton and DrawSCCAutomaton.

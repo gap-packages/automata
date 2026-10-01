@@ -719,7 +719,7 @@ digraph  Automaton{
 "2" [shape=doublecircle, style=filled, fillcolor=white];
 "3" [shape=doublecircle, style=filled, fillcolor=white];
 }
-gap> Print(DotStringForDrawingAutomaton(x,["st 1", "2", "C"]));
+gap> DotStringForDrawingAutomaton(x,["st 1", "2", "C"]);
 digraph  Automaton{
 "st 1" -> "2" [label="a",color=red];
 "2" -> "C" [label="a",color=red];
@@ -729,7 +729,7 @@ digraph  Automaton{
 "2" [shape=doublecircle, style=filled, fillcolor=white];
 "C" [shape=doublecircle, style=filled, fillcolor=white];
 }
-gap> Print(DotStringForDrawingAutomaton(x,["st 1", "2", "C"],[[2],[1,3]]));
+gap> DotStringForDrawingAutomaton(x,["st 1", "2", "C"],[[2],[1,3]]);
 digraph  Automaton{
 "st 1" -> "2" [label="a",color=red];
 "2" -> "C" [label="a",color=red];
@@ -791,7 +791,7 @@ digraph  Automaton {
 
 gap> G := [[1,2,3],[5],[3,4],[1],[2,5]];
 [ [ 1, 2, 3 ], [ 5 ], [ 3, 4 ], [ 1 ], [ 2, 5 ] ]
-gap> Print(DotStringForDrawingGraph(G));
+gap> DotStringForDrawingGraph(G);
 digraph Graph__{
 1 -> 1 [style=bold, color=black];
 1 -> 2 [style=bold, color=black];
@@ -810,7 +810,7 @@ digraph Graph__{
 }
 
 gap> rcg := Automaton("det",6,"ab",[ [ 3, 3, 6, 5, 6, 6 ], [ 4, 6, 2, 6, 4, 6 ] ], [ ],[ ]);;
-gap> Print(DotStringForDrawingSCCAutomaton(rcg));
+gap> DotStringForDrawingSCCAutomaton(rcg);
 digraph  Automaton{
 "1" -> "3" [label="a",color=red,style = dotted];
 "2" -> "3" [label="a",color=red];
