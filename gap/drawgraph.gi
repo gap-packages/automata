@@ -6,13 +6,14 @@
 ##
 #Y  Copyright (C)  2004,  CMUP, Universidade do Porto, Portugal
 ##
-##  The functions in this file make use of the external program dot (from
-##  the freely available software package graphviz, for graph visualization)
-##  to display the graphs.
 ############################################################################
+## Updated to use GraphvizForGAP by Ruth Hoffmann (rh347@st-andrews.ac.uk)
+#Y Copyright (C)  2026
 
-# ---------------------------------------------------------------------------------
-# List of Colors
+#############################################################################
+##
+## TEMPORARY!
+## List of Colors (here only temporary until a SetColor function exists in GraphvizForGAP)
 InstallValue(colors, 
 [ "red", "blue", "green", "purple", "orange", "brown", "darksalmon", "darkseagreen", "darkturquoise",
     "darkviolet", "deeppink", "deepskyblue", "dodgerblue", "firebrick", "forestgreen", "gold",
@@ -31,6 +32,7 @@ InstallValue(colors,
 
 #========================================================================
 # This function parses the arguments for the functions DrawAutomaton and DrawSCCAutomaton.
+# NOTE! The output file fich is never created!
 #------------------------------------------------------------------------
 InstallGlobalFunction(AUX__parseDrawAutArgs, function(LA)
     local   A,  fich,  state_names,  states_to_colorize,  l,  s;
@@ -159,15 +161,12 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
     alphabet := AlphabetOfAutomatonAsList(A);
 
     for i in [1 .. A!.states] do 
-        GraphvizAddNode(f, String(i));
+        GraphvizSetAttr(GraphvizAddNode(f, String(i)), "label", String(map[i]));
     od;
 
     # Draw the initial states
     for i in initial do
         AUX_DrawInitialState(f, i);
-        # for j in [1 .. A!.states] do  
-        #     GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(j)), "style","invis");
-        # od;
     od;
 
     # Draw the accepting/final states.
@@ -196,7 +195,7 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
                     if who_called = 1 then
                         GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(T[i][j])), "label", Concatenation("\"", letter, "\""));
                     elif who_called = 2 then 
-                        if p in G[p] and q in G[p] and IsBound(G[p][2]) then    
+                        if j in G[j] and T[i][j] in G[j] and IsBound(G[j][2]) then 
                             GraphvizSetAttr(GraphvizAddEdge(f, String(j), String(T[i][j])), "label", Concatenation("\"", letter, "\""));
                         else
                             GraphvizSetAttrs(GraphvizAddEdge(f, String(j), String(T[i][j])), rec(label:=Concatenation("\"", letter, "\""), style:="dotted"));
@@ -234,11 +233,13 @@ InstallGlobalFunction(WriteDotFileForGraph, function(A, fich, map, states_to_col
     # Colour the nodes that want to be coloured
     for k in [1 .. Length(states_to_colorize)] do
         for p in states_to_colorize[k] do
-            GraphvizSetAttr(String(p), "style", "filled");
-            GraphvizSetAttr(String(p), "fillcolor", String(colors[k]));
+            GraphvizSetAttr(GV_FindNode(f, String(p)), "style", "filled");
+            # This colouring solution is temporary until GraphvizForGAP has a GetColor function. An issue on this has been opened.
+            GraphvizSetAttr(GV_FindNode(f, String(p)), "fillcolor", String(colors[k]));
         od;
     od;
 
+    # The function name seems to imply that a file gets created, in the past this was not the case.
     #Splash(f,rec(filename:=fich,path:="./",filetype:="dot"));
     return AsString(f);
 
@@ -303,7 +304,7 @@ end);
 ## subautomaton.
 ##
 InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
-    local nome, f, Aaccepting, Ainitial, AT, Aalph, Baccepting, Binitial, BT, Balph, i, j, k;
+    local nome, f, Aaccepting, Ainitial, AT, Aalph, Baccepting, Binitial, BT, Balph, i, j, k,letter;
 
     nome := "Automaton";
 
@@ -327,14 +328,15 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
     od;
     for i in Difference(Binitial,Ainitial) do
         AUX_DrawInitialState(f, i);
-        GraphvizSetAttr(f, i, "color", "gray");
+        # GV_FindNode is a GraphvizForGAP internal function. There is an issue which asks to add this as a public function.
+        GraphvizSetAttr(GV_FindNode(f, String(i)), "color", "gray");
     od;
     for j in Aaccepting do
         AUX_DrawAcceptState(f, j);
     od;
     for j in Difference(Baccepting,Aaccepting) do
         AUX_DrawAcceptState(f, j);
-        GraphvizSetAttr(f,j,"color", "gray");
+        GraphvizSetAttr(String(j),"color", "gray");
     od;
    
     for k in Difference(Difference([1..A!.states],Baccepting),Concatenation(Ainitial, Binitial,Aaccepting)) do
@@ -345,22 +347,23 @@ InstallGlobalFunction(AUX__DotStringForDrawingSubAutomaton, function(A,B)
     od;
 
     for i in [1 .. B!.states] do
-        for j in [1 .. Balph] do
+        for j in [1 .. Size(Balph)] do
+            letter := [Aalph[j]];
             if IsBound(BT[j]) and IsBound(BT[j][i]) and BT[j][i] <> " " then
                 if IsList(BT[j][i]) then
                     for k in BT[j][i] do
                         if i <= A!.states and j <= Aalph and IsBound(AT[j]) and IsBound(AT[j][i]) and k in AT[j][i] and AT[j][i] <> " " then
-                            GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(k)), "label", Concatenation("\"", Aalph[j], "\""));
+                            GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(k)), "label", Concatenation("\"", letter, "\""));
                         else
-                            GraphvizSetAttrs(GraphvizAddEdge(f, String(i), String(k)), rec(label:=Concatenation("\"", Aalph[j], "\""), style:="dotted"));
+                            GraphvizSetAttrs(GraphvizAddEdge(f, String(i), String(k)), rec(label:=Concatenation("\"", letter, "\""), style:="dotted"));
 
                         fi;
                     od;
                 else
                     if i <= A!.states and j <= Aalph and IsBound(AT[j]) and IsBound(AT[j][i]) and AT[j][i] <> " " then
-                        GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(BT[j][i])), "label", Concatenation("\"", Aalph[j], "\""));
+                        GraphvizSetAttr(GraphvizAddEdge(f, String(i), String(BT[j][i])), "label", Concatenation("\"", letter, "\""));
                     else
-                        GraphvizSetAttrs(GraphvizAddEdge(f, String(i), String(BT[j][i])), rec(label:=Concatenation("\"", Aalph[j], "\""), style:="dotted"));
+                        GraphvizSetAttrs(GraphvizAddEdge(f, String(i), String(BT[j][i])), rec(label:=Concatenation("\"", letter, "\""), style:="dotted"));
                     fi;
                 fi;
             fi;
